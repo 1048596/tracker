@@ -1,0 +1,1 @@
+select c.* from mangas m join chapters c on m.id = c.manga_id where m.manga_title = 'Kakukaku Shikajika' order by c.chapter_number desc;

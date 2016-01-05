@@ -1,0 +1,41 @@
+@import 'border-radius';
+
+table.chapter-list {
+  @include border-radius(2px);
+  margin: 20px 0px;
+  display: block;
+  border: 1px solid #ddd;
+}
+
+table.chapter-list tr {
+  display: table-row;
+  vertical-align: inherit;
+  border-color: inherit;
+}
+
+table.chapter-list tr:first-child td {
+  padding: 6px 10px;
+  line-height: 20px;
+  border-color: transparent;
+}
+
+
+table.chapter-list td {
+  padding: 6px 10px;
+  line-height: 20px;
+  border-top: 1px solid #eee;
+}
+
+table.chapter-list td.info {
+  width: 818px;
+}
+
+table.chapter-list td.created {
+  width: 140px;
+  text-align: right;
+}
+
+.chapter-item {
+  font-size: 13px;
+  font-weight: 700;
+}

@@ -1,0 +1,55 @@
+.left {
+  float: left;
+}
+
+.right {
+  float: right;
+}
+
+.header {
+  padding-top: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #ddd;
+}
+
+.main-content {
+  width: 980px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.container {
+  width: 980px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.clearfix:before {
+  display: block;
+  content: "";
+}
+
+.clearfix:after {
+  display: block;
+  content: "";
+  clear: both;
+}
+
+.header-nav-item {
+  margin: 0 5px 0 5px;
+}
+
+body {
+  font: helvetica;
+  font-family: helvetica;
+}
+
+a {
+  text-decoration: none;
+  color: blue;
+}
+
+a:hover {
+  background: #000;
+  color: #fff;
+}
