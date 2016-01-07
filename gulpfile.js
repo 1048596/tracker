@@ -1,20 +1,15 @@
 var gulp = require('gulp');
 var babel = require('gulp-babel');
-var browserify = require('browserify');
-var source = require('vinyl-source-stream');
 var sass = require('gulp-sass');
 var concat = require('gulp-concat');
-var watchify = require('watchify');
 
 var assign = require('object-assign');
-
-var plugin = require('babel-relay-plugin')(require('./schema/schema.json').data);
 
 var node_path = __dirname + '/node_modules';
 
 // Schema for GraphQL
 gulp.task('babel-schema', () => {
-  return gulp.src('./babel/es6-schema/*.js')
+  return gulp.src('./es6-schema/*.js')
     .pipe(babel({
       plugins: ['transform-runtime'],
       presets: ['es2015', 'stage-0']
@@ -33,7 +28,20 @@ gulp.task('babel-relay', () => {
     .pipe(gulp.dest('bundle'));
 });
 
-gulp.task('browserify', ['babel-relay'], () => {
+gulp.task('sass', () => {
+  gulp.src(__dirname + '/scss/*.scss')
+  .pipe(sass().on('error', sass.logError))
+  .pipe(concat('style.css'))
+  .pipe(gulp.dest('./public/'));
+});
+
+gulp.task('watch', () => {
+  //gulp.watch(['./babel/app/**/*.js'], ['browserify']);
+  gulp.watch(['./scss/*.scss'], ['sass']);
+});
+
+
+/*gulp.task('browserify', ['babel-relay'], () => {
   var opts = assign({}, watchify.args);
   var b = watchify(browserify(opts));
 
@@ -50,16 +58,4 @@ gulp.task('force', () => {
   return b.bundle()
     .pipe(source('bundle.js'))
     .pipe(gulp.dest('./public/'));
-});
-
-gulp.task('sass', () => {
-  gulp.src(__dirname + '/scss/*.scss')
-    .pipe(sass().on('error', sass.logError))
-    .pipe(concat('style.css'))
-    .pipe(gulp.dest('./public/'));
-});
-
-gulp.task('watch', () => {
-  gulp.watch(['./babel/app/**/*.js'], ['browserify']);
-  gulp.watch(['./scss/*.scss'], ['sass']);
-});
+});*/

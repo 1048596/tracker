@@ -1,7 +1,3 @@
-var mysql = require('./config/mysql.js');
-var moment = require('moment');
-var Relay = require('graphql-relay');
+var React = require('react');
 
-mysql.getPermissionByGroupIdAndUsername(1, 'asdf').then((value) => {
-  console.log(value);
-});
+console.log('asdf');
