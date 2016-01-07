@@ -25,7 +25,7 @@ import {
 
 import mysql from '../config/mysql.js';
 
-import {nodeField}  from './node.js';
+import { nodeField }  from './node.js';
 
 import { mangaConnection, mangaType } from './mangaType.js';
 import { chapterConnection, chapterType, chapterEdge } from './chapterType.js';
@@ -121,8 +121,8 @@ var userType = new GraphQLObjectType({
   name: 'User',
   fields: () => ({
     username: {
-      type: GraphQLString
-    }
+      type: GraphQLString,
+    },
   })
 });
 

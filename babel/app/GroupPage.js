@@ -14,7 +14,7 @@ class GroupPage extends React.Component {
     console.log(this.props.relay.variables);
     return (
       <div>
-        {this.props.node.id}:{this.props.node.group_name}
+        {this.props.node.id}: {this.props.node.group_name}
 
         {this.props.node.chapters.edges.map((edge, i) => {
           return (
@@ -41,6 +41,8 @@ var Container = Relay.createContainer(GroupPage, {
           group_name,
           descript,
           created,
+          owner,
+          permission,
           mangas (first: 100) {
             edges {
               node {

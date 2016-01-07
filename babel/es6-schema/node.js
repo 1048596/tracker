@@ -7,8 +7,8 @@ import {
 
 import mysql from '../config/mysql.js';
 
-import {idFetcher, typeResolver} from './registry.js';
+import { idFetcher, typeResolver } from './registry.js';
 
-export const {nodeInterface, nodeField} = nodeDefinitions(
+export const { nodeInterface, nodeField } = nodeDefinitions(
   idFetcher, typeResolver
 );

@@ -369,7 +369,7 @@ exports.getTypeByTypeId = function(id) {
 };
 
 
-//Status
+// Status
 
 exports.getStatusByStatusId = function(id) {
   return new Promise((resolve, reject) => {
@@ -383,7 +383,7 @@ exports.getStatusByStatusId = function(id) {
   });
 };
 
-//Misc
+// Genre
 
 exports.getGenresByMangaId = function(id) {
   return new Promise((resolve, reject) => {
@@ -397,12 +397,32 @@ exports.getGenresByMangaId = function(id) {
   });
 };
 
+// Chapter count
 
 exports.getChapterCountByMangaId = function(id) {
   return new Promise((resolve, reject) => {
     var sql = 'select count(*) as chapter_count from chapters where manga_id = ?';
 
     connection.query(sql, id, function(err, results) {
+      if (err) console.log(err);
+
+      resolve(results);
+    });
+  });
+};
+
+
+// Permission
+
+exports.getPermissionByGroupIdAndUsername = function(group_id, username) {
+  return new Promise((resolve, reject) => {
+    var sql = 'select permission from members where group_id = ? && username = ?;';
+
+    var inserts = [group_id, username];
+
+    sql = mysql.format(sql, inserts);
+
+    connection.query(sql, function(err, results) {
       if (err) console.log(err);
 
       resolve(results);

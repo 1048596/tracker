@@ -1,6 +1,7 @@
 var mysql = require('./config/mysql.js');
 var moment = require('moment');
+var Relay = require('graphql-relay');
 
-mysql.getAuthorsByMangaId(2).then((value) => {
+mysql.getPermissionByGroupIdAndUsername(1, 'asdf').then((value) => {
   console.log(value);
 });

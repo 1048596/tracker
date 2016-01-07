@@ -25,11 +25,11 @@ import {
 
 import mysql from '../config/mysql.js';
 
-import {registerType} from './registry';
+import { registerType } from './registry';
 
 import { nodeInterface } from './node.js';
-import {mangaConnection} from './mangaType';
-import {chapterConnection} from './chapterType';
+import { mangaConnection } from './mangaType';
+import { chapterConnection } from './chapterType';
 
 export const groupType = registerType(new GraphQLObjectType({
   name: 'Group',
@@ -50,10 +50,20 @@ export const groupType = registerType(new GraphQLObjectType({
     owner: {
       type: GraphQLString
     },
+    permission: {
+      type: GraphQLString,
+      resolve: (root) => {
+        if (root.rootValue.user) {
+          return mysql.getPermissionByGroupIdAndUsername(root.id, root.rootValue.user.username).then((value) => {
+            return value[0].permission;
+          });
+        }
+      }
+    },
     mangas: {
       type: mangaConnection,
       args: connectionArgs,
-        resolve: (root, args) =>{
+        resolve: (root, args) => {
           return mysql.getMangasByGroupId(root.id).then((value) => {
             return connectionFromArray(value, args);
           });

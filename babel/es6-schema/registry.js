@@ -12,6 +12,8 @@ export function registerType(type, endpoint, getItemOverride) {
 export async function idFetcher(globalId, info) {
   const { type, id } = fromGlobalId(globalId);
 
+  console.log(info.rootValue);
+
   let item;
   if (type === 'Chapter') {
     console.log(type);
@@ -30,7 +32,7 @@ export async function idFetcher(globalId, info) {
   }
 
   console.log({ graphql_type: type, ...item });
-  return { graphql_type: type, ...item };
+  return { graphql_type: type, ...item, rootValue: info.rootValue };
 }
 
 export function typeResolver(obj) {
