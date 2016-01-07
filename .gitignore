@@ -2,3 +2,4 @@ node_modules
 bundle
 schema
 public/bundle.js
+public/vendor.bundle.js
