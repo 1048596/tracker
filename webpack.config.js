@@ -4,6 +4,21 @@ var webpack = require('webpack');
 module.exports = {
   entry: {
     'public/bundle.js': './app/main.js',
+    vendor: [
+      'graphql',
+      'graphql-relay',
+      'history',
+      'moment',
+      'object-assign',
+      'pluralize',
+      'query-string',
+      'react',
+      'react-dom',
+      'react-relay',
+      'react-router',
+      'react-router-relay',
+      'cookie',
+    ],
   },
   output: {
     path: './',
@@ -26,4 +41,7 @@ module.exports = {
     // you can now require('file') instead of require('file.coffee')
     extensions: ['', '.js', '.json'],
   },
+  plugins: [
+    new webpack.optimize.CommonsChunkPlugin(/* chunkName= */"vendor", /* filename= */"./public/vendor.bundle.js")
+  ],
 };
