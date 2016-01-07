@@ -10,17 +10,30 @@ import { Link, IndexLink } from 'react-router';
 import ChapterItem from './ChapterItem';
 
 class GroupPage extends React.Component {
+
+
   render() {
+    let editLink;
+
+    if (this.props.node.permission) {
+      editLink = <Link to={this.props.location.pathname + '/edit'}>Edit</Link>
+    }
+
     console.log(this.props.relay.variables);
     return (
       <div>
+        {editLink}
+        <table className="chapter-list">
+          <tbody>
+            {this.props.node.chapters.edges.map((edge, i) => {
+              return (
+                <ChapterItem key={i} {...edge.node} />
+              );
+            })}
+          </tbody>
+        </table>
         {this.props.node.id}: {this.props.node.group_name}
 
-        {this.props.node.chapters.edges.map((edge, i) => {
-          return (
-            <ChapterItem key={i} {...edge.node} />
-          );
-        })}
         <br></br>{this.props.node.descript}
         <br></br>Created on: {this.props.node.created}
       </div>
