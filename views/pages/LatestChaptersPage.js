@@ -8,12 +8,13 @@ import { fromGlobalId } from 'graphql-relay';
 import ChapterItem from './ChapterItem.js';
 import PaginationButton from './PaginationButton.js';
 
-class SubscriptionChapters extends React.Component {
+class LatestChaptersPage extends React.Component {
   nextPage(event) {
     try {
       this.props.relay.setVariables({
         page: this.props.relay.variables.page + 1
       });
+      document.body.scrollTop = document.documentElement.scrollTop = 0;
     }
     catch(err) {
       console.log(err);
@@ -24,6 +25,7 @@ class SubscriptionChapters extends React.Component {
       this.props.relay.setVariables({
         page: this.props.relay.variables.page - 1
       });
+      document.body.scrollTop = document.documentElement.scrollTop = 0;
     }
     catch(err) {
       console.log(err);
@@ -33,64 +35,69 @@ class SubscriptionChapters extends React.Component {
 
     let paginationButtonPreivous;
     let paginationButtonNext;
-    let mapChapters;
+    let separator;
 
     if (this.props.location.query.page > 0) {
       paginationButtonPreivous = <PaginationButton
           nextPage={false}
           onClick={this.previousPage.bind(this)}
           text="Previous page"
-          pathname={this.props.location.pathname}
+          pathname="/feed"
           query={this.props.location.query}
+          className="left"
         />;
     }
 
-    if (this.props.subscriptionChapters.chapters) {
-      if (this.props.subscriptionChapters.chapters.pageInfo.hasNextPage) {
-        paginationButtonNext = <PaginationButton
-            nextPage={true}
-            onClick={this.nextPage.bind(this)}
-            text="Next page"
-            pathname={this.props.location.pathname}
-            query={this.props.location.query}
-          />;
-      }
+    if (this.props.allChapters.chapters.pageInfo.hasNextPage) {
+      paginationButtonNext = <PaginationButton
+          nextPage={true}
+          onClick={this.nextPage.bind(this)}
+          text="Next page"
+          pathname="/feed"
+          query={this.props.location.query}
+          className="left"
+        />;
+    }
 
-      mapChapters = this.props.subscriptionChapters.chapters.edges.map((edge, i) => {
-          return (
-            <ChapterItem key={i} {...edge.node} />
-          );
-        });
-
-    } else {
-      console.log('Not logged in m8.');
-      mapChapters = <div>Login to see your chapters!</div>;
+    if (paginationButtonNext && paginationButtonPreivous) {
+      separator = <span className="separator"></span>;
     }
 
     //Render this shit
     return (
-      <div>
-        This is the id: {this.props.subscriptionChapters._id}<br></br>
-        Sub Chapters
-        {mapChapters}
+      <div className="container">
+        <table className="chapter-list">
+          <tbody>
+            {this.props.allChapters.chapters.edges.map((edge, i) => {
+              return (
+                <ChapterItem key={i} {...edge.node} />
+              );
+            })}
+          </tbody>
+        </table>
+
         <p>Page (Router query - page): {this.props.location.query.page}</p>
         <p>Page (Relay variable): {this.props.relay.variables.page}</p>
-        {paginationButtonPreivous}
-        {paginationButtonNext}
+        <div className="container">
+          {paginationButtonPreivous}
+          {separator}
+          {paginationButtonNext}
+        </div>
       </div>
     );
   }
 }
 
-var Container = Relay.createContainer(SubscriptionChapters, {
+var Container = Relay.createContainer(LatestChaptersPage, {
   initialVariables: {
-    page: null
+    page: null,
+    limit: null
   },
   fragments: {
-    subscriptionChapters: () => Relay.QL`
-      fragment on SubscriptionChapters {
+    allChapters: () => Relay.QL`
+      fragment on AllChapters {
         _id,
-        chapters (first: 2, page: $page) {
+        chapters (first: $limit, page: $page) {
           pageInfo {
             hasNextPage
           }
@@ -100,6 +107,7 @@ var Container = Relay.createContainer(SubscriptionChapters, {
               chapter_title,
               chapter_number,
               manga_id,
+              created
               manga {
                 id,
                 manga_title

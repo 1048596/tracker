@@ -9,9 +9,7 @@ import { Link, IndexLink } from 'react-router';
 
 import ChapterItem from './ChapterItem';
 
-class GroupPage extends React.Component {
-
-
+class GroupInfo extends React.Component {
   render() {
     let editLink;
 
@@ -41,7 +39,7 @@ class GroupPage extends React.Component {
   }
 }
 
-var Container = Relay.createContainer(GroupPage, {
+var Container = Relay.createContainer(GroupInfo, {
   initialVariables: {
     id: null,
     page: null

@@ -10,15 +10,18 @@ import cookie from 'cookie';
 import { toGlobalId } from 'graphql-relay';
 
 import Schell from './Schell.js';
-import LatestFeed from './LatestFeed.js';
-import SubscriptionsFeed from './SubscriptionsFeed.js';
+import LatestFeed from './pages/LatestChaptersPage.js';
+import SubscriptionsFeed from './pages/SubscriptionsPage.js';
+import GroupPage from './pages/GroupPage.js';
 import Upload from './Upload.js';
 import Login from './Login.js';
 import Register from './Register.js';
 import Authenticate from './Authenticate.js';
 import MangaPage from './MangaPage.js';
 import ChapterPage from './ChapterPage.js';
-import GroupPage from './GroupPage.js';
+
+import GroupInfo from './components/GroupInfo.js';
+
 
 /*
 function createRelayContainer(Component, props) {
@@ -167,28 +170,53 @@ Relay.injectNetworkLayer(
 ReactDOM.render(
   <RelayRouter history={createBrowserHistory()}>
     <Route path="/" component={Schell}>
-      <IndexRoute component={LatestFeed} queries={chapterRoute}
-        queryParams={['page', 'limit']} prepareParams={prepareLatestChapterAndSubscriptionsParams}
+      <IndexRoute
+        component={LatestChaptersPage}
+        queries={chapterRoute}
+        queryParams={['page', 'limit']}
+        prepareParams={prepareLatestChapterAndSubscriptionsParams}
       />
-      <Route path="feed" component={LatestFeed} queries={chapterRoute}
-        queryParams={['page', 'limit']} prepareParams={prepareLatestChapterAndSubscriptionsParams}
+      <Route path="feed"
+        component={LatestChaptersPage}
+        queries={chapterRoute}
+        queryParams={['page', 'limit']}
+        prepareParams={prepareLatestChapterAndSubscriptionsParams}
       />
-      <Route path="subscriptions" component={SubscriptionsFeed} queries={subscriptionChapterRoute}
-        queryParams={['page', 'limit']} prepareParams={prepareLatestChapterAndSubscriptionsParams}
+      <Route path="subscriptions"
+        component={SubscriptionsFeed}
+        queries={subscriptionChapterRoute}
+        queryParams={['page', 'limit']}
+        prepareParams={prepareLatestChapterAndSubscriptionsParams}
       />
       <Route path="upload" component={Upload} queries={chapterRoute}/>
       <Route path="login" component={Login}/>
       <Route path="register" component={Register}/>
       <Route path="authenticate" component={Authenticate} queries={userRoute}/>
-      <Route path="manga/:id" component={MangaPage} queries={nodeIdPageAndLimitRoute}
-        queryParams={['page', 'limit']} prepareParams={prepareMangaParams}
-      />
-      <Route path="chapter/:id" component={ChapterPage} queries={nodeIdRoute}
+      <Route path="manga/:id" component={MangaPage}>
+        <IndexRoute
+          component={MangaInfo}
+          queries={nodeIdPageAndLimitRoute}
+          queryParams={['page', 'limit']}
+          prepareParams={prepareMangaParams}
+        />
+        <Route path="edit"
+          component={MangaEdit}
+          
+        />
+      </Route>
+      <Route path="chapter/:id"
+        component={ChapterPage}
+        queries={nodeIdRoute}
         prepareParams={prepareChapterParams}
       />
-      <Route path="group/:id" component={GroupPage} queries={nodeIdAndPageRoute}
-        queryParams={['page', 'limit']} prepareParams={prepareGroupParams}
-      />
+      <Route path="group/:id" component={GroupPage}>
+        <IndexRoute
+          component={GroupInfo}
+          queries={nodeIdAndPageRoute}
+          queryParams={['page', 'limit']}
+          prepareParams={prepareGroupParams}
+        />
+      </Route>
     </Route>
   </RelayRouter>,
   document.getElementById('wrap')

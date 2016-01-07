@@ -1,30 +1,30 @@
 Schell
-  IndexRoute: LatestChapterPage
-  SubscriptionPage
-  MangaPage
-    IndexRoute: Info
-    Images
-    Graphs
-    Edit
-  ChapterPage
-    Edit
-  GroupPage
-    IndexRoute: Info
-    Images
-    Members
-    Graphs (optional)
-    Edit
-  ProfilePage
-  Settings
-    ProfileSettings
-    FollowSettings
-    GroupSettings
-    etc. (dunno what else)
-  CreatorPage
-    IndexRoute: Info
-    Images
-    Graphs
-    Edit
-  Login
-  Register
-  Reset (reset password with username or email)
+[x]  IndexRoute: LatestChapterPage
+[x]  SubscriptionPage
+[x]  MangaPage
+[x]    IndexRoute: Info
+[ ]    Images
+[ ]    Graphs
+[x]    Edit
+[ ]  ChapterPage
+[ ]    Edit
+[x]  GroupPage
+[x]    IndexRoute: Info
+[ ]    Members
+[ ]    Images
+[ ]    Graphs (optional)
+[ ]    Edit
+[ ]  ProfilePage
+[ ]  Settings
+[ ]    ProfileSettings
+[ ]    FollowSettings
+[ ]    GroupSettings
+[ ]    etc. (dunno what else)
+[ ]  CreatorPage
+[ ]    IndexRoute: Info
+[ ]    Images
+[ ]    Graphs
+[ ]    Edit
+[ ]  Login
+[ ]  Register
+[ ]  Reset (reset password with username or email)

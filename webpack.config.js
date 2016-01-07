@@ -3,7 +3,7 @@ var webpack = require('webpack');
 
 module.exports = {
   entry: {
-    'public/bundle.js': './app/main.js',
+    'public/bundle.js': './views/main.js',
     vendor: [
       'graphql',
       'graphql-relay',
