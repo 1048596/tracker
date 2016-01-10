@@ -10,10 +10,10 @@ Schell
 [ ]    Edit
 [x]  GroupPage
 [x]    IndexRoute: Info
-[ ]    Members
+[x]    Members
 [ ]    Images
 [ ]    Graphs (optional)
-[ ]    Edit
+[x]    Edit
 [ ]  ProfilePage
 [ ]  Settings
 [ ]    ProfileSettings
