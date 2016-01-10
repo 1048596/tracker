@@ -207,7 +207,7 @@ var addChapterMutation = mutationWithClientMutationId({
             return {
               cursor: cursorForObjectInConnection(chapters, chapters[position]),
               node: {
-                id: toGlobalId('Chapter', insertId),
+                id: insertId,
                 chapter_title: chapter_title,
                 chapter_number: parseInt(chapter_number),
                 manga_id: chapter[0].manga_id,
@@ -242,8 +242,14 @@ var addChapterMutation = mutationWithClientMutationId({
 var changeMangaMutation = mutationWithClientMutationId({
   name: 'ChangeManga',
   inputFields: {
+    id: {
+      type: new GraphQLNonNull(GraphQLInt)
+    },
     manga_title: {
       type: new GraphQLNonNull(GraphQLString)
+    },
+    descript: {
+      type: GraphQLString
     },
     authors: {
       type: new GraphQLList(GraphQLString)
@@ -264,8 +270,10 @@ var changeMangaMutation = mutationWithClientMutationId({
   outputFields: {
 
   },
-  mutateAndGetPayload: (payload) => {
-    
+  mutateAndGetPayload: ({ id, manga_title, authors, artists, status, type, genres }) => {
+    return mysql.updateManga(id, manga_title, descript, authors, artists, status, type, genres).then((value) => {
+      console.log('Updated: ' + manga_title);
+    });
   }
 });
 
