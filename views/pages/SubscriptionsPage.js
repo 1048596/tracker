@@ -5,8 +5,8 @@ import queryString from 'query-string';
 
 import { fromGlobalId } from 'graphql-relay';
 
-import ChapterItem from './ChapterItem.js';
-import PaginationButton from './PaginationButton.js';
+import ChapterItem from '../components/ChapterItem.js';
+import PaginationButton from '../components/PaginationButton.js';
 
 class SubscriptionsPage extends React.Component {
   nextPage(event) {

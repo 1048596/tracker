@@ -5,10 +5,11 @@ import queryString from 'query-string';
 
 import { fromGlobalId } from 'graphql-relay';
 
-import ChapterItem from './ChapterItem.js';
-import PaginationButton from './PaginationButton.js';
+import ChapterItem from '../components/ChapterItem.js';
+import PaginationButton from '../components/PaginationButton.js';
 
-class MangaPage extends React.Component {
+
+class MangaIndex extends React.Component {
   nextPage(event) {
     try {
       this.props.relay.setVariables({
@@ -30,7 +31,6 @@ class MangaPage extends React.Component {
     }
   }
   render() {
-
     let paginationButtonPreivous;
     let paginationButtonNext;
     let mapChapters;
@@ -164,7 +164,7 @@ class MangaPage extends React.Component {
   }
 }
 
-var Container = Relay.createContainer(MangaPage, {
+var Container = Relay.createContainer(MangaIndex, {
   initialVariables: {
     id: null,
     page: null,

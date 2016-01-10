@@ -239,6 +239,36 @@ var addChapterMutation = mutationWithClientMutationId({
   }
 });
 
+var changeMangaMutation = mutationWithClientMutationId({
+  name: 'ChangeManga',
+  inputFields: {
+    manga_title: {
+      type: new GraphQLNonNull(GraphQLString)
+    },
+    authors: {
+      type: new GraphQLList(GraphQLString)
+    },
+    artists: {
+      type: new GraphQLList(GraphQLString)
+    },
+    status: {
+      type: GraphQLInt
+    },
+    type: {
+      type: GraphQLString
+    },
+    genres: {
+      type: new GraphQLList(GraphQLString)
+    },
+  },
+  outputFields: {
+
+  },
+  mutateAndGetPayload: (payload) => {
+    
+  }
+});
+
 var mutationType = new GraphQLObjectType({
   name: 'Mutation',
   fields: {

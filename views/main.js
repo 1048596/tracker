@@ -1,26 +1,34 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Route, IndexRoute } from 'react-router';
+import { Route, IndexRoute, browserHistory } from 'react-router';
 import Relay from 'react-relay';
 import createBrowserHistory from 'history/lib/createBrowserHistory';
 import queryString from 'query-string';
 import { RelayRouter } from 'react-router-relay';
 import cookie from 'cookie';
-
 import { toGlobalId } from 'graphql-relay';
 
+// Views
 import Schell from './Schell.js';
-import LatestFeed from './pages/LatestChaptersPage.js';
-import SubscriptionsFeed from './pages/SubscriptionsPage.js';
-import GroupPage from './pages/GroupPage.js';
-import Upload from './Upload.js';
-import Login from './Login.js';
-import Register from './Register.js';
-import Authenticate from './Authenticate.js';
-import MangaPage from './MangaPage.js';
-import ChapterPage from './ChapterPage.js';
+import LatestChaptersPage from './pages/LatestChaptersPage.js';
+import SubscriptionsPage from './pages/SubscriptionsPage.js';
 
-import GroupInfo from './components/GroupInfo.js';
+// Manga page
+import MangaPage from './pages/MangaPage.js';
+import MangaIndex from './components/MangaIndex.js';
+import MangaEdit from './components/MangaEdit.js';
+
+//Group page
+import GroupPage from './pages/GroupPage.js';
+
+//Chapter page
+import ChapterPage from './pages/ChapterPage.js';
+
+import Upload from './pages/Upload.js';
+import Login from './pages/Login.js';
+import Register from './pages/Register.js';
+import Authenticate from './pages/Authenticate.js';
+
 
 
 /*
@@ -167,8 +175,24 @@ Relay.injectNetworkLayer(
   })
 );
 
+/*
+<Route path="chapter/:id"
+  component={ChapterPage}
+  queries={nodeIdRoute}
+  prepareParams={prepareChapterParams}
+/>
+<Route path="group/:id" component={GroupPage}>
+  <IndexRoute
+    component={GroupInfo}
+    queries={nodeIdAndPageRoute}
+    queryParams={['page', 'limit']}
+    prepareParams={prepareGroupParams}
+  />
+</Route>
+*/
+
 ReactDOM.render(
-  <RelayRouter history={createBrowserHistory()}>
+  <RelayRouter history={browserHistory}>
     <Route path="/" component={Schell}>
       <IndexRoute
         component={LatestChaptersPage}
@@ -183,7 +207,7 @@ ReactDOM.render(
         prepareParams={prepareLatestChapterAndSubscriptionsParams}
       />
       <Route path="subscriptions"
-        component={SubscriptionsFeed}
+        component={SubscriptionsPage}
         queries={subscriptionChapterRoute}
         queryParams={['page', 'limit']}
         prepareParams={prepareLatestChapterAndSubscriptionsParams}
@@ -192,31 +216,21 @@ ReactDOM.render(
       <Route path="login" component={Login}/>
       <Route path="register" component={Register}/>
       <Route path="authenticate" component={Authenticate} queries={userRoute}/>
-      <Route path="manga/:id" component={MangaPage}>
+      <Route path="manga/:id"
+        component={MangaPage}
+      >
         <IndexRoute
-          component={MangaInfo}
+          component={MangaIndex}
           queries={nodeIdPageAndLimitRoute}
           queryParams={['page', 'limit']}
           prepareParams={prepareMangaParams}
         />
-        <Route path="edit"
-          component={MangaEdit}
-          
-        />
       </Route>
-      <Route path="chapter/:id"
-        component={ChapterPage}
-        queries={nodeIdRoute}
-        prepareParams={prepareChapterParams}
+      <Route
+        path="edit"
+        component={MangaEdit}
       />
-      <Route path="group/:id" component={GroupPage}>
-        <IndexRoute
-          component={GroupInfo}
-          queries={nodeIdAndPageRoute}
-          queryParams={['page', 'limit']}
-          prepareParams={prepareGroupParams}
-        />
-      </Route>
+
     </Route>
   </RelayRouter>,
   document.getElementById('wrap')

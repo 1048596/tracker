@@ -1,7 +1,7 @@
 import React from 'react';
 import Relay from 'react-relay';
 
-import AddChapterMutation from './mutations/AddChapterMutation.js';
+import AddChapterMutation from '../mutations/AddChapterMutation.js';
 
 class Upload extends React.Component {
   constructor(props) {

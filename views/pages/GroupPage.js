@@ -7,7 +7,8 @@ import { fromGlobalId } from 'graphql-relay';
 
 import { Link, IndexLink } from 'react-router';
 
-import ChapterItem from './ChapterItem';
+import ChapterItem from '../components/ChapterItem.js';
+
 
 class GroupPage extends React.Component {
   render() {

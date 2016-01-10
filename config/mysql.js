@@ -5,7 +5,8 @@ var connection = mysql.createConnection({
   user: 'root',
   password: 'superhacker1',
   database: 'tracker',
-  timezone: 'utc'
+  timezone: 'utc',
+  multipleStatements: true,
 });
 
 /*
@@ -421,6 +422,50 @@ exports.getPermissionByGroupIdAndUsername = function(group_id, username) {
     var inserts = [group_id, username];
 
     sql = mysql.format(sql, inserts);
+
+    connection.query(sql, function(err, results) {
+      if (err) console.log(err);
+
+      resolve(results);
+    });
+  });
+};
+
+// Change info
+
+exports.updateManga = function(id, manga_title, descript, authors, artists, status, type, genres) {
+  return new Promise((resolve, reject) => {
+    var sql = (`UPDATE mangas SET manga_title = ?, descript = ?,
+       status = ?, type = ? where id = ?;`);
+
+    sql = mysql.format(sql, [manga_title, descript, status, type, id]);
+
+    var authorsSql = '';
+    var artistsSql = '';
+    var genresSql = '';
+
+    for (var i = 0; i < authors.length; i++) {
+      authorsSql = authorsSql + 'INSERT INTO authors (manga_id, creator_id) values (?, ?);'
+      authorsSql = mysql.format(authorsSql, [id, authors[i]]);
+    }
+
+    for (var i = 0; i < artists.length; i++) {
+      artistsSql = artistsSql + 'INSERT INTO artists (manga_id, creator_id) values (?, ?);'
+      artistsSql = mysql.format(artistsSql, [id, artists[i]]);
+    }
+
+    for (var i = 0; i < genre.length; i++) {
+      genresSql = genresSql + 'INSERT INTO genres (manga_id, genre) values (?, ?);'
+      genresSql = mysql.format(genresSql, [id, genre[i]]);
+    }
+
+    /* To remove a group, you need to remove all the chapters from the group.
+    for (var i = 0; i < groups.length; i++) {
+      groupsSql = groupsSql + 'INSERT INTO chapter_scanlated_by (chapter_id, group_id) values (?, ?);'
+      groupsSql = mysql.format(groupsSql, [id, groups[i]]);
+    }*/
+
+    sql = sql + authorsSql + artistsSql + genresSql;
 
     connection.query(sql, function(err, results) {
       if (err) console.log(err);
