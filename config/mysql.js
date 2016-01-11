@@ -436,7 +436,7 @@ exports.getPermissionByGroupIdAndUsername = function(group_id, username) {
 exports.updateManga = function(id, manga_title, descript, authors, artists, status, type, genres) {
   return new Promise((resolve, reject) => {
     var sql = (`UPDATE mangas SET manga_title = ?, descript = ?,
-       status = ?, type = ? where id = ?;`);
+       status = ?, type = ?, edited = now() where id = ?;`);
 
     sql = mysql.format(sql, [manga_title, descript, status, type, id]);
 

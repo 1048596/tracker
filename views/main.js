@@ -29,24 +29,6 @@ import Login from './pages/Login.js';
 import Register from './pages/Register.js';
 import Authenticate from './pages/Authenticate.js';
 
-
-
-/*
-function createRelayContainer(Component, props) {
-  if (Relay.isContainer(Component)) {
-    // Construct the RelayQueryConfig from the route and the router props.
-    return (
-      <Relay.RootContainer
-        Component={Component}
-        renderFetched={(data) => <Component {...props} {...data} />}
-        route={props.route.queries}
-      />
-    );
-  } else {
-    return <Component {...props}/>;
-  }
-}*/
-
 const chapterRoute = {
   allChapters: () => Relay.QL`
     query {
@@ -115,6 +97,8 @@ function prepareMangaParams(params, route) {
   let limit;
 
   console.log(params);
+  console.log('-----Route-----');
+  console.log(route);
   if (params.limit) {
     document.cookie = cookie.serialize('usr', 'limit=' + params.limit);
     limit = parseInt(params.limit, 10);
@@ -147,6 +131,12 @@ function prepareGroupParams(params, route) {
     page: params.page ? parseInt(params.page, 10) : 0,
   };
 }
+function prepareMangaEditParams(params, route) {
+  console.log(params.id);
+  return {
+    id: toGlobalId('Manga', parseInt(params.id, 10))
+  };
+}
 
 function prepareLatestChapterAndSubscriptionsParams(params, route) {
   let limit;
@@ -175,22 +165,6 @@ Relay.injectNetworkLayer(
   })
 );
 
-/*
-<Route path="chapter/:id"
-  component={ChapterPage}
-  queries={nodeIdRoute}
-  prepareParams={prepareChapterParams}
-/>
-<Route path="group/:id" component={GroupPage}>
-  <IndexRoute
-    component={GroupInfo}
-    queries={nodeIdAndPageRoute}
-    queryParams={['page', 'limit']}
-    prepareParams={prepareGroupParams}
-  />
-</Route>
-*/
-
 ReactDOM.render(
   <RelayRouter history={browserHistory}>
     <Route path="/" component={Schell}>
@@ -200,13 +174,15 @@ ReactDOM.render(
         queryParams={['page', 'limit']}
         prepareParams={prepareLatestChapterAndSubscriptionsParams}
       />
-      <Route path="feed"
+      <Route
+        path="feed"
         component={LatestChaptersPage}
         queries={chapterRoute}
         queryParams={['page', 'limit']}
         prepareParams={prepareLatestChapterAndSubscriptionsParams}
       />
-      <Route path="subscriptions"
+      <Route
+        path="subscriptions"
         component={SubscriptionsPage}
         queries={subscriptionChapterRoute}
         queryParams={['page', 'limit']}
@@ -225,12 +201,13 @@ ReactDOM.render(
           queryParams={['page', 'limit']}
           prepareParams={prepareMangaParams}
         />
+        <Route
+          path="edit"
+          component={MangaEdit}
+          queries={nodeIdRoute}
+          prepareParams={prepareMangaEditParams}
+        />
       </Route>
-      <Route
-        path="edit"
-        component={MangaEdit}
-      />
-
     </Route>
   </RelayRouter>,
   document.getElementById('wrap')

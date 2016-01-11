@@ -57,9 +57,21 @@ class Upload extends React.Component {
   render() {
     return (
       <div>
-        <input onChange={this._handleOnChange.bind(this)} name="chapter_title" placeholder="Chapter title"/>
-        <input onChange={this._handleOnChange.bind(this)} name="chapter_number" placeholder="Chapter number"/>
-        <input onChange={this._handleOnChange.bind(this)} name="manga_title" placeholder="Manga title"/>
+        <input
+          onChange={this._handleOnChange.bind(this)}
+          name="chapter_title"
+          placeholder="Chapter title"
+        />
+        <input
+          onChange={this._handleOnChange.bind(this)}
+          name="chapter_number"
+          placeholder="Chapter number"
+        />
+        <input
+          onChange={this._handleOnChange.bind(this)}
+          name="manga_title"
+          placeholder="Manga title"
+        />
         <button onClick={this.addChapter.bind(this)}>Add Chapter</button>
       </div>
     );
@@ -69,7 +81,6 @@ class Upload extends React.Component {
 var Container = Relay.createContainer(Upload, {
   initialVariables: {
     page: 0,
-    manga: 'Kakukaku Shikajika'
   },
   fragments: {
     allChapters: () => Relay.QL`

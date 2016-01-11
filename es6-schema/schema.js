@@ -171,7 +171,7 @@ var queryType = new GraphQLObjectType({
   })
 });
 
-//Mutation
+// Mutation
 var addChapterMutation = mutationWithClientMutationId({
   name: 'AddChapter',
   inputFields: {
@@ -233,14 +233,13 @@ var addChapterMutation = mutationWithClientMutationId({
         insertId: value.insertId,
         chapter_title: payload.chapter_title,
         chapter_number: payload.chapter_number,
-        manga_title: payload.manga_title
       };
     });
   }
 });
 
-var changeMangaMutation = mutationWithClientMutationId({
-  name: 'ChangeManga',
+var updateMangaMutation = mutationWithClientMutationId({
+  name: 'UpdateManga',
   inputFields: {
     id: {
       type: new GraphQLNonNull(GraphQLInt)
@@ -268,11 +267,17 @@ var changeMangaMutation = mutationWithClientMutationId({
     },
   },
   outputFields: {
-
+    null: {
+      type: GraphQLString,
+      resolve: () => {
+        return 'null';
+      }
+    }
   },
   mutateAndGetPayload: ({ id, manga_title, authors, artists, status, type, genres }) => {
     return mysql.updateManga(id, manga_title, descript, authors, artists, status, type, genres).then((value) => {
       console.log('Updated: ' + manga_title);
+      return;
     });
   }
 });
@@ -281,6 +286,7 @@ var mutationType = new GraphQLObjectType({
   name: 'Mutation',
   fields: {
     addChapter: addChapterMutation,
+    updateManga: updateMangaMutation,
   },
 });
 

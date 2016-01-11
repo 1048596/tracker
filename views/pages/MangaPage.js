@@ -75,8 +75,11 @@ class MangaPage extends React.Component {
     }
     */
     //Render this shit
+    console.log(this.props);
+
     return (
       <div>
+        <Link to={this.props.location.pathname + '/edit'}>Edit</Link>
         {this.props.children}
       </div>
     );
