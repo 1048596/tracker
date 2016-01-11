@@ -29,6 +29,8 @@ import Login from './pages/Login.js';
 import Register from './pages/Register.js';
 import Authenticate from './pages/Authenticate.js';
 
+import Ace from './Ace.js';
+
 const chapterRoute = {
   allChapters: () => Relay.QL`
     query {
@@ -192,7 +194,8 @@ ReactDOM.render(
       <Route path="login" component={Login}/>
       <Route path="register" component={Register}/>
       <Route path="authenticate" component={Authenticate} queries={userRoute}/>
-      <Route path="manga/:id"
+      <Route
+        path="manga/:id"
         component={MangaPage}
       >
         <IndexRoute
@@ -208,6 +211,10 @@ ReactDOM.render(
           prepareParams={prepareMangaEditParams}
         />
       </Route>
+      <Route
+        path="ace"
+        component={Ace}
+      />
     </Route>
   </RelayRouter>,
   document.getElementById('wrap')
