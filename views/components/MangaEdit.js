@@ -19,11 +19,9 @@ class MangaEdit extends React.Component {
     console.log(this.state);
   }
   _handleOnChange(event) {
-    (function (name, value) {
-      this.setState({
-        name: value
-      });
-    })(event.target.name, event.target.value);
+    this.setState({
+      event.target.name: event.target.value
+    });
   }
   _handleListOnChange() {
 
@@ -43,6 +41,14 @@ class MangaEdit extends React.Component {
           placeholder="Description"
           value={this.props.node.descript}
         />
+        <textarea
+          className="editor"
+          name="descript"
+          rows="7"
+          cols="40"
+          onChange={this._handleOnChange}>
+        </textarea>
+        <button onClick={this.callState}>Check state!</button>
       </div>
     );
   }
