@@ -19,36 +19,49 @@ class MangaEdit extends React.Component {
     console.log(this.state);
   }
   _handleOnChange(event) {
-    this.setState({
-      event.target.name: event.target.value
-    });
-  }
-  _handleListOnChange() {
+    let obj = {};
+    obj[event.target.name] = event.target.value;
 
+    this.setState(obj);
+  }
+  componentDidMount() {
+    let node = this.props.node;
+    let state = this.state;
+    let arr = [];
+    let obj = {};
+
+    for (let key in state) {
+      if (key in node) {
+        arr.push(key);
+      }
+    }
+
+    for (let key of arr) {
+      obj[key] = node[key];
+    }
+
+    this.setState(obj);
   }
   render() {
     return (
       <div>
         <input
-          onChange={this._handleOnChange.bind(this)}
           name="manga_title"
           placeholder="Manga title"
-          value={this.props.node.manga_title}
-        />
-        <input
+          defaultValue={this.props.node.manga_title}
           onChange={this._handleOnChange.bind(this)}
-          name="descript"
-          placeholder="Description"
-          value={this.props.node.descript}
         />
+        <br/>
         <textarea
           className="editor"
           name="descript"
+          placeholder="Description"
           rows="7"
           cols="40"
-          onChange={this._handleOnChange}>
+          defaultValue={this.props.node.descript}
+          onChange={this._handleOnChange.bind(this)}>
         </textarea>
-        <button onClick={this.callState}>Check state!</button>
+        <button onClick={this.callState.bind(this)}>Check state!</button>
       </div>
     );
   }
