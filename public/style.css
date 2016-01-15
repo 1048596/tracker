@@ -37,6 +37,9 @@ table.chapter-list td.created {
   font-size: 13px;
   font-weight: 700; }
 
+.form {
+  margin: 15px 0; }
+
 table.info-column-left {
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
