@@ -446,17 +446,17 @@ exports.updateManga = function(id, manga_title, descript, authors, artists, stat
 
     for (var i = 0; i < authors.length; i++) {
       authorsSql = authorsSql + 'INSERT INTO authors (manga_id, creator_id) values (?, ?);'
-      authorsSql = mysql.format(authorsSql, [id, authors[i]]);
+      authorsSql = mysql.format(authorsSql, [id, authors[i].creator_id]);
     }
 
     for (var i = 0; i < artists.length; i++) {
       artistsSql = artistsSql + 'INSERT INTO artists (manga_id, creator_id) values (?, ?);'
-      artistsSql = mysql.format(artistsSql, [id, artists[i]]);
+      artistsSql = mysql.format(artistsSql, [id, artists[i].creator_id]);
     }
 
-    for (var i = 0; i < genre.length; i++) {
+    for (var i = 0; i < genres.length; i++) {
       genresSql = genresSql + 'INSERT INTO genres (manga_id, genre) values (?, ?);'
-      genresSql = mysql.format(genresSql, [id, genre[i]]);
+      genresSql = mysql.format(genresSql, [id, genres[i].genre]);
     }
 
     /* To remove a group, you need to remove all the chapters from the group.

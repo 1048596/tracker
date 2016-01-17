@@ -14,7 +14,7 @@ class AddChapterMutation extends Relay.Mutation {
   getFatQuery() {
     return Relay.QL`
       fragment on AddChapterPayload {
-        newChapterEdge
+        uploadedChapter
       }
     `;
   }
@@ -23,12 +23,10 @@ class AddChapterMutation extends Relay.Mutation {
       type: 'REQUIRED_CHILDREN',
       children: [Relay.QL`
         fragment on AddChapterPayload {
-          newChapterEdge {
-            cursor,
-            node {
-              id,
-              chapter_title
-            }
+          uploadedChapter {
+            id,
+            chapter_title,
+            chapter_number
           }
         }
       `],

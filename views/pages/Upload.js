@@ -34,7 +34,6 @@ class Upload extends React.Component {
         chapter_title: this.state.chapter_title,
         chapter_number: parseInt(this.state.chapter_number),
         manga_title: this.state.manga_title,
-        allChapters: this.props.allChapters
       }),
       { onSuccess, onFailure }
     );

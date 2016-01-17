@@ -1,6 +1,13 @@
 import React from 'react';
 import Relay from 'react-relay';
+
+import {
+  fromGlobalId
+} from 'graphql-relay';
+
 import UpdateManga from '../mutations/UpdateManga.js';
+
+import Tag from './Tag.js';
 
 class MangaEdit extends React.Component {
   constructor(props) {
@@ -18,6 +25,33 @@ class MangaEdit extends React.Component {
   callState() {
     console.log(this.state);
   }
+  updateManga(event) {
+    var onSuccess = (response) => {
+      console.log('Success!');
+      alert('Success');
+      console.log(response);
+    };
+
+    var onFailure = (response) => {
+      console.log('Failed!');
+      alert('Failed');
+      console.log(response);
+    };
+
+    Relay.Store.update(
+      new UpdateManga({
+        id: fromGlobalId(this.props.node.id).id,
+        manga_title: this.state.manga_title,
+        descript: this.state.descript,
+        authors: this.state.authors,
+        artists: this.state.artists,
+        status: this.state.status,
+        type: this.state.type,
+        genres: this.state.genres
+      }),
+      { onSuccess, onFailure }
+    );
+  }
   test(event) {
     console.log(event.target.name);
   }
@@ -26,6 +60,36 @@ class MangaEdit extends React.Component {
     obj[event.target.name] = event.target.value;
 
     this.setState(obj);
+  }
+  keyDown(arrayName, objectName, value, key) {
+    if (this.state[arrayName] && value !== '' && key == 'Enter') {
+      let state = this.state[arrayName];
+      let pushObject = {};
+      pushObject[objectName] = value;
+      state.push(pushObject);
+
+      let setStateObject = {};
+      setStateObject[arrayName] = state;
+
+      this.setState(setStateObject);
+    } else if (this.state[arrayName] && key == 'Backspace' && value == '') {
+      let state = this.state[arrayName];
+      state.pop();
+
+      let setStateObject = {};
+      setStateObject[arrayName] = state;
+
+      this.setState(setStateObject);
+    }
+  }
+  deleteTag(arrayName, index) {
+    let state = this.state[arrayName];
+    state.splice(index, 1);
+
+    let setStateObject = {};
+    setStateObject[arrayName] = state;
+
+    this.setState(setStateObject);
   }
   componentDidMount() {
     let node = this.props.node;
@@ -57,7 +121,7 @@ class MangaEdit extends React.Component {
               name="manga_title"
               defaultValue={this.props.node.manga_title}
               onChange={this._handleOnChange.bind(this)}
-              />
+            />
           </dd>
         </dl>
         <dl className="form">
@@ -68,7 +132,6 @@ class MangaEdit extends React.Component {
             <textarea
               className="editor"
               name="descript"
-              placeholder="Description"
               rows="7"
               cols="40"
               defaultValue={this.props.node.descript}
@@ -81,12 +144,14 @@ class MangaEdit extends React.Component {
             Authors
           </dt>
           <dd>
-            <div>
-              <span>
-                {this.props.node.authors.map((author) => {
-                  return <span className="tag">{author.author_name}</span>
-                })}
-              </span>
+            <div className="tag-container clearfix">
+              <Tag
+                arrayName="authors"
+                array={this.state.authors}
+                objectName="author_name"
+                keyDown={this.keyDown.bind(this)}
+                deleteTag={this.deleteTag.bind(this)}
+                />
             </div>
           </dd>
         </dl>
@@ -95,7 +160,31 @@ class MangaEdit extends React.Component {
             Artists
           </dt>
           <dd>
-
+            <div className="tag-container clearfix">
+              <Tag
+                arrayName="artists"
+                array={this.state.artists}
+                objectName="artist_name"
+                keyDown={this.keyDown.bind(this)}
+                deleteTag={this.deleteTag.bind(this)}
+                />
+            </div>
+          </dd>
+        </dl>
+        <dl className="form">
+          <dt>
+            Genre
+          </dt>
+          <dd>
+            <div className="tag-container clearfix">
+              <Tag
+                arrayName="genres"
+                array={this.state.genres}
+                objectName="genre"
+                keyDown={this.keyDown.bind(this)}
+                deleteTag={this.deleteTag.bind(this)}
+                />
+            </div>
           </dd>
         </dl>
         <dl className="form">
@@ -131,6 +220,7 @@ class MangaEdit extends React.Component {
           </dd>
         </dl>
         <button onClick={this.callState.bind(this)}>Check state!</button>
+        <button onClick={this.updateManga.bind(this)}>Save edit</button>
       </div>
     );
   }
@@ -152,6 +242,13 @@ var Container = Relay.createContainer(MangaEdit, {
           authors {
             creator_id,
             author_name
+          },
+          artists {
+            creator_id,
+            artist_name
+          },
+          genres {
+            genre
           }
         }
       }

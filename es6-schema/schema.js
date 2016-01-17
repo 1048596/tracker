@@ -23,6 +23,8 @@ import {
   nodeDefinitions
 } from 'graphql-relay';
 
+import util from 'util';
+
 import mysql from '../config/mysql.js';
 
 import { nodeField }  from './node.js';
@@ -30,6 +32,9 @@ import { nodeField }  from './node.js';
 import { mangaConnection, mangaType } from './mangaType.js';
 import { chapterConnection, chapterType, chapterEdge } from './chapterType.js';
 import { groupConnection, groupType } from './groupType.js';
+import { authorType } from './authorType.js';
+import { artistType } from './artistType.js';
+import { genreType } from './genreType.js';
 
 //All types, lists
 var allChaptersType = new GraphQLObjectType({
@@ -185,7 +190,7 @@ var addChapterMutation = mutationWithClientMutationId({
       type: new GraphQLNonNull(GraphQLString)
     }
   },
-  outputFields: {
+  outputFields: {/*
     newChapterEdge: {
       type: chapterEdge,
       resolve: ({ insertId, chapter_title, chapter_number, manga_title }) => {
@@ -224,7 +229,23 @@ var addChapterMutation = mutationWithClientMutationId({
       resolve: () => {
         return {_id: 1};
       }
-    }
+    }*/
+    uploadedChapter: {
+      type: chapterType,
+      resolve: ({ insertId, chapter_title, chapter_number }) => {
+        return {
+          id: insertId,
+          chapter_title: chapter_title,
+          chapter_number: chapter_number
+        };
+      }
+    },
+    allChapters: {
+      type: allChaptersType,
+      resolve: () => {
+        return {_id: 1};
+      }
+    },
   },
   mutateAndGetPayload: (payload) => {
     return mysql.addChapter(payload.chapter_title, payload.chapter_number, payload.manga_title).then((value) => {
@@ -251,13 +272,13 @@ var updateMangaMutation = mutationWithClientMutationId({
       type: GraphQLString
     },
     authors: {
-      type: new GraphQLList(GraphQLString)
+      type: new GraphQLList(authorType)
     },
     artists: {
       type: new GraphQLList(GraphQLString)
     },
     status: {
-      type: GraphQLInt
+      type: GraphQLString
     },
     type: {
       type: GraphQLString
@@ -267,17 +288,37 @@ var updateMangaMutation = mutationWithClientMutationId({
     },
   },
   outputFields: {
-    null: {
-      type: GraphQLString,
-      resolve: () => {
-        return 'null';
+    updatedManga: {
+      type: mangaType,
+      resolve: ({ id, manga_title, descript, authors, artists, status, type, genres }) => {
+        console.log('Output fields on updatedManga returning!');
+        return {
+          id: id,
+          manga_title: manga_title,
+          descript: descript,
+          authors: authors,
+          artists: artists,
+          status: status,
+          type: type,
+          genres: genres
+        };
       }
     }
   },
-  mutateAndGetPayload: ({ id, manga_title, authors, artists, status, type, genres }) => {
+  mutateAndGetPayload: ({ id, manga_title, descript, authors, artists, status, type, genres }) => {
     return mysql.updateManga(id, manga_title, descript, authors, artists, status, type, genres).then((value) => {
       console.log('Updated: ' + manga_title);
-      return;
+      console.log(util.inspect(authors[0], false, null));
+      return {
+        id: id,
+        manga_title: manga_title,
+        descript: descript,
+        authors: authors,
+        artists: artists,
+        status: status,
+        type: type,
+        genres: genres
+      };
     });
   }
 });

@@ -1,0 +1,1 @@
+GraphQLInputObjectType instead of GraphQLObjectType! Change in the mutation.

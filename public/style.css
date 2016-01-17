@@ -40,6 +40,40 @@ table.chapter-list td.created {
 .form {
   margin: 15px 0; }
 
+.tag {
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  -ms-border-radius: 2px;
+  border-radius: 2px;
+  border: 1px solid #ddd;
+  margin-right: 5px;
+  padding: 3px 5px;
+  background-color: #eee;
+  line-height: 18px;
+  margin-bottom: 5px; }
+
+.tag-container {
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  -ms-border-radius: 2px;
+  border-radius: 2px;
+  border: 1px solid #ddd;
+  padding: 5px 5px 0 5px;
+  line-height: 10px; }
+
+.tag-input {
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  -ms-border-radius: 2px;
+  border-radius: 2px;
+  border: 1px solid #ddd;
+  padding: 3px 5px;
+  width: auto;
+  margin-bottom: 5px; }
+
+.delete-tag {
+  cursor: pointer; }
+
 table.info-column-left {
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;

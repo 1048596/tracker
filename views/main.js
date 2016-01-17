@@ -29,7 +29,7 @@ import Login from './pages/Login.js';
 import Register from './pages/Register.js';
 import Authenticate from './pages/Authenticate.js';
 
-import Ace from './Ace.js';
+import Test from './components/Test.js';
 
 const chapterRoute = {
   allChapters: () => Relay.QL`
@@ -212,8 +212,8 @@ ReactDOM.render(
         />
       </Route>
       <Route
-        path="ace"
-        component={Ace}
+        path="test"
+        component={Test}
       />
     </Route>
   </RelayRouter>,

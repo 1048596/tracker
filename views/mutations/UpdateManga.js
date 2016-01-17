@@ -1,13 +1,20 @@
 import Relay from 'react-relay';
 
 class UpdateMangaMutation extends Relay.Mutation {
+  static fragments = {
+    manga: () => Relay.QL`
+      fragment on Manga {
+        id,
+      }
+    `
+  };
   getMutation() {
     return Relay.QL`mutation { updateManga }`;
   }
   getFatQuery() {
     return Relay.QL`
       fragment on UpdateMangaPayload {
-        null
+        updatedManga
       }
     `;
   }
@@ -16,7 +23,13 @@ class UpdateMangaMutation extends Relay.Mutation {
       type: 'REQUIRED_CHILDREN',
       children: [Relay.QL`
         fragment on UpdateMangaPayload {
-          null
+          updatedManga {
+            id,
+            manga_title,
+            authors {
+              author_name
+            }
+          }
         }
       `],
     }];
@@ -34,3 +47,5 @@ class UpdateMangaMutation extends Relay.Mutation {
     };
   }
 }
+
+module.exports = UpdateMangaMutation;
