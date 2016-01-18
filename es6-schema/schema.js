@@ -36,6 +36,10 @@ import { authorType } from './authorType.js';
 import { artistType } from './artistType.js';
 import { genreType } from './genreType.js';
 
+import { authorInput} from './authorInput.js';
+import { artistInput } from './artistInput.js';
+import { genreInput } from './genreInput.js';
+
 //All types, lists
 var allChaptersType = new GraphQLObjectType({
   name: 'AllChapters',
@@ -272,10 +276,10 @@ var updateMangaMutation = mutationWithClientMutationId({
       type: GraphQLString
     },
     authors: {
-      type: new GraphQLList(authorType)
+      type: new GraphQLList(authorInput)
     },
     artists: {
-      type: new GraphQLList(GraphQLString)
+      type: new GraphQLList(artistInput)
     },
     status: {
       type: GraphQLString
@@ -284,7 +288,7 @@ var updateMangaMutation = mutationWithClientMutationId({
       type: GraphQLString
     },
     genres: {
-      type: new GraphQLList(GraphQLString)
+      type: new GraphQLList(genreInput)
     },
   },
   outputFields: {

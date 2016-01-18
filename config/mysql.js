@@ -435,27 +435,53 @@ exports.getPermissionByGroupIdAndUsername = function(group_id, username) {
 
 exports.updateManga = function(id, manga_title, descript, authors, artists, status, type, genres) {
   return new Promise((resolve, reject) => {
+    // Main update sql
     var sql = (`UPDATE mangas SET manga_title = ?, descript = ?,
-       status = ?, type = ?, edited = now() where id = ?;`);
+     status = ?, type = ?, edited = now() where id = ?;`);
 
-    sql = mysql.format(sql, [manga_title, descript, status, type, id]);
-
+    // Query variables to update lists.
     var authorsSql = '';
     var artistsSql = '';
     var genresSql = '';
 
+    // Use this instead of "status" and "type" directly
+    var statusInt;
+    var typeInt;
+
+    // Queries for getting the id of status, type
+    var statusIntSql = 'select * from status where status = ?';
+    var typeIntSql = 'select * from types where type = ?';
+
+    statusIntSql = mysql.format(statusIntSql, [status]);
+    typeIntSql = mysql.format(typeIntSql, [type]);
+
+    connection.query(statusIntSql, function(err, results) {
+      if (err) console.log(err);
+      statusInt = results[0].id;
+      console.log('Status 0');
+      console.log(statusInt);
+    });
+
+    connection.query(typeIntSql, function(err, results) {
+      if (err) console.log(err);
+      typeInt = results[0].id;
+      console.log('Type 1');
+      console.log(typeInt);
+    });
+
+    // Add sql to the list variables
     for (var i = 0; i < authors.length; i++) {
-      authorsSql = authorsSql + 'INSERT INTO authors (manga_id, creator_id) values (?, ?);'
+      authorsSql = authorsSql + 'INSERT IGNORE INTO authors (manga_id, creator_id) values (?, ?);'
       authorsSql = mysql.format(authorsSql, [id, authors[i].creator_id]);
     }
 
     for (var i = 0; i < artists.length; i++) {
-      artistsSql = artistsSql + 'INSERT INTO artists (manga_id, creator_id) values (?, ?);'
+      artistsSql = artistsSql + 'INSERT IGNORE INTO artists (manga_id, creator_id) values (?, ?);'
       artistsSql = mysql.format(artistsSql, [id, artists[i].creator_id]);
     }
 
     for (var i = 0; i < genres.length; i++) {
-      genresSql = genresSql + 'INSERT INTO genres (manga_id, genre) values (?, ?);'
+      genresSql = genresSql + 'INSERT IGNORE INTO genres (manga_id, genre) values (?, ?);'
       genresSql = mysql.format(genresSql, [id, genres[i].genre]);
     }
 
@@ -465,12 +491,33 @@ exports.updateManga = function(id, manga_title, descript, authors, artists, stat
       groupsSql = mysql.format(groupsSql, [id, groups[i]]);
     }*/
 
+    sql = mysql.format(sql, [manga_title, descript, statusInt, typeInt, id]);
+
     sql = sql + authorsSql + artistsSql + genresSql;
 
     connection.query(sql, function(err, results) {
       if (err) console.log(err);
-
+      console.log('Main update 2');
+      console.log(sql);
       resolve(results);
     });
+  });
+};
+
+exports.test = function() {
+  return new Promise((resolve, reject) => {
+    var sql = 'select id from mangas where id = 2;';
+
+    connection.query(sql, function(err, results) {
+      if (err) console.log(err);
+
+      connection.query('select * from genres where manga_id = ?;', results[0].id, function(err, results) {
+        if (err) console.log(err);
+
+        resolve(results);
+      });
+
+    });
+
   });
 };

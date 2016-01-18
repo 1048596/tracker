@@ -104,8 +104,11 @@ class MangaEdit extends React.Component {
     }
 
     for (let key of arr) {
+      console.log(key);
       obj[key] = node[key];
     }
+
+    console.log(obj.authors[0].__dataID__);
 
     this.setState(obj);
   }
