@@ -38,16 +38,13 @@ class MangaEdit extends React.Component {
       console.log(response);
     };
 
-    Relay.Store.update(
+    Relay.Store.commitUpdate(
       new UpdateManga({
         id: fromGlobalId(this.props.node.id).id,
         manga_title: this.state.manga_title,
         descript: this.state.descript,
-        authors: this.state.authors,
-        artists: this.state.artists,
         status: this.state.status,
         type: this.state.type,
-        genres: this.state.genres
       }),
       { onSuccess, onFailure }
     );

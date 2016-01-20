@@ -23,6 +23,6 @@ connection.query('select id from mangas where id = 2;', function(err, value) {
 
 var mysql = require('/Users/1048596/Desktop/tracker/config/mysql.js');
 
-mysql.test().then((value) => {
+mysql.addAuthor(3, 1).then((value) => {
   console.log(value);
 });

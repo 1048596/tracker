@@ -275,55 +275,109 @@ var updateMangaMutation = mutationWithClientMutationId({
     descript: {
       type: GraphQLString
     },
-    authors: {
-      type: new GraphQLList(authorInput)
-    },
-    artists: {
-      type: new GraphQLList(artistInput)
-    },
     status: {
       type: GraphQLString
     },
     type: {
       type: GraphQLString
     },
-    genres: {
-      type: new GraphQLList(genreInput)
-    },
   },
   outputFields: {
     updatedManga: {
       type: mangaType,
-      resolve: ({ id, manga_title, descript, authors, artists, status, type, genres }) => {
+      resolve: ({ id, manga_title, descript, status, type }) => {
         console.log('Output fields on updatedManga returning!');
         return {
           id: id,
           manga_title: manga_title,
           descript: descript,
-          authors: authors,
-          artists: artists,
           status: status,
           type: type,
-          genres: genres
         };
       }
     }
   },
-  mutateAndGetPayload: ({ id, manga_title, descript, authors, artists, status, type, genres }) => {
-    return mysql.updateManga(id, manga_title, descript, authors, artists, status, type, genres).then((value) => {
+  mutateAndGetPayload: ({ id, manga_title, descript, status, type}) => {
+    return mysql.updateManga(id, manga_title, descript, status, type).then((value) => {
       console.log('Updated: ' + manga_title);
-      console.log(util.inspect(authors[0], false, null));
       return {
         id: id,
         manga_title: manga_title,
         descript: descript,
-        authors: authors,
-        artists: artists,
         status: status,
         type: type,
-        genres: genres
       };
     });
+  }
+});
+
+var addAuthorMutation = mutationWithClientMutationId({
+  name: 'AddAuthor',
+  inputFields: {
+    manga_id: {
+      type: new GraphQLNonNull(GraphQLInt)
+    },
+    creator_id: {
+      type: new GraphQLNonNull(GraphQLInt)
+    }
+  },
+  outputFields: {
+    addedAuthor: {
+      type: authorType,
+      resolve: ({ manga_id, creator_id }) => {
+        return mysql.getCreatorById(creator_id).then((value) => {
+          console.log('Added author: ' + value[0].creator_name);
+          return {
+            manga_id: manga_id,
+            creator_id: creator_id,
+            author_name: value[0].creator_name
+          }
+        });
+      }
+    }
+  },
+  mutateAndGetPayload: ({ manga_id, creator_id }) => {
+    return mysql.addAuthor(manga_id, creator_id).then((value) => {
+      return {
+        manga_id: manga_id,
+        creator_id: creator_id
+      };
+    })
+  }
+});
+
+var deleteAuthorMutation = mutationWithClientMutationId({
+  name: 'DeleteAuthor',
+  inputFields: {
+    manga_id: {
+      type: new GraphQLNonNull(GraphQLInt)
+    },
+    creator_id: {
+      type: new GraphQLNonNull(GraphQLInt)
+    }
+  },
+  outputFields: {
+    deleteAuthor: {
+      type: authorType,
+      resolve: ({ manga_id, creator_id }) => {
+        return mysql.getCreatorById(creator_id).then((value) => {
+          console.log('Delete author: ' + value[0].creator_name);
+          return {
+            manga_id: manga_id,
+            creator_id: creator_id,
+            author_name: value[0].creator_name
+          }
+        });
+      }
+    }
+  },
+  mutateAndGetPayload: ({ manga_id, creator_id }) => {
+    return mysql.deleteAuthor(manga_id, creator_id).then((value) => {
+      return {
+        manga_id: manga_id,
+        creator_id: creator_id
+      };
+    })
   }
 });
 
