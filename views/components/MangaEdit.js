@@ -6,8 +6,22 @@ import {
 } from 'graphql-relay';
 
 import UpdateManga from '../mutations/UpdateManga.js';
+import AddAuthorMutation from '../mutations/AddAuthorMutation.js';
+import DeleteAuthorMutation from '../mutations/DeleteAuthorMutation.js';
 
 import Tag from './Tag.js';
+
+var onSuccess = (response) => {
+  console.log('Success!');
+  alert('Success');
+  console.log(response);
+};
+
+var onFailure = (response) => {
+  console.log('Failed!');
+  alert('Failed');
+  console.log(response);
+};
 
 class MangaEdit extends React.Component {
   constructor(props) {
@@ -26,18 +40,6 @@ class MangaEdit extends React.Component {
     console.log(this.state);
   }
   updateManga(event) {
-    var onSuccess = (response) => {
-      console.log('Success!');
-      alert('Success');
-      console.log(response);
-    };
-
-    var onFailure = (response) => {
-      console.log('Failed!');
-      alert('Failed');
-      console.log(response);
-    };
-
     Relay.Store.commitUpdate(
       new UpdateManga({
         id: fromGlobalId(this.props.node.id).id,
@@ -87,6 +89,14 @@ class MangaEdit extends React.Component {
     setStateObject[arrayName] = state;
 
     this.setState(setStateObject);
+
+    Relay.Store.commitUpdate({
+      new DeleteAuthorMutation({
+        manga_id: fromGlobalId(this.props.node.id).id,
+        creator_id: this.state.authors[index].creator_id
+      }),
+      { onSuccess, onFailure }
+    });
   }
   componentDidMount() {
     let node = this.props.node;
