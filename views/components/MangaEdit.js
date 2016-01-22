@@ -82,21 +82,24 @@ class MangaEdit extends React.Component {
     }
   }
   deleteTag(arrayName, index) {
+
     let state = this.state[arrayName];
-    state.splice(index, 1);
-
-    let setStateObject = {};
-    setStateObject[arrayName] = state;
-
-    this.setState(setStateObject);
-
-    Relay.Store.commitUpdate({
+    var transaction = Relay.Store.applyUpdate(
       new DeleteAuthorMutation({
         manga_id: fromGlobalId(this.props.node.id).id,
         creator_id: this.state.authors[index].creator_id
       }),
       { onSuccess, onFailure }
-    });
+    );
+    console.log(transaction);
+
+    state.splice(index, 1);
+
+    let setStateObject = {};
+    setStateObject[arrayName] = state;
+    
+    this.setState(setStateObject);
+
   }
   componentDidMount() {
     let node = this.props.node;
