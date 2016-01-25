@@ -95,6 +95,23 @@ const nodeIdRoute = {
   `,
 };
 
+const nodeIdAndSearchRoute = {
+  node: (Component, { id }) => Relay.QL`
+    query {
+      node(id: $id) {
+        ${Component.getFragment('node', { id })}
+      }
+    }
+  `,
+  search: (Component) => Relay.QL`
+    query {
+      search {
+        ${Component.getFragment('search')}
+      }
+    }
+  `
+};
+
 function prepareMangaParams(params, route) {
   let limit;
 
@@ -136,7 +153,7 @@ function prepareGroupParams(params, route) {
 function prepareMangaEditParams(params, route) {
   console.log(params.id);
   return {
-    id: toGlobalId('Manga', parseInt(params.id, 10))
+    id: toGlobalId('Manga', parseInt(params.id, 10)),
   };
 }
 
@@ -207,7 +224,7 @@ ReactDOM.render(
         <Route
           path="edit"
           component={MangaEdit}
-          queries={nodeIdRoute}
+          queries={nodeIdAndSearchRoute}
           prepareParams={prepareMangaEditParams}
         />
       </Route>

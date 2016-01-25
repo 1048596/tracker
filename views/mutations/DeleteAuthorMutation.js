@@ -9,7 +9,7 @@ class DeleteAuthorMutation extends Relay.Mutation {
     `
   };
   getMutation() {
-    return Relay.QL`mutation { addAuthor }`;
+    return Relay.QL`mutation { deleteAuthor }`;
   }
   getFatQuery() {
     return Relay.QL`
@@ -24,7 +24,6 @@ class DeleteAuthorMutation extends Relay.Mutation {
       children: [Relay.QL`
         fragment on DeleteAuthorPayload {
           deleteAuthor {
-            manga_id,
             creator_id,
             author_name
           }

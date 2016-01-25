@@ -35,6 +35,7 @@ import { groupConnection, groupType } from './groupType.js';
 import { authorType } from './authorType.js';
 import { artistType } from './artistType.js';
 import { genreType } from './genreType.js';
+import { creatorType } from './creatorType.js';
 
 import { authorInput} from './authorInput.js';
 import { artistInput } from './artistInput.js';
@@ -135,6 +136,25 @@ var userType = new GraphQLObjectType({
   })
 });
 
+var searchType = new GraphQLObjectType({
+  name: 'Search',
+  fields: () => ({
+    creators: {
+      type: new GraphQLList(creatorType),
+      args: {
+        name: {
+          type: GraphQLString
+        }
+      },
+      resolve: (rootValue, args) => {
+        return mysql.getCreatorsByName(args.name).then((value) => {
+          return value;
+        });
+      }
+    }
+  })
+});
+
 var queryType = new GraphQLObjectType({
   name: 'Query',
   fields: () => ({
@@ -162,6 +182,14 @@ var queryType = new GraphQLObjectType({
       resolve: (rootValue) => {
         return {
           _id: 1,
+          rootValue: rootValue
+        }
+      }
+    },
+    search: {
+      type: searchType,
+      resolve: (rootValue) => {
+        return {
           rootValue: rootValue
         }
       }
@@ -328,7 +356,6 @@ var addAuthorMutation = mutationWithClientMutationId({
         return mysql.getCreatorById(creator_id).then((value) => {
           console.log('Added author: ' + value[0].creator_name);
           return {
-            manga_id: manga_id,
             creator_id: creator_id,
             author_name: value[0].creator_name
           }
@@ -363,7 +390,6 @@ var deleteAuthorMutation = mutationWithClientMutationId({
         return mysql.getCreatorById(creator_id).then((value) => {
           console.log('Delete author: ' + value[0].creator_name);
           return {
-            manga_id: manga_id,
             creator_id: creator_id,
             author_name: value[0].creator_name
           }
@@ -386,6 +412,8 @@ var mutationType = new GraphQLObjectType({
   fields: {
     addChapter: addChapterMutation,
     updateManga: updateMangaMutation,
+    addAuthor: addAuthorMutation,
+    deleteAuthor: deleteAuthorMutation,
   },
 });
 

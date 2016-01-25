@@ -24,7 +24,6 @@ class AddAuthorMutation extends Relay.Mutation {
       children: [Relay.QL`
         fragment on AddAuthorPayload {
           addedAuthor {
-            manga_id,
             creator_id,
             author_name
           }

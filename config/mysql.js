@@ -323,6 +323,28 @@ exports.getCreatorById = function(id) {
   });
 };
 
+exports.getCreatorsByName = function(name) {
+  return new Promise((resolve, reject) => {
+    var sql = (`
+      select * from creators
+        where creator_name LIKE ?
+        ORDER BY CASE
+          WHEN creator_name LIKE ? THEN 0
+          WHEN creator_name LIKE ? THEN 1
+          ELSE 2
+        END
+        limit 5;`);
+
+    sql = mysql.format(sql, ['%' + name + '%', name + '%', '%' + name]);
+
+    connection.query(sql, function(err, results) {
+      if (err) console.log(err);
+
+      resolve(results);
+    });
+  });
+}
+
 
 // Artists
 
@@ -493,6 +515,8 @@ exports.deleteAuthor = function(manga_id, creator_id) {
     });
   });
 };
+
+
 
 /*
 // Add sql to the list variables
