@@ -323,7 +323,7 @@ exports.getCreatorById = function(id) {
   });
 };
 
-exports.getCreatorsByName = function(name) {
+exports.searchCreatorsByName = function(name) {
   return new Promise((resolve, reject) => {
     var sql = (`
       select * from creators

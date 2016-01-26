@@ -71,7 +71,7 @@ class MangaEdit extends React.Component {
       setStateObject[arrayName] = state;
 
       this.setState(setStateObject);
-    } else if (this.state[arrayName] && key == 'Backspace' && value == '') {
+    }/* else if (this.state[arrayName] && key == 'Backspace' && value == '') {
       let state = this.state[arrayName];
       state.pop();
 
@@ -79,7 +79,7 @@ class MangaEdit extends React.Component {
       setStateObject[arrayName] = state;
 
       this.setState(setStateObject);
-    }
+    }*/
   }
   deleteTag(arrayName, index) {
     let state = this.state[arrayName];

@@ -147,7 +147,7 @@ var searchType = new GraphQLObjectType({
         }
       },
       resolve: (rootValue, args) => {
-        return mysql.getCreatorsByName(args.name).then((value) => {
+        return mysql.searchCreatorsByName(args.name).then((value) => {
           return value;
         });
       }

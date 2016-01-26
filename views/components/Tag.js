@@ -29,29 +29,33 @@ class Tag extends React.Component {
   render() {
     return (
       <div>
-        <span className="clearfix left">
-          {this.props.array.map((obj, i) => {
-            return (
-              <span
-                className="tag left"
-              >
-                {obj[this.props.objectName]}
-                <a
-                  onClick={this._handleDeleteTag.bind(this, i)}
-                  className="delete-tag"
-                >
-                  x
-                </a>
-              </span>
-            );
-          })}
+        <div>
+          <span className="clearfix">
+            {this.props.array.map((obj, i) => {
+              return (
+                <span
+                  className="tag left"
+                  >
+                  {obj[this.props.objectName]}
+                  <a
+                    onClick={this._handleDeleteTag.bind(this, i)}
+                    className="delete-tag"
+                    >
+                    x
+                  </a>
+                </span>
+              );
+            })}
+          </span>
+        </div>
+        <div>
           <input
-            className="tag-input left"
+            className="tag-input"
             name={this.props.arrayName}
             onKeyDown={this._handleKeyDown.bind(this)}
             ref="tagInputValue"
-          />
-        </span>
+            />
+        </div>
       </div>
     );
   }
