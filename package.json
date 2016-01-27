@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "gulp babel-schema && node ./utils/updateSchema.js"
+    "build": "gulp babel-schema && node ./utils/updateSchema.js",
+    "dump": "mysqldump --databases tracker > ./sql/tracker.sql -u root -p"
   },
   "author": "",
   "license": "ISC",

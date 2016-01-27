@@ -343,7 +343,7 @@ exports.searchCreatorsByName = function(name) {
       resolve(results);
     });
   });
-}
+};
 
 
 // Artists
@@ -410,7 +410,7 @@ exports.getStatusByStatusId = function(id) {
 
 exports.getGenresByMangaId = function(id) {
   return new Promise((resolve, reject) => {
-    var sql = 'select genre from genres where manga_id = ?';
+    var sql = 'select id, genre from manga_genres mg join genres g on mg.genre_id = g.id where mg.manga_id = ?;';
 
     connection.query(sql, id, function(err, results) {
       if (err) console.log(err);

@@ -151,7 +151,18 @@ var searchType = new GraphQLObjectType({
           return value;
         });
       }
-    }
+    },
+    /*genres: {
+      type: new GraphQLList(genreType),
+      args: {
+        genre: {
+          type: GraphQLString
+        }
+      },
+      resolve: (rootValue, args) => {
+        return
+      }
+    }*/
   })
 });
 

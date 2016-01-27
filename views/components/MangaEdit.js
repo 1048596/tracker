@@ -83,14 +83,14 @@ class MangaEdit extends React.Component {
   }
   deleteTag(arrayName, index) {
     let state = this.state[arrayName];
-    var transaction = Relay.Store.applyUpdate(
+    /*var transaction = Relay.Store.applyUpdate(
       new DeleteAuthorMutation({
         manga_id: fromGlobalId(this.props.node.id).id,
         creator_id: this.state.authors[index].creator_id
       }),
       { onSuccess, onFailure }
     );
-    console.log(transaction);
+    console.log(transaction);*/
 
     state.splice(index, 1);
 
@@ -163,6 +163,7 @@ class MangaEdit extends React.Component {
                 objectName="author_name"
                 keyDown={this.keyDown.bind(this)}
                 deleteTag={this.deleteTag.bind(this)}
+                onChange={}
               />
             </div>
           </dd>
@@ -261,6 +262,7 @@ var Container = Relay.createContainer(MangaEdit, {
             artist_name
           },
           genres {
+            id,
             genre
           }
         }

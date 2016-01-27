@@ -30,6 +30,9 @@ import {registerType} from './registry';
 export const genreType = registerType(new GraphQLObjectType({
   name: 'Genre',
   fields: () => ({
+    id: {
+      type: GraphQLString
+    },
     genre: {
       type: GraphQLString
     }

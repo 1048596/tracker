@@ -1,0 +1,9 @@
+insert into manga_genres (manga_id, genre_id) values (1, 3);
+insert into manga_genres (manga_id, genre_id) values (1, 5);
+insert into manga_genres (manga_id, genre_id) values (1, 7);
+insert into manga_genres (manga_id, genre_id) values (2, 1);
+insert into manga_genres (manga_id, genre_id) values (2, 2);
+insert into manga_genres (manga_id, genre_id) values (2, 4);
+insert into manga_genres (manga_id, genre_id) values (3, 1);
+insert into manga_genres (manga_id, genre_id) values (3, 4);
+insert into manga_genres (manga_id, genre_id) values (3, 6);
