@@ -16,6 +16,14 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Current Database: `tracker`
+--
+
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `tracker` /*!40100 DEFAULT CHARACTER SET utf8 */;
+
+USE `tracker`;
+
+--
 -- Table structure for table `artists`
 --
 
@@ -187,12 +195,10 @@ DROP TABLE IF EXISTS `genres`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `genres` (
-  `manga_id` int(10) unsigned NOT NULL,
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `genre` varchar(70) NOT NULL,
-  PRIMARY KEY (`manga_id`,`genre`),
-  KEY `manga_id` (`manga_id`),
-  CONSTRAINT `genres_ibfk_1` FOREIGN KEY (`manga_id`) REFERENCES `mangas` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`id`,`genre`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -201,7 +207,7 @@ CREATE TABLE `genres` (
 
 LOCK TABLES `genres` WRITE;
 /*!40000 ALTER TABLE `genres` DISABLE KEYS */;
-INSERT INTO `genres` VALUES (1,'Action'),(1,'Mystery'),(1,'Psychological'),(2,'Comedy'),(2,'Slice of Life'),(3,'Comedy'),(3,'Romance'),(3,'School Life');
+INSERT INTO `genres` VALUES (1,'School Life'),(2,'Slice of Life'),(3,'Action'),(4,'Comedy'),(5,'Tradegy'),(6,'Romance'),(7,'Shounen'),(8,'Shoujo');
 /*!40000 ALTER TABLE `genres` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -233,6 +239,34 @@ LOCK TABLES `groups` WRITE;
 /*!40000 ALTER TABLE `groups` DISABLE KEYS */;
 INSERT INTO `groups` VALUES (1,'Twisted Hel Scans','Translates Tokyo Ghoul and was in a bit of a drama around translations.','2015-10-29 11:28:12',NULL,'asdf'),(2,'Game of Scanlation','Scanlation group created by Allafta.','2015-10-29 11:28:12',NULL,'tonton'),(3,'Testing Group','This is just a test for groups.','2015-12-21 12:25:44',NULL,'asdf');
 /*!40000 ALTER TABLE `groups` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `manga_genres`
+--
+
+DROP TABLE IF EXISTS `manga_genres`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `manga_genres` (
+  `manga_id` int(10) unsigned NOT NULL,
+  `genre_id` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`manga_id`,`genre_id`),
+  KEY `manga_id` (`manga_id`),
+  KEY `genre_id` (`genre_id`),
+  CONSTRAINT `manga_genres_ibfk_1` FOREIGN KEY (`manga_id`) REFERENCES `mangas` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `manga_genres_ibfk_2` FOREIGN KEY (`genre_id`) REFERENCES `genres` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `manga_genres`
+--
+
+LOCK TABLES `manga_genres` WRITE;
+/*!40000 ALTER TABLE `manga_genres` DISABLE KEYS */;
+INSERT INTO `manga_genres` VALUES (1,3),(1,5),(1,7),(2,1),(2,2),(2,4),(3,1),(3,4),(3,6);
+/*!40000 ALTER TABLE `manga_genres` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -432,4 +466,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-01-06  0:21:34
+-- Dump completed on 2016-01-28 14:58:41

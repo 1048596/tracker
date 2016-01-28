@@ -98,7 +98,8 @@ class MangaEdit extends React.Component {
     setStateObject[arrayName] = state;
 
     this.setState(setStateObject);
-
+  }
+  creatorSuggestion(event) {
   }
   componentDidMount() {
     let node = this.props.node;
@@ -163,7 +164,6 @@ class MangaEdit extends React.Component {
                 objectName="author_name"
                 keyDown={this.keyDown.bind(this)}
                 deleteTag={this.deleteTag.bind(this)}
-                onChange={}
               />
             </div>
           </dd>

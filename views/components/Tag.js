@@ -33,14 +33,12 @@ class Tag extends React.Component {
           <span className="clearfix">
             {this.props.array.map((obj, i) => {
               return (
-                <span
-                  className="tag left"
-                  >
+                <span className="tag left">
                   {obj[this.props.objectName]}
                   <a
                     onClick={this._handleDeleteTag.bind(this, i)}
                     className="delete-tag"
-                    >
+                  >
                     x
                   </a>
                 </span>
@@ -54,7 +52,7 @@ class Tag extends React.Component {
             name={this.props.arrayName}
             onKeyDown={this._handleKeyDown.bind(this)}
             ref="tagInputValue"
-            />
+          />
         </div>
       </div>
     );
@@ -62,11 +60,3 @@ class Tag extends React.Component {
 }
 
 module.exports = Tag;
-
-
-/*
-
-
-
-
-*/
