@@ -160,7 +160,9 @@ var searchType = new GraphQLObjectType({
         }
       },
       resolve: (rootValue, args) => {
-        return
+        return mysql.searchGenresByGenre(args.genre).then((value) => {
+          return value
+        });
       }
     }
   })

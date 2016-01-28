@@ -91,7 +91,7 @@ class MangaIndex extends React.Component {
                   {this.props.node.authors.map((author, i) => {
                     return (<span key={i} className="info-row-item">
                         <Link to={'/creator/' + author.creator_id}>
-                          {author.author_name}
+                          {author.creator_name}
                         </Link>
                       </span>);
                   })}
@@ -103,7 +103,7 @@ class MangaIndex extends React.Component {
                   {this.props.node.artists.map((artist, i) => {
                     return (<span key={i} className="info-row-item">
                         <Link to={'/creator/' + artist.creator_id}>
-                          {artist.artist_name}
+                          {artist.creator_name}
                         </Link>
                       </span>);
                   })}
@@ -185,12 +185,12 @@ var Container = Relay.createContainer(MangaIndex, {
           status,
           chapter_count,
           authors {
-            creator_id,
-            author_name
+            id,
+            creator_name
           },
           artists {
-            creator_id,
-            artist_name
+            id,
+            creator_name
           }
           chapters (first: $limit, page: $page) {
             pageInfo {

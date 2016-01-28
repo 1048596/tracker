@@ -9,7 +9,8 @@ class Tag extends React.Component {
     keyDown: React.PropTypes.func.isRequired,
     deleteTag: React.PropTypes.func.isRequired,
     search: React.PropTypes.func,
-    results: React.PropTypes.array
+    relayVariableName: React.PropTypes.string,
+    results: React.PropTypes.array,
   };
   constructor(props) {
     super(props);
@@ -39,8 +40,8 @@ class Tag extends React.Component {
       index
     );
   }
-  _handleChange(event) {
-    this.props.search(event.target.value);
+  _handleSearch(event) {
+    this.props.search(this.props.relayVariableName, event.target.value);
     this.setState({
       input: event.target.value
     });
@@ -80,7 +81,7 @@ class Tag extends React.Component {
             className="tag-input"
             name={this.props.arrayName}
             onKeyDown={this._handleKeyDown.bind(this)}
-            onChange={this._handleChange.bind(this)}
+            onChange={this._handleSearch.bind(this)}
             onFocus={this.handleFocus.bind(this)}
             onBlur={this.handleBlur.bind(this)}
           />

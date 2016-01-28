@@ -32,8 +32,10 @@ import { chapterConnection } from './chapterType';
 import { groupConnection } from './groupType';
 import { genreType } from './genreType';
 
-import { authorType } from './authorType';
-import { artistType } from './artistType';
+//import { authorType } from './authorType';
+//import { artistType } from './artistType';
+
+import { creatorType } from './creatorType';
 
 export const mangaType = registerType(new GraphQLObjectType({
   name: 'Manga',
@@ -84,7 +86,7 @@ export const mangaType = registerType(new GraphQLObjectType({
       }
     },
     authors: {
-      type: new GraphQLList(authorType),
+      type: new GraphQLList(creatorType),
       resolve: (root, args) => {
         return mysql.getAuthorsByMangaId(root.id).then((value) => {
           return value;
@@ -92,7 +94,7 @@ export const mangaType = registerType(new GraphQLObjectType({
       }
     },
     artists: {
-      type: new GraphQLList(artistType),
+      type: new GraphQLList(creatorType),
       resolve: (root, args) => {
         return mysql.getArtistsByMangaId(root.id).then((value) => {
           return value;

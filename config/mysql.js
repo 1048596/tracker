@@ -422,6 +422,29 @@ exports.getGenresByMangaId = function(id) {
   });
 };
 
+exports.searchGenresByGenre = function(genre) {
+  return new Promise((resolve, reject) => {
+    var sql = (`
+      select * from genres
+        where genre LIKE ?
+        ORDER BY CASE
+          WHEN genre LIKE ? THEN 0
+          WHEN genre LIKE ? THEN 1
+          ELSE 2
+        END
+        limit 5;
+      `);
+
+      sql = mysql.format(sql, ['%' + genre + '%', genre + '%', '%' + genre]);
+
+    connection.query(sql, genre, function(err, results) {
+      if (err) console.log(err);
+
+      resolve(results);
+    });
+  });
+};
+
 // Chapter count
 
 exports.getChapterCountByMangaId = function(id) {

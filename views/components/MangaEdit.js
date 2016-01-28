@@ -99,15 +99,15 @@ class MangaEdit extends React.Component {
 
     this.setState(setStateObject);
   }
-  searchCreator(word) {
+  searchQuery(relayVariableName, word) {
+    let setVariablesObject = {};
+
     if (word == "") {
-      this.props.relay.setVariables({
-        searchCreatorWord: null
-      });
+      setVariablesObject[relayVariableName] = null;
+      this.props.relay.setVariables(setVariablesObject);
     } else {
-      this.props.relay.setVariables({
-        searchCreatorWord: word
-      });
+      setVariablesObject[relayVariableName] = word;
+      this.props.relay.setVariables(setVariablesObject);
     }
   }
   componentDidMount() {
@@ -170,10 +170,11 @@ class MangaEdit extends React.Component {
               <Tag
                 arrayName="authors"
                 array={this.state.authors}
-                objectName="author_name"
+                objectName="creator_name"
                 keyDown={this.keyDown.bind(this)}
                 deleteTag={this.deleteTag.bind(this)}
-                search={this.searchCreator.bind(this)}
+                search={this.searchQuery.bind(this, )}
+                relayVariableName="searchCreatorWord"
                 results={this.props.searchCreators.creators}
               />
             </div>
@@ -188,10 +189,11 @@ class MangaEdit extends React.Component {
               <Tag
                 arrayName="artists"
                 array={this.state.artists}
-                objectName="artist_name"
+                objectName="creator_name"
                 keyDown={this.keyDown.bind(this)}
                 deleteTag={this.deleteTag.bind(this)}
-                search={this.searchCreator.bind(this)}
+                search={this.searchQuery.bind(this)}
+                relayVariableName="searchCreatorWord"
                 results={this.props.searchCreators.creators}
               />
             </div>
@@ -209,7 +211,8 @@ class MangaEdit extends React.Component {
                 objectName="genre"
                 keyDown={this.keyDown.bind(this)}
                 deleteTag={this.deleteTag.bind(this)}
-                search={this.searchCreators.bind(this)}
+                search={this.searchQuery.bind(this)}
+                relayVariableName="searchGenreWord"
                 results={this.props.searchGenres.genres}
               />
             </div>
@@ -270,12 +273,12 @@ var Container = Relay.createContainer(MangaEdit, {
           status,
           type,
           authors {
-            creator_id,
-            author_name
+            id,
+            creator_name
           },
           artists {
-            creator_id,
-            artist_name
+            id,
+            creator_name
           },
           genres {
             id,

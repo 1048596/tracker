@@ -23,6 +23,7 @@ connection.query('select id from mangas where id = 2;', function(err, value) {
 
 var mysql = require('/Users/1048596/Desktop/tracker/config/mysql.js');
 
-mysql.getCreatorsByName('Akiko').then((value) => {
+mysql.searchGenresByGenre('').then((value) => {
+  console.log('yo');
   console.log(value);
 });
