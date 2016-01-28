@@ -152,7 +152,7 @@ var searchType = new GraphQLObjectType({
         });
       }
     },
-    /*genres: {
+    genres: {
       type: new GraphQLList(genreType),
       args: {
         genre: {
@@ -162,7 +162,7 @@ var searchType = new GraphQLObjectType({
       resolve: (rootValue, args) => {
         return
       }
-    }*/
+    }
   })
 });
 

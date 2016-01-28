@@ -103,10 +103,17 @@ const nodeIdAndSearchRoute = {
       }
     }
   `,
-  search: (Component) => Relay.QL`
+  searchCreators: (Component) => Relay.QL`
     query {
       search {
-        ${Component.getFragment('search')}
+        ${Component.getFragment('searchCreators')}
+      }
+    }
+  `,
+  searchGenres: (Component) => Relay.QL`
+    query {
+      search {
+        ${Component.getFragment('searchGenres')}
       }
     }
   `

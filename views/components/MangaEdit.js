@@ -99,7 +99,16 @@ class MangaEdit extends React.Component {
 
     this.setState(setStateObject);
   }
-  creatorSuggestion(event) {
+  searchCreator(word) {
+    if (word == "") {
+      this.props.relay.setVariables({
+        searchCreatorWord: null
+      });
+    } else {
+      this.props.relay.setVariables({
+        searchCreatorWord: word
+      });
+    }
   }
   componentDidMount() {
     let node = this.props.node;
@@ -164,6 +173,8 @@ class MangaEdit extends React.Component {
                 objectName="author_name"
                 keyDown={this.keyDown.bind(this)}
                 deleteTag={this.deleteTag.bind(this)}
+                search={this.searchCreator.bind(this)}
+                results={this.props.searchCreators.creators}
               />
             </div>
           </dd>
@@ -180,6 +191,8 @@ class MangaEdit extends React.Component {
                 objectName="artist_name"
                 keyDown={this.keyDown.bind(this)}
                 deleteTag={this.deleteTag.bind(this)}
+                search={this.searchCreator.bind(this)}
+                results={this.props.searchCreators.creators}
               />
             </div>
           </dd>
@@ -196,7 +209,9 @@ class MangaEdit extends React.Component {
                 objectName="genre"
                 keyDown={this.keyDown.bind(this)}
                 deleteTag={this.deleteTag.bind(this)}
-                />
+                search={this.searchCreators.bind(this)}
+                results={this.props.searchGenres.genres}
+              />
             </div>
           </dd>
         </dl>
@@ -242,7 +257,8 @@ class MangaEdit extends React.Component {
 var Container = Relay.createContainer(MangaEdit, {
   initialVariables: {
     id: null,
-    searchWord: null,
+    searchCreatorWord: null,
+    searchGenreWord: null,
   },
   fragments: {
     node: () => Relay.QL`
@@ -268,12 +284,22 @@ var Container = Relay.createContainer(MangaEdit, {
         }
       }
     `,
-    search: () => Relay.QL`
+    searchCreators: () => Relay.QL`
       fragment on Search {
-        creators(name: $searchWord) {
+        creators(name: $searchCreatorWord) {
           ... on Creator {
             id,
             creator_name
+          }
+        }
+      }
+    `,
+    searchGenres: () => Relay.QL`
+      fragment on Search {
+        genres(genre: $searchGenreWord) {
+          ... on Genre {
+            id,
+            genre
           }
         }
       }

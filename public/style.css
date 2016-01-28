@@ -37,6 +37,12 @@ table.chapter-list td.created {
   font-size: 13px;
   font-weight: 700; }
 
+.drop-down {
+  z-index: 100; }
+
+.drop-down-item {
+  z-index: 101; }
+
 .form {
   margin: 15px 0; }
 
