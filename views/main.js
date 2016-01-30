@@ -10,7 +10,7 @@ import { toGlobalId } from 'graphql-relay';
 
 // Views
 import Schell from './Schell.js';
-import LatestChaptersPage from './pages/LatestChaptersPage.js';
+import FeedPage from './pages/FeedPage.js';
 import SubscriptionsPage from './pages/SubscriptionsPage.js';
 
 // Manga page
@@ -31,159 +31,13 @@ import Authenticate from './pages/Authenticate.js';
 
 import Test from './components/Test.js';
 
-const chapterRoute = {
-  allChapters: () => Relay.QL`
-    query {
-      allChapters
-    }
-  `,
-};
-
-const subscriptionChapterRoute = {
-  subscriptionChapters: () => Relay.QL`
-    query {
-      subscriptionChapters
-    }
-  `,
-};
-
-const mangaRoute = {
-  allMangas: (Component, { id, page }) => Relay.QL`
-    query {
-      allMangas {
-        ${Component.getFragment('allMangas', { id, page }) }
-      }
-    }
-  `,
-};
-
-const userRoute = {
-  authenticate: () => Relay.QL`
-    query {
-      authenticate
-    }
-  `,
-};
-
-const nodeIdAndPageRoute = {
-  node: (Component, { id, page }) => Relay.QL`
-    query {
-      node(id: $id) {
-        ${Component.getFragment('node', { id, page })}
-      }
-    }
-  `,
-};
-
-const nodeIdPageAndLimitRoute = {
-  node: (Component, { id, page, limit }) => Relay.QL`
-    query {
-      node(id: $id) {
-        ${Component.getFragment('node', { id, page, limit }) }
-      }
-    }
-  `,
-};
-
-const nodeIdRoute = {
-  node: (Component, { id }) => Relay.QL`
-    query {
-      node(id: $id) {
-        ${Component.getFragment('node', { id })}
-      }
-    }
-  `,
-};
-
-const nodeIdAndSearchRoute = {
-  node: (Component, { id }) => Relay.QL`
-    query {
-      node(id: $id) {
-        ${Component.getFragment('node', { id })}
-      }
-    }
-  `,
-  searchCreators: (Component) => Relay.QL`
-    query {
-      search {
-        ${Component.getFragment('searchCreators')}
-      }
-    }
-  `,
-  searchGenres: (Component) => Relay.QL`
-    query {
-      search {
-        ${Component.getFragment('searchGenres')}
-      }
-    }
-  `
-};
-
-function prepareMangaParams(params, route) {
-  let limit;
-
-  console.log(params);
-  console.log('-----Route-----');
-  console.log(route);
-  if (params.limit) {
-    document.cookie = cookie.serialize('usr', 'limit=' + params.limit);
-    limit = parseInt(params.limit, 10);
-  } else if (document.cookie) {
-    limit = parseInt(queryString.parse(cookie.parse(document.cookie).usr).limit, 10);
-    console.log(limit);
-  } else {
-    document.cookie = cookie.serialize('usr', 'limit=50');
-    limit = 50;
-  }
-
-  return {
-    id: toGlobalId('Manga', parseInt(params.id, 10)),
-    page: params.page ? parseInt(params.page, 10) : 0,
-    limit: limit
-  };
-}
-
-function prepareChapterParams(params, route) {
-  console.log(params);
-  return {
-    id: toGlobalId('Chapter', parseInt(params.id, 10))
-  };
-}
-
-function prepareGroupParams(params, route) {
-  console.log(params);
-  return {
-    id: toGlobalId('Group', parseInt(params.id, 10)),
-    page: params.page ? parseInt(params.page, 10) : 0,
-  };
-}
-function prepareMangaEditParams(params, route) {
-  console.log(params.id);
-  return {
-    id: toGlobalId('Manga', parseInt(params.id, 10)),
-  };
-}
-
-function prepareLatestChapterAndSubscriptionsParams(params, route) {
-  let limit;
-
-  console.log(params);
-  if (params.limit) {
-    document.cookie = cookie.serialize('usr', 'limit=' + params.limit);
-    limit = parseInt(params.limit, 10);
-  } else if (document.cookie) {
-    limit = parseInt(queryString.parse(cookie.parse(document.cookie).usr).limit, 10);
-    console.log(limit);
-  } else {
-    document.cookie = cookie.serialize('usr', 'limit=50');
-    limit = 50;
-  }
-
-  return {
-    page: params.page ? parseInt(params.page, 10) : 0,
-    limit: limit
-  };
-}
+// Routes
+import { MangaIndexQueries, prepareMangaIndexParams } from './routes/MangaIndexRoute.js';
+import { FeedQueries, prepareFeedParams } from './routes/FeedRoute.js';
+import { SubscriptionQueries, prepareSubscriptionParams } from './routes/SubscriptionRoute.js';
+import { MangaEditQueries, prepareMangaEditParams } from './routes/MangaEditRoute.js';
+import { UploadQueries } from './routes/UploadRoute.js';
+import { AuthenticateQueries } from './routes/AuthenticateRoute.js';
 
 Relay.injectNetworkLayer(
   new Relay.DefaultNetworkLayer('http://localhost:1337/graphql', {
@@ -195,43 +49,43 @@ ReactDOM.render(
   <RelayRouter history={browserHistory}>
     <Route path="/" component={Schell}>
       <IndexRoute
-        component={LatestChaptersPage}
-        queries={chapterRoute}
+        component={FeedPage}
+        queries={FeedQueries}
         queryParams={['page', 'limit']}
-        prepareParams={prepareLatestChapterAndSubscriptionsParams}
+        prepareParams={prepareFeedParams}
       />
       <Route
         path="feed"
-        component={LatestChaptersPage}
-        queries={chapterRoute}
+        component={FeedPage}
+        queries={FeedQueries}
         queryParams={['page', 'limit']}
-        prepareParams={prepareLatestChapterAndSubscriptionsParams}
+        prepareParams={prepareFeedParams}
       />
       <Route
         path="subscriptions"
         component={SubscriptionsPage}
-        queries={subscriptionChapterRoute}
+        queries={SubscriptionQueries}
         queryParams={['page', 'limit']}
-        prepareParams={prepareLatestChapterAndSubscriptionsParams}
+        prepareParams={prepareSubscriptionParams}
       />
-      <Route path="upload" component={Upload} queries={chapterRoute}/>
+    <Route path="upload" component={Upload} queries={UploadQueries}/>
       <Route path="login" component={Login}/>
       <Route path="register" component={Register}/>
-      <Route path="authenticate" component={Authenticate} queries={userRoute}/>
+      <Route path="authenticate" component={Authenticate} queries={AuthenticateQueries}/>
       <Route
         path="manga/:id"
         component={MangaPage}
       >
         <IndexRoute
           component={MangaIndex}
-          queries={nodeIdPageAndLimitRoute}
+          queries={MangaIndexQueries}
           queryParams={['page', 'limit']}
-          prepareParams={prepareMangaParams}
+          prepareParams={prepareMangaIndexParams}
         />
         <Route
           path="edit"
           component={MangaEdit}
-          queries={nodeIdAndSearchRoute}
+          queries={MangaEditQueries}
           prepareParams={prepareMangaEditParams}
         />
       </Route>

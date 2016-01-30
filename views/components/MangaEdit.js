@@ -38,14 +38,11 @@ class MangaEdit extends React.Component {
   }
   callState() {
     console.log(this.state);
-    /*let transactions = this.props.relay.getPendingTransactions({
-      __dataID__: "Q3JlYXRvcjox"
-    });*/
   }
   updateManga(event) {
     Relay.Store.commitUpdate(
       new UpdateManga({
-        id: fromGlobalId(this.props.node.id).id,
+        id: fromGlobalId(this.props.viewer.id).id,
         manga_title: this.state.manga_title,
         descript: this.state.descript,
         status: this.state.status,
@@ -74,70 +71,18 @@ class MangaEdit extends React.Component {
 
       this.setState(setStateObject);
     }
-
-    /* if (this.state[arrayName] && value !== '' && key == 'Enter') {
-      let state = this.state[arrayName];
-      let pushObject = {};
-      pushObject[objectName] = value;
-      state.push(pushObject);
-
-      let setStateObject = {};
-      setStateObject[arrayName] = state;
-
-      this.setState(setStateObject);
-
-    } else if (this.state[arrayName] && key == 'Backspace' && value == '') {
-      let state = this.state[arrayName];
-      state.pop();
-
-      let setStateObject = {};
-      setStateObject[arrayName] = state;
-
-      this.setState(setStateObject);
-    }*/
   }
   deleteTag(arrayName, index) {
-    /*let state = this.state[arrayName];
-
-    state.splice(index, 1);
-
-    let setStateObject = {};
-    setStateObject[arrayName] = state;
-
-    this.setState(setStateObject);*/
-    // Copy the field
-    let field = this.state[arrayName];
-
-    new Promise((resolve, reject) => {
-      var transaction = Relay.Store.applyUpdate(
-        new DeleteAuthorMutation({
-          manga_id: fromGlobalId(this.props.node.id).id,
-          creator_id: fromGlobalId(this.state[arrayName].edges[index].node.id).id,
-        }),
-        { onSuccess, onFailure }
-      );
-      resolve(transaction);
-    }).then((value) => {
-      var transactions = this.props.relay.getPendingTransactions(this.props.node.authors);
-      console.log('Client: Transaction');
-      console.log(value);
-      console.log('Client: Transactions');
-      console.log(transactions);
-      console.log('Goin in MAN');
-      console.log(value._mutationQueue._queue[0]);
-    });
-
-
-    new Promise((resolve, reject) => {
-      this.setState(this.props.node);
-      resolve('Props shifted to state.');
-    }).then((value) => {
-      console.log(value);
-    });
-
-    // Delete the edge
-    //field.edges.splice(index, 1);
-    //this.setState(field);
+    var transaction = Relay.Store.commitUpdate(
+      new DeleteAuthorMutation({
+        node: this.props.viewer,
+        author: this.props.viewer[arrayName].edges[index].node,
+        authors: this.props.viewer[arrayName],
+      }),
+      { onSuccess, onFailure }
+    );
+    var transactions = this.props.relay.getPendingTransactions(this.props.viewer);
+    console.log(transactions);
   }
   searchQuery(relayVariableName, word) {
     let setVariablesObject = {};
@@ -151,32 +96,12 @@ class MangaEdit extends React.Component {
     }
   }
   componentWillMount() {
-    console.log('YOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO');
     new Promise((resolve, reject) => {
-      this.setState(this.props.node);
+      this.setState(this.props.viewer);
       resolve('Props shifted to state.');
     }).then((value) => {
       console.log(value);
     });
-    /*let node = this.props.node;
-    let state = this.state;
-    let arr = [];
-    let obj = {};
-
-    for (let key in state) {
-    if (key in node) {
-    arr.push(key);
-    }
-    }
-
-    for (let key of arr) {
-    console.log(key);
-    obj[key] = node[key];
-    }
-
-    console.log(obj.authors[0].__dataID__);
-
-    this.setState(obj);*/
   }
   render() {
     return (
@@ -188,7 +113,7 @@ class MangaEdit extends React.Component {
           <dd>
             <input
               name="manga_title"
-              defaultValue={this.props.node.manga_title}
+              defaultValue={this.props.viewer.manga_title}
               onChange={this._handleOnChange.bind(this)}
             />
           </dd>
@@ -203,7 +128,7 @@ class MangaEdit extends React.Component {
               name="descript"
               rows="7"
               cols="40"
-              defaultValue={this.props.node.descript}
+              defaultValue={this.props.viewer.descript}
               onChange={this._handleOnChange.bind(this)}>
             </textarea>
           </dd>
@@ -215,7 +140,7 @@ class MangaEdit extends React.Component {
           <dd>
             <Tag
               arrayName="authors"
-              array={this.state.authors.edges}
+              array={this.props.viewer.authors.edges}
               propName="node.creator_name"
               keyDown={this.keyDown.bind(this)}
               deleteTag={this.deleteTag.bind(this)}
@@ -267,7 +192,7 @@ class MangaEdit extends React.Component {
             <select
               name="status"
               onChange={this._handleOnChange.bind(this)}
-              defaultValue={this.props.node.status}
+              defaultValue={this.props.viewer.status}
             >
               <option value="null">null</option>
               <option value="On going">On going</option>
@@ -283,7 +208,7 @@ class MangaEdit extends React.Component {
             <select
               name="type"
               onChange={this._handleOnChange.bind(this)}
-              defaultValue={this.props.node.type}
+              defaultValue={this.props.viewer.type}
             >
               <option value="null">null</option>
               <option value="Manga">Manga</option>
@@ -305,7 +230,7 @@ var Container = Relay.createContainer(MangaEdit, {
     searchGenreWord: null,
   },
   fragments: {
-    node: () => Relay.QL`
+    viewer: () => Relay.QL`
       fragment on Node {
         id,
         ... on Manga {

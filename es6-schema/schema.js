@@ -29,19 +29,19 @@ import mysql from '../config/mysql.js';
 
 import { nodeField }  from './node.js';
 
-import { mangaConnection, mangaType } from './mangaType.js';
-import { chapterConnection, chapterType, chapterEdge } from './chapterType.js';
-import { groupConnection, groupType } from './groupType.js';
-import { authorType } from './authorType.js';
-import { artistType } from './artistType.js';
-import { genreType } from './genreType.js';
-import { creatorType } from './creatorType.js';
+// Types and connections
+import { mangaConnection, mangaType } from './types/mangaType.js';
+import { chapterConnection, chapterType, chapterEdge } from './types/chapterType.js';
+import { groupConnection, groupType } from './types/groupType.js';
+import { authorType } from './types/authorType.js';
+import { artistType } from './types/artistType.js';
+import { genreType } from './types/genreType.js';
+import { creatorType, creatorConnection } from './types/creatorType.js';
 
-import { authorInput} from './authorInput.js';
-import { artistInput } from './artistInput.js';
-import { genreInput } from './genreInput.js';
+// Mutations
+import { deleteAuthorMutation } from './deleteAuthorMutation.js';
 
-//All types, lists
+// All types, lists
 var allChaptersType = new GraphQLObjectType({
   name: 'AllChapters',
   fields: () => ({
@@ -98,7 +98,7 @@ var allMangasType = new GraphQLObjectType({
   }),
 });
 
-var subscriptionChapters = new GraphQLObjectType({
+var subscriptionChaptersType = new GraphQLObjectType({
   name: 'SubscriptionChapters',
   fields:() => ({
     _id: {
@@ -182,7 +182,7 @@ var queryType = new GraphQLObjectType({
       }
     },
     subscriptionChapters: {
-      type: subscriptionChapters,
+      type: subscriptionChaptersType,
       resolve: (rootValue) => {
         return {
           _id: 2,
@@ -221,211 +221,9 @@ var queryType = new GraphQLObjectType({
   })
 });
 
-// Mutation
-var addChapterMutation = mutationWithClientMutationId({
-  name: 'AddChapter',
-  inputFields: {
-    chapter_title: {
-      type: new GraphQLNonNull(GraphQLString)
-    },
-    chapter_number: {
-      type: new GraphQLNonNull(GraphQLInt)
-    },
-    manga_title: {
-      type: new GraphQLNonNull(GraphQLString)
-    }
-  },
-  outputFields: {/*
-    newChapterEdge: {
-      type: chapterEdge,
-      resolve: ({ insertId, chapter_title, chapter_number, manga_title }) => {
-        return mysql.getChaptersByMangaAndPage(manga_title, 0).then((chapters) => {
-          return mysql.getChapterById(insertId).then((chapter) => {
-            var position;
-
-            console.log(chapter_title);
-            console.log(chapter[0].manga_id);
-
-            for (var i = 0; i < chapter.length; i++) {
-              if (chapter[0].id == chapters[i].id) {
-                position = i;
-                console.log(position);
-                break;
-              }
-            }
-
-            return {
-              cursor: cursorForObjectInConnection(chapters, chapters[position]),
-              node: {
-                id: insertId,
-                chapter_title: chapter_title,
-                chapter_number: parseInt(chapter_number),
-                manga_id: chapter[0].manga_id,
-                created: chapter[0].created,
-                type: chapter[0].type
-              }
-            }
-          });
-        });
-      }
-    },
-    allChapters: {
-      type: allChaptersType,
-      resolve: () => {
-        return {_id: 1};
-      }
-    }*/
-    uploadedChapter: {
-      type: chapterType,
-      resolve: ({ insertId, chapter_title, chapter_number }) => {
-        return {
-          id: insertId,
-          chapter_title: chapter_title,
-          chapter_number: chapter_number
-        };
-      }
-    },
-    allChapters: {
-      type: allChaptersType,
-      resolve: () => {
-        return {_id: 1};
-      }
-    },
-  },
-  mutateAndGetPayload: (payload) => {
-    return mysql.addChapter(payload.chapter_title, payload.chapter_number, payload.manga_title).then((value) => {
-      console.log('Addded! ' + value.insertId);
-      return {
-        insertId: value.insertId,
-        chapter_title: payload.chapter_title,
-        chapter_number: payload.chapter_number,
-      };
-    });
-  }
-});
-
-var updateMangaMutation = mutationWithClientMutationId({
-  name: 'UpdateManga',
-  inputFields: {
-    id: {
-      type: new GraphQLNonNull(GraphQLInt)
-    },
-    manga_title: {
-      type: new GraphQLNonNull(GraphQLString)
-    },
-    descript: {
-      type: GraphQLString
-    },
-    status: {
-      type: GraphQLString
-    },
-    type: {
-      type: GraphQLString
-    },
-  },
-  outputFields: {
-    updatedManga: {
-      type: mangaType,
-      resolve: ({ id, manga_title, descript, status, type }) => {
-        console.log('Output fields on updatedManga returning!');
-        return {
-          id: id,
-          manga_title: manga_title,
-          descript: descript,
-          status: status,
-          type: type,
-        };
-      }
-    }
-  },
-  mutateAndGetPayload: ({ id, manga_title, descript, status, type}) => {
-    return mysql.updateManga(id, manga_title, descript, status, type).then((value) => {
-      console.log('Updated: ' + manga_title);
-      return {
-        id: id,
-        manga_title: manga_title,
-        descript: descript,
-        status: status,
-        type: type,
-      };
-    });
-  }
-});
-
-var addAuthorMutation = mutationWithClientMutationId({
-  name: 'AddAuthor',
-  inputFields: {
-    manga_id: {
-      type: new GraphQLNonNull(GraphQLInt)
-    },
-    creator_id: {
-      type: new GraphQLNonNull(GraphQLInt)
-    }
-  },
-  outputFields: {
-    addedAuthor: {
-      type: authorType,
-      resolve: ({ manga_id, creator_id }) => {
-        return mysql.getCreatorById(creator_id).then((value) => {
-          console.log('Added author: ' + value[0].creator_name);
-          return {
-            creator_id: creator_id,
-            author_name: value[0].creator_name
-          }
-        });
-      }
-    }
-  },
-  mutateAndGetPayload: ({ manga_id, creator_id }) => {
-    return mysql.addAuthor(manga_id, creator_id).then((value) => {
-      return {
-        manga_id: manga_id,
-        creator_id: creator_id
-      };
-    })
-  }
-});
-
-var deleteAuthorMutation = mutationWithClientMutationId({
-  name: 'DeleteAuthor',
-  inputFields: {
-    manga_id: {
-      type: new GraphQLNonNull(GraphQLInt)
-    },
-    creator_id: {
-      type: new GraphQLNonNull(GraphQLInt)
-    }
-  },
-  outputFields: {
-    deleteAuthor: {
-      type: creatorType,
-      resolve: ({ manga_id, creator_id }) => {
-        return mysql.getCreatorById(creator_id).then((value) => {
-          console.log('Delete author: ' + value[0].creator_name);
-          return {
-            id: creator_id,
-            creator_name: value[0].creator_name
-          }
-        });
-      }
-    }
-  },
-  mutateAndGetPayload: ({ manga_id, creator_id }) => {
-    return mysql.deleteAuthor(manga_id, creator_id).then((value) => {
-      return {
-        manga_id: manga_id,
-        creator_id: creator_id
-      };
-    })
-  }
-});
-
 var mutationType = new GraphQLObjectType({
   name: 'Mutation',
   fields: {
-    addChapter: addChapterMutation,
-    updateManga: updateMangaMutation,
-    addAuthor: addAuthorMutation,
     deleteAuthor: deleteAuthorMutation,
   },
 });

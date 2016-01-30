@@ -8,7 +8,7 @@ import { fromGlobalId } from 'graphql-relay';
 import ChapterItem from '../components/ChapterItem.js';
 import PaginationButton from '../components/PaginationButton.js';
 
-class LatestChaptersPage extends React.Component {
+class FeedPage extends React.Component {
   nextPage(event) {
     try {
       this.props.relay.setVariables({
@@ -88,7 +88,7 @@ class LatestChaptersPage extends React.Component {
   }
 }
 
-var Container = Relay.createContainer(LatestChaptersPage, {
+var Container = Relay.createContainer(FeedPage, {
   initialVariables: {
     page: null,
     limit: null
