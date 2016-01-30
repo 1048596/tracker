@@ -23,11 +23,11 @@ import {
   nodeDefinitions
 } from 'graphql-relay';
 
-import mysql from '../config/mysql';
+import mysql from '../../config/mysql';
 
-import {registerType} from './registry';
+import {registerType} from '../registry';
 
-import {nodeInterface} from './node';
+import {nodeInterface} from '../node';
 import {mangaType} from './mangaType';
 import {groupConnection} from './groupType';
 

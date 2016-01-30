@@ -1,8 +1,11 @@
+import Relay from 'react-relay';
+import { toGlobalId } from 'graphql-relay';
+
 export const MangaEditQueries = {
-  node: (Component, { id }) => Relay.QL`
+  vertex: (Component, { id }) => Relay.QL`
     query {
       node(id: $id) {
-        ${Component.getFragment('viewer', { id })}
+        ${Component.getFragment('vertex', { id })}
       }
     }
   `,
@@ -22,7 +25,7 @@ export const MangaEditQueries = {
   `
 };
 
-expots.prepareMangaEditParams = function (params, route) {
+exports.prepareMangaEditParams = function (params, route) {
   return {
     id: toGlobalId('Manga', parseInt(params.id, 10)),
   };

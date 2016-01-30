@@ -9,7 +9,7 @@ var node_path = __dirname + '/node_modules';
 
 // Schema for GraphQL
 gulp.task('babel-schema', () => {
-  return gulp.src('./es6-schema/*.js')
+  return gulp.src('./es6-schema/**/*.js')
     .pipe(babel({
       plugins: ['transform-runtime'],
       presets: ['es2015', 'stage-0']

@@ -23,17 +23,14 @@ import {
   nodeDefinitions
 } from 'graphql-relay';
 
-import mysql from '../config/mysql.js';
+import mysql from '../../config/mysql.js';
 
-import { registerType } from './registry';
+import { registerType } from '../registry';
 
-import { nodeInterface } from './node.js';
+import { nodeInterface } from '../node.js';
 import { chapterConnection } from './chapterType';
 import { groupConnection } from './groupType';
 import { genreType } from './genreType';
-
-//import { authorType } from './authorType';
-//import { artistType } from './artistType';
 
 import { creatorType } from './creatorType';
 import { creatorConnection } from './creatorType';

@@ -1,3 +1,5 @@
+import queryString from 'query-string';
+
 export const MangaIndexQueries = {
   node: (Component, { id, page, limit }) => Relay.QL`
     query {

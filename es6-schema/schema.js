@@ -39,7 +39,7 @@ import { genreType } from './types/genreType.js';
 import { creatorType, creatorConnection } from './types/creatorType.js';
 
 // Mutations
-import { deleteAuthorMutation } from './deleteAuthorMutation.js';
+import { deleteAuthorMutation } from './mutations/deleteAuthorMutation.js';
 
 // All types, lists
 var allChaptersType = new GraphQLObjectType({
@@ -223,9 +223,9 @@ var queryType = new GraphQLObjectType({
 
 var mutationType = new GraphQLObjectType({
   name: 'Mutation',
-  fields: {
+  fields: () => ({
     deleteAuthor: deleteAuthorMutation,
-  },
+  })
 });
 
 var Schema = new GraphQLSchema({

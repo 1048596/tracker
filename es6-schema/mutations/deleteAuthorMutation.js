@@ -25,27 +25,31 @@ import {
 
 import util from 'util';
 
-import mysql from '../config/mysql.js';
+import mysql from '../../config/mysql.js';
+import { mangaType } from '../types/mangaType.js';
 
 export const deleteAuthorMutation = mutationWithClientMutationId({
   name: 'DeleteAuthor',
   inputFields: {
     manga_id: {
-      type: new GraphQLNonNull(GraphQLInt)
+      type: new GraphQLNonNull(GraphQLString)
     },
     creator_id: {
-      type: new GraphQLNonNull(GraphQLInt)
+      type: new GraphQLNonNull(GraphQLString)
     }
   },
   outputFields: {
-    viewer: {
+    vertex: {
       type: mangaType,
-      args: {
-        id: new GraphQLNonNull(GraphQLID)
-      },
-      resolve: (rootValue, args) => {
-        return mysql.getMangaById()
+      resolve: ({ manga_id }) => {
+        return mysql.getMangaById(fromGlobalId(manga_id).id).then((value) => {
+          return value[0];
+        });
       }
+    },
+    deletedAuthorId: {
+      type: GraphQLInt,
+      resolve: ({ creator_id }) => creator_id,
     }
   },
   mutateAndGetPayload: ({ manga_id, creator_id }) => {

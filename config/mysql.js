@@ -351,7 +351,7 @@ exports.searchCreatorsByName = function(name) {
 exports.getArtistsByMangaId = function(manga_id) {
   return new Promise((resolve, reject) => {
     //var sql = 'select a.creator_id, c.creator_name as artist_name from artists a join creators c on a.creator_id = c.id where manga_id = ?';
-    var sql = 'select c.id, c.creator_name from authors a join creators c on a.creator_id = c.id where a.manga_id = ?;';
+    var sql = 'select c.id, c.creator_name from artists a join creators c on a.creator_id = c.id where a.manga_id = ?;';
     var inserts = [manga_id];
 
     sql = mysql.format(sql, inserts);
@@ -368,7 +368,7 @@ exports.getArtistsByMangaId = function(manga_id) {
 exports.getAuthorsByMangaId = function(manga_id) {
   return new Promise((resolve, reject) => {
     //var sql = 'select a.creator_id, c.creator_name as author_name from authors a join creators c on a.creator_id = c.id where manga_id = ?';
-    var sql = 'select c.id, c.creator_name from artists a join creators c on a.creator_id = c.id where a.manga_id = ?;';
+    var sql = 'select c.id, c.creator_name from authors a join creators c on a.creator_id = c.id where a.manga_id = ?;';
     var inserts = [manga_id];
 
     sql = mysql.format(sql, inserts);

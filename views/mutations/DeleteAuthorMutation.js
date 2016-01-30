@@ -1,13 +1,24 @@
 import Relay from 'react-relay';
-import {
-  fromGlobalId
-} from 'graphql-relay';
+import { fromGlobalId } from 'graphql-relay';
 
 class DeleteAuthorMutation extends Relay.Mutation {
+  static initialVariables = {
+    id: null
+  };
   static fragments = {
-    viewer: () => Relay.QL`
+    vertex: () => Relay.QL`
       fragment on Node {
-        id
+        id,
+        ... on Manga {
+          authors (first: 5) {
+            edges {
+              node {
+                id,
+                creator_name
+              }
+            }
+          }
+        }
       }
     `
   };
@@ -17,44 +28,33 @@ class DeleteAuthorMutation extends Relay.Mutation {
   getFatQuery() {
     return Relay.QL`
       fragment on DeleteAuthorPayload {
-        viewer,
+        vertex,
         deletedAuthorId
       }
     `;
   }
   getConfigs() {
     return [{
-      type: 'NODE_DELETE',
-      parentName: 'viewer',
-      parentID: this.props.viewer.id,
+      type: 'RANGE_DELETE',
+      parentName: 'vertex',
+      parentID: this.props.vertex.id,
       connectionName: 'authors',
-      deletedIDFieldName: 'deletedAuthorId'
+      deletedIDFieldName: 'deletedAuthorId',
+      pathToConnection: ['vertex', 'authors']
     }];
   }
   getVariables() {
     return {
-      manga_id: this.props.viewer.id,
+      manga_id: this.props.vertex.id,
       creator_id: this.props.author.id
     };
+  }
+  getOptimisticResponse() {
+    return {
+      vertex: this.props.vertex,
+      deletedAuthorId: this.props.author.id
+    }
   }
 }
 
 module.exports = DeleteAuthorMutation;
-
-/*
-
-getConfigs() {
-  return [{
-    type: 'REQUIRED_CHILDREN',
-    children: [Relay.QL`
-      fragment on DeleteAuthorPayload {
-        deleteAuthor {
-          id,
-          creator_name
-        }
-      }
-    `],
-  }];
-}
-
-*/

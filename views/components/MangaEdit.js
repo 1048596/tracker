@@ -1,15 +1,10 @@
 import React from 'react';
 import Relay from 'react-relay';
+import { fromGlobalId } from 'graphql-relay';
 
-import {
-  fromGlobalId
-} from 'graphql-relay';
+import TagContainer from './TagContainer.js';
 
-import UpdateManga from '../mutations/UpdateManga.js';
-import AddAuthorMutation from '../mutations/AddAuthorMutation.js';
 import DeleteAuthorMutation from '../mutations/DeleteAuthorMutation.js';
-
-import Tag from './Tag.js';
 
 var onSuccess = (response) => {
   console.log('Success!');
@@ -27,32 +22,31 @@ class MangaEdit extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-    //  manga_title: '',
-    //  descript: '',
-    //  authors: [],
-    //  artists: [],
-    //  status: '',
-    //  type: '',
-    //  genres: [],
+      manga_title: '',
+      descript: '',
+      status: '',
+      type: '',
     };
   }
   callState() {
     console.log(this.state);
+    console.log(this.props.vertex);
   }
-  updateManga(event) {
-    Relay.Store.commitUpdate(
-      new UpdateManga({
-        id: fromGlobalId(this.props.viewer.id).id,
-        manga_title: this.state.manga_title,
-        descript: this.state.descript,
-        status: this.state.status,
-        type: this.state.type,
-      }),
-      { onSuccess, onFailure }
-    );
+  rollBack(event) {
+    var transactions = this.props.relay.getPendingTransactions(this.props.vertex);
+    console.log(transactions);
+
+    for (let i = 0; i < transactions.length; i++) {
+      transactions[i].rollback();
+    }
   }
-  test(event) {
-    console.log(event.target.name);
+  commit() {
+    var transactions = this.props.relay.getPendingTransactions(this.props.vertex);
+    console.log(transactions);
+
+    for (let i = 0; i < transactions.length; i++) {
+      transactions[i].commit();
+    }
   }
   _handleOnChange(event) {
     let obj = {};
@@ -73,16 +67,14 @@ class MangaEdit extends React.Component {
     }
   }
   deleteTag(arrayName, index) {
-    var transaction = Relay.Store.commitUpdate(
+    var transaction = Relay.Store.applyUpdate(
       new DeleteAuthorMutation({
-        node: this.props.viewer,
-        author: this.props.viewer[arrayName].edges[index].node,
-        authors: this.props.viewer[arrayName],
+        vertex: this.props.vertex,
+        author: this.props.vertex.authors.edges[index].node
       }),
       { onSuccess, onFailure }
     );
-    var transactions = this.props.relay.getPendingTransactions(this.props.viewer);
-    console.log(transactions);
+    console.log(transaction);
   }
   searchQuery(relayVariableName, word) {
     let setVariablesObject = {};
@@ -96,12 +88,7 @@ class MangaEdit extends React.Component {
     }
   }
   componentWillMount() {
-    new Promise((resolve, reject) => {
-      this.setState(this.props.viewer);
-      resolve('Props shifted to state.');
-    }).then((value) => {
-      console.log(value);
-    });
+    let arr = [''];
   }
   render() {
     return (
@@ -113,7 +100,7 @@ class MangaEdit extends React.Component {
           <dd>
             <input
               name="manga_title"
-              defaultValue={this.props.viewer.manga_title}
+              defaultValue={this.props.vertex.manga_title}
               onChange={this._handleOnChange.bind(this)}
             />
           </dd>
@@ -128,7 +115,7 @@ class MangaEdit extends React.Component {
               name="descript"
               rows="7"
               cols="40"
-              defaultValue={this.props.viewer.descript}
+              defaultValue={this.props.vertex.descript}
               onChange={this._handleOnChange.bind(this)}>
             </textarea>
           </dd>
@@ -138,9 +125,9 @@ class MangaEdit extends React.Component {
             Authors
           </dt>
           <dd>
-            <Tag
+            <TagContainer
               arrayName="authors"
-              array={this.props.viewer.authors.edges}
+              array={this.props.vertex.authors.edges}
               propName="node.creator_name"
               keyDown={this.keyDown.bind(this)}
               deleteTag={this.deleteTag.bind(this)}
@@ -155,9 +142,9 @@ class MangaEdit extends React.Component {
             Artists
           </dt>
           <dd>
-            <Tag
+            <TagContainer
               arrayName="artists"
-              array={this.state.artists.edges}
+              array={this.props.vertex.artists.edges}
               propName="node.creator_name"
               keyDown={this.keyDown.bind(this)}
               deleteTag={this.deleteTag.bind(this)}
@@ -172,9 +159,9 @@ class MangaEdit extends React.Component {
             Genre
           </dt>
           <dd>
-            <Tag
+            <TagContainer
               arrayName="genres"
-              array={this.state.genres}
+              array={this.props.vertex.genres}
               propName="genre"
               keyDown={this.keyDown.bind(this)}
               deleteTag={this.deleteTag.bind(this)}
@@ -192,7 +179,7 @@ class MangaEdit extends React.Component {
             <select
               name="status"
               onChange={this._handleOnChange.bind(this)}
-              defaultValue={this.props.viewer.status}
+              defaultValue={this.props.vertex.status}
             >
               <option value="null">null</option>
               <option value="On going">On going</option>
@@ -208,7 +195,7 @@ class MangaEdit extends React.Component {
             <select
               name="type"
               onChange={this._handleOnChange.bind(this)}
-              defaultValue={this.props.viewer.type}
+              defaultValue={this.props.vertex.type}
             >
               <option value="null">null</option>
               <option value="Manga">Manga</option>
@@ -217,7 +204,8 @@ class MangaEdit extends React.Component {
           </dd>
         </dl>
         <button onClick={this.callState.bind(this)}>Check state!</button>
-        <button onClick={this.updateManga.bind(this)}>Save edit</button>
+        <button onClick={this.rollBack.bind(this)}>Time rooollllback!</button>
+        <button onClick={this.commit.bind(this)}>Commit!</button>
       </div>
     );
   }
@@ -230,7 +218,7 @@ var Container = Relay.createContainer(MangaEdit, {
     searchGenreWord: null,
   },
   fragments: {
-    viewer: () => Relay.QL`
+    vertex: () => Relay.QL`
       fragment on Node {
         id,
         ... on Manga {
@@ -238,6 +226,7 @@ var Container = Relay.createContainer(MangaEdit, {
           descript,
           status,
           type,
+          ${DeleteAuthorMutation.getFragment('vertex')},
           authors (first: 5) {
             edges {
               node {
@@ -245,7 +234,7 @@ var Container = Relay.createContainer(MangaEdit, {
                 creator_name
               }
             }
-          },
+          }
           artists (first: 5) {
             edges {
               node {

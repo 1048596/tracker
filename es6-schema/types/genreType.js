@@ -23,9 +23,9 @@ import {
   nodeDefinitions
 } from 'graphql-relay';
 
-import mysql from '../config/mysql.js';
+import mysql from '../../config/mysql.js';
 
-import {registerType} from './registry';
+import {registerType} from '../registry';
 
 export const genreType = registerType(new GraphQLObjectType({
   name: 'Genre',

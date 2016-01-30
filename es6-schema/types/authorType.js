@@ -18,9 +18,9 @@ import {
   globalIdField,
 } from 'graphql-relay';
 
-import mysql from '../config/mysql.js';
+import mysql from '../../config/mysql.js';
 
-import { registerType } from './registry';
+import { registerType } from '../registry';
 
 export const authorType = registerType(new GraphQLObjectType({
   name: 'Author',

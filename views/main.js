@@ -8,7 +8,7 @@ import { RelayRouter } from 'react-router-relay';
 import cookie from 'cookie';
 import { toGlobalId } from 'graphql-relay';
 
-// Views
+// Solo-pages
 import Schell from './Schell.js';
 import FeedPage from './pages/FeedPage.js';
 import SubscriptionsPage from './pages/SubscriptionsPage.js';
@@ -18,17 +18,19 @@ import MangaPage from './pages/MangaPage.js';
 import MangaIndex from './components/MangaIndex.js';
 import MangaEdit from './components/MangaEdit.js';
 
-//Group page
+// Group page
 import GroupPage from './pages/GroupPage.js';
 
-//Chapter page
+// Chapter page
 import ChapterPage from './pages/ChapterPage.js';
 
+// Tiny-pages
 import Upload from './pages/Upload.js';
 import Login from './pages/Login.js';
 import Register from './pages/Register.js';
 import Authenticate from './pages/Authenticate.js';
 
+// Test-page
 import Test from './components/Test.js';
 
 // Routes

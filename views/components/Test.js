@@ -1,6 +1,5 @@
 import React from 'react';
-import Tag from './Tag.js';
-
+import TagContainer from './TagContainer.js';
 
 class Test extends React.Component {
   constructor(props) {
