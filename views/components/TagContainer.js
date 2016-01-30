@@ -1,10 +1,11 @@
 import React from 'react';
-import DropDown from './DropDown.js';
 import dotProp from 'dot-prop';
 
-class Tag extends React.Component {
+import Tag from './Tag.js';
+import DropDown from './DropDown.js';
+
+class TagContainer extends React.Component {
   static propTypes = {
-    arrayName: React.PropTypes.string.isRequired,
     array: React.PropTypes.array.isRequired,
     propName: React.PropTypes.string.isRequired,
     keyDown: React.PropTypes.func.isRequired,
@@ -127,15 +128,12 @@ class Tag extends React.Component {
           <span className="clearfix">
             {this.props.array.map((obj, i) => {
               return (
-                <span className="tag left" key={i}>
-                  {dotProp.get(obj, this.props.propName)}
-                  <a
-                    onClick={this._handleDeleteTag.bind(this, i)}
-                    className="delete-tag"
-                  >
-                    x
-                  </a>
-                </span>
+                <Tag
+                  propName={this.props.propName}
+                  handleDeleteTag={this.props.deleteTag}
+                  key={i}
+                  edge={obj}
+                  />
               );
             })}
           </span>
@@ -148,17 +146,17 @@ class Tag extends React.Component {
             onChange={this._handleSearch.bind(this)}
             onFocus={this.handleFocus.bind(this)}
             onBlur={this.handleBlur.bind(this)}
-          />
-        {this.state.focused && this.state.input.length > 0 && this.props.results.length > 0 ?
+            />
+            {this.state.focused && this.state.input.length > 0 && this.props.results.length > 0 ?
             <DropDown
               data={this.props.results}
               propName={this.props.propName}
               focusedIndex={this.state.focusedIndex}
-            /> : null}
+              /> : null}
         </div>
       </div>
     );
   }
 }
 
-module.exports = Tag;
+module.exports = TagContainer;
