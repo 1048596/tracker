@@ -24,8 +24,8 @@ class DeleteAuthorMutation extends Relay.Mutation {
       children: [Relay.QL`
         fragment on DeleteAuthorPayload {
           deleteAuthor {
-            creator_id,
-            author_name
+            id,
+            creator_name
           }
         }
       `],

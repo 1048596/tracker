@@ -1,7 +1,40 @@
+@import 'border-radius';
+
+.drop-down-container {
+  width: 212px;
+  position: absolute;
+}
+
+.arrow-up {
+  display: table;
+  margin: 0 auto;
+	height: 0;
+	border-left: 7px solid transparent;
+	border-right: 7px solid transparent;
+	border-bottom: 7px solid black;
+}
+
 .drop-down {
+  @include border-radius(2px);
+  border: 1px solid #ddd;
   z-index: 100;
+  width: auto;
+  display: block;
+  background-color: #fff;
 }
 
 .drop-down-item {
   z-index: 101;
+  padding: 15px 10px;
+  background-color: #fff;
+}
+
+.drop-down-item-focused {
+  z-index: 101;
+  padding: 15px 10px;
+  background-color: #ddd;
+}
+
+.drop-down-item:hover {
+  background-color: #ddd;
 }

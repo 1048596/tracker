@@ -36,6 +36,7 @@ import { genreType } from './genreType';
 //import { artistType } from './artistType';
 
 import { creatorType } from './creatorType';
+import { creatorConnection } from './creatorType';
 
 export const mangaType = registerType(new GraphQLObjectType({
   name: 'Manga',
@@ -86,18 +87,20 @@ export const mangaType = registerType(new GraphQLObjectType({
       }
     },
     authors: {
-      type: new GraphQLList(creatorType),
+      type: creatorConnection,
+      args: connectionArgs,
       resolve: (root, args) => {
         return mysql.getAuthorsByMangaId(root.id).then((value) => {
-          return value;
+          return connectionFromArray(value, args);
         });
       }
     },
     artists: {
-      type: new GraphQLList(creatorType),
+      type: creatorConnection,
+      args: connectionArgs,
       resolve: (root, args) => {
         return mysql.getArtistsByMangaId(root.id).then((value) => {
-          return value;
+          return connectionFromArray(value, args);
         });
       }
     },

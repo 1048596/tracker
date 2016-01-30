@@ -17,7 +17,7 @@
 .tag-container {
   @include border-radius(2px);
   border: 1px solid #ddd;
-  padding: 5px 5px 0 5px;
+  padding: 5px;
   line-height: 10px;
 }
 
@@ -25,8 +25,7 @@
   @include border-radius(2px);
   border: 1px solid #ddd;
   padding: 3px 5px;
-  width: auto;
-  margin-bottom: 5px;
+  width: 200px;
 }
 
 .delete-tag {

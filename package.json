@@ -18,6 +18,7 @@
     "cookie": "^0.2.3",
     "cookie-parser": "^1.4.0",
     "decamelize": "^1.1.2",
+    "dot-prop": "^2.2.0",
     "express": "^4.13.3",
     "express-graphql": "^0.4.5",
     "express-session": "^1.12.1",

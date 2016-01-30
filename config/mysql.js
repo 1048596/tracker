@@ -517,7 +517,7 @@ exports.updateManga = function(id, manga_title, descript, status, type) {
 
 exports.addAuthor = function(manga_id, creator_id) {
   return new Promise((resolve, reject) => {
-    var sql = 'INSERT IGNORE INTO authors set manga_id = ?, creator_id = ?;';
+    var sql = 'INSERT IGNORE INTO authors set manga_id = ? AND creator_id = ?;';
 
     sql = mysql.format(sql, [manga_id, creator_id]);
 
@@ -530,7 +530,7 @@ exports.addAuthor = function(manga_id, creator_id) {
 
 exports.deleteAuthor = function(manga_id, creator_id) {
   return new Promise((resolve, reject) => {
-    var sql = 'DELETE IGNORE from authors where manga_id = ?, creator_id = ?;';
+    var sql = 'DELETE IGNORE from authors where manga_id = ? AND creator_id = ?;';
 
     sql = mysql.format(sql, [manga_id, creator_id]);
 

@@ -398,13 +398,13 @@ var deleteAuthorMutation = mutationWithClientMutationId({
   },
   outputFields: {
     deleteAuthor: {
-      type: authorType,
+      type: creatorType,
       resolve: ({ manga_id, creator_id }) => {
         return mysql.getCreatorById(creator_id).then((value) => {
           console.log('Delete author: ' + value[0].creator_name);
           return {
-            creator_id: creator_id,
-            author_name: value[0].creator_name
+            id: creator_id,
+            creator_name: value[0].creator_name
           }
         });
       }

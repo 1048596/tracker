@@ -1,21 +1,26 @@
 import React from 'react';
+import DropDownItem from './DropDownItem';
+import dotProp from 'dot-prop';
 
 class DropDown extends React.Component {
   static propTypes = {
     data: React.PropTypes.array,
-    objectName: React.PropTypes.string,
+    propName: React.PropTypes.string,
+    focusedIndex: React.PropTypes.number,
   };
-  constructor(props) {
-    super(props);
-    this.state = {
-    };
-  }
   render() {
     return (
-      <div className="drop-down">
-        {this.props.data.map((item, i) => {
-          return <div className="drop-down-item" key={i}>{item[this.props.objectName]}</div>;
+      <div className="drop-down-container">
+        <div className="drop-down">
+          {this.props.data.map((item, i) => {
+            return (
+              <DropDownItem
+                value={dotProp.get(item, this.props.propName)}
+                focused={this.props.focusedIndex == i}
+              />
+            );
           })}
+        </div>
       </div>
     );
   }

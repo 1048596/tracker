@@ -88,10 +88,10 @@ class MangaIndex extends React.Component {
               <tr>
                 <td>Author(s): </td>
                 <td className="info-row">
-                  {this.props.node.authors.map((author, i) => {
+                  {this.props.node.authors.edges.map((edge, i) => {
                     return (<span key={i} className="info-row-item">
-                        <Link to={'/creator/' + author.creator_id}>
-                          {author.creator_name}
+                        <Link to={'/creator/' + edge.node.creator_id}>
+                          {edge.node.creator_name}
                         </Link>
                       </span>);
                   })}
@@ -100,10 +100,10 @@ class MangaIndex extends React.Component {
               <tr>
                 <td>Artist(s): </td>
                 <td className="info-row">
-                  {this.props.node.artists.map((artist, i) => {
+                  {this.props.node.artists.edges.map((edge, i) => {
                     return (<span key={i} className="info-row-item">
-                        <Link to={'/creator/' + artist.creator_id}>
-                          {artist.creator_name}
+                        <Link to={'/creator/' + edge.node.creator_id}>
+                          {edge.node.creator_name}
                         </Link>
                       </span>);
                   })}
@@ -184,14 +184,22 @@ var Container = Relay.createContainer(MangaIndex, {
           type,
           status,
           chapter_count,
-          authors {
-            id,
-            creator_name
+          authors (first: 5) {
+            edges {
+              node {
+                id,
+                creator_name
+              }
+            }
           },
-          artists {
-            id,
-            creator_name
-          }
+          artists (first: 5) {
+            edges {
+              node {
+                id,
+                creator_name
+              }
+            }
+          },
           chapters (first: $limit, page: $page) {
             pageInfo {
               hasNextPage

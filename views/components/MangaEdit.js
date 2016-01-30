@@ -27,17 +27,20 @@ class MangaEdit extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      manga_title: '',
-      descript: '',
-      authors: [],
-      artists: [],
-      status: '',
-      type: '',
-      genres: [],
+    //  manga_title: '',
+    //  descript: '',
+    //  authors: [],
+    //  artists: [],
+    //  status: '',
+    //  type: '',
+    //  genres: [],
     };
   }
   callState() {
     console.log(this.state);
+    /*let transactions = this.props.relay.getPendingTransactions({
+      __dataID__: "Q3JlYXRvcjox"
+    });*/
   }
   updateManga(event) {
     Relay.Store.commitUpdate(
@@ -60,8 +63,19 @@ class MangaEdit extends React.Component {
 
     this.setState(obj);
   }
-  keyDown(arrayName, objectName, value, key) {
-    if (this.state[arrayName] && value !== '' && key == 'Enter') {
+  keyDown(arrayName, obj, keyCode) {
+    if (keyCode == 13) {
+      // If "Enter" (13)
+      let state = this.state[arrayName];
+      state.push(obj);
+
+      let setStateObject = {};
+      setStateObject[arrayName] = state;
+
+      this.setState(setStateObject);
+    }
+
+    /* if (this.state[arrayName] && value !== '' && key == 'Enter') {
       let state = this.state[arrayName];
       let pushObject = {};
       pushObject[objectName] = value;
@@ -71,7 +85,8 @@ class MangaEdit extends React.Component {
       setStateObject[arrayName] = state;
 
       this.setState(setStateObject);
-    }/* else if (this.state[arrayName] && key == 'Backspace' && value == '') {
+
+    } else if (this.state[arrayName] && key == 'Backspace' && value == '') {
       let state = this.state[arrayName];
       state.pop();
 
@@ -82,22 +97,47 @@ class MangaEdit extends React.Component {
     }*/
   }
   deleteTag(arrayName, index) {
-    let state = this.state[arrayName];
-    /*var transaction = Relay.Store.applyUpdate(
-      new DeleteAuthorMutation({
-        manga_id: fromGlobalId(this.props.node.id).id,
-        creator_id: this.state.authors[index].creator_id
-      }),
-      { onSuccess, onFailure }
-    );
-    console.log(transaction);*/
+    /*let state = this.state[arrayName];
 
     state.splice(index, 1);
 
     let setStateObject = {};
     setStateObject[arrayName] = state;
 
-    this.setState(setStateObject);
+    this.setState(setStateObject);*/
+    // Copy the field
+    let field = this.state[arrayName];
+
+    new Promise((resolve, reject) => {
+      var transaction = Relay.Store.applyUpdate(
+        new DeleteAuthorMutation({
+          manga_id: fromGlobalId(this.props.node.id).id,
+          creator_id: fromGlobalId(this.state[arrayName].edges[index].node.id).id,
+        }),
+        { onSuccess, onFailure }
+      );
+      resolve(transaction);
+    }).then((value) => {
+      var transactions = this.props.relay.getPendingTransactions(this.props.node.authors);
+      console.log('Client: Transaction');
+      console.log(value);
+      console.log('Client: Transactions');
+      console.log(transactions);
+      console.log('Goin in MAN');
+      console.log(value._mutationQueue._queue[0]);
+    });
+
+
+    new Promise((resolve, reject) => {
+      this.setState(this.props.node);
+      resolve('Props shifted to state.');
+    }).then((value) => {
+      console.log(value);
+    });
+
+    // Delete the edge
+    //field.edges.splice(index, 1);
+    //this.setState(field);
   }
   searchQuery(relayVariableName, word) {
     let setVariablesObject = {};
@@ -110,26 +150,33 @@ class MangaEdit extends React.Component {
       this.props.relay.setVariables(setVariablesObject);
     }
   }
-  componentDidMount() {
-    let node = this.props.node;
+  componentWillMount() {
+    console.log('YOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO');
+    new Promise((resolve, reject) => {
+      this.setState(this.props.node);
+      resolve('Props shifted to state.');
+    }).then((value) => {
+      console.log(value);
+    });
+    /*let node = this.props.node;
     let state = this.state;
     let arr = [];
     let obj = {};
 
     for (let key in state) {
-      if (key in node) {
-        arr.push(key);
-      }
+    if (key in node) {
+    arr.push(key);
+    }
     }
 
     for (let key of arr) {
-      console.log(key);
-      obj[key] = node[key];
+    console.log(key);
+    obj[key] = node[key];
     }
 
     console.log(obj.authors[0].__dataID__);
 
-    this.setState(obj);
+    this.setState(obj);*/
   }
   render() {
     return (
@@ -166,18 +213,16 @@ class MangaEdit extends React.Component {
             Authors
           </dt>
           <dd>
-            <div className="tag-container clearfix">
-              <Tag
-                arrayName="authors"
-                array={this.state.authors}
-                objectName="creator_name"
-                keyDown={this.keyDown.bind(this)}
-                deleteTag={this.deleteTag.bind(this)}
-                search={this.searchQuery.bind(this, )}
-                relayVariableName="searchCreatorWord"
-                results={this.props.searchCreators.creators}
-              />
-            </div>
+            <Tag
+              arrayName="authors"
+              array={this.state.authors.edges}
+              propName="node.creator_name"
+              keyDown={this.keyDown.bind(this)}
+              deleteTag={this.deleteTag.bind(this)}
+              search={this.searchQuery.bind(this, )}
+              relayVariableName="searchCreatorWord"
+              results={this.props.searchCreators.creators}
+            />
           </dd>
         </dl>
         <dl className="form">
@@ -185,18 +230,16 @@ class MangaEdit extends React.Component {
             Artists
           </dt>
           <dd>
-            <div className="tag-container clearfix">
-              <Tag
-                arrayName="artists"
-                array={this.state.artists}
-                objectName="creator_name"
-                keyDown={this.keyDown.bind(this)}
-                deleteTag={this.deleteTag.bind(this)}
-                search={this.searchQuery.bind(this)}
-                relayVariableName="searchCreatorWord"
-                results={this.props.searchCreators.creators}
-              />
-            </div>
+            <Tag
+              arrayName="artists"
+              array={this.state.artists.edges}
+              propName="node.creator_name"
+              keyDown={this.keyDown.bind(this)}
+              deleteTag={this.deleteTag.bind(this)}
+              search={this.searchQuery.bind(this)}
+              relayVariableName="searchCreatorWord"
+              results={this.props.searchCreators.creators}
+            />
           </dd>
         </dl>
         <dl className="form">
@@ -204,18 +247,16 @@ class MangaEdit extends React.Component {
             Genre
           </dt>
           <dd>
-            <div className="tag-container clearfix">
-              <Tag
-                arrayName="genres"
-                array={this.state.genres}
-                objectName="genre"
-                keyDown={this.keyDown.bind(this)}
-                deleteTag={this.deleteTag.bind(this)}
-                search={this.searchQuery.bind(this)}
-                relayVariableName="searchGenreWord"
-                results={this.props.searchGenres.genres}
-              />
-            </div>
+            <Tag
+              arrayName="genres"
+              array={this.state.genres}
+              propName="genre"
+              keyDown={this.keyDown.bind(this)}
+              deleteTag={this.deleteTag.bind(this)}
+              search={this.searchQuery.bind(this)}
+              relayVariableName="searchGenreWord"
+              results={this.props.searchGenres.genres}
+            />
           </dd>
         </dl>
         <dl className="form">
@@ -272,13 +313,21 @@ var Container = Relay.createContainer(MangaEdit, {
           descript,
           status,
           type,
-          authors {
-            id,
-            creator_name
+          authors (first: 5) {
+            edges {
+              node {
+                id,
+                creator_name
+              }
+            }
           },
-          artists {
-            id,
-            creator_name
+          artists (first: 5) {
+            edges {
+              node {
+                id,
+                creator_name
+              }
+            }
           },
           genres {
             id,

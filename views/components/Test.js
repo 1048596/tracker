@@ -47,7 +47,7 @@ class Test extends React.Component {
     this.setState(setStateObject);
   }
   render() {
-    return (
+    /*return (
       <div>
         <Tag
           arrayName="fruits"
@@ -58,6 +58,9 @@ class Test extends React.Component {
         />
       <button onClick={this.callState.bind(this)}>Call state!</button>
       </div>
+    );*/
+    return (
+      <div onFocus={this.callState.bind(this)}>asdf</div>
     );
   }
 }
