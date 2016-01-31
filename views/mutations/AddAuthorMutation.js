@@ -2,7 +2,7 @@ import Relay from 'react-relay';
 import { fromGlobalId } from 'graphql-relay';
 import { FIRST_MAXIMUM } from '../../config/config.js';
 
-class DeleteAuthorMutation extends Relay.Mutation {
+class AddAuthorMutation extends Relay.Mutation {
   //static initialVariables = {
   //  maximum: FIRST_MAXIMUM
   //};
@@ -24,38 +24,42 @@ class DeleteAuthorMutation extends Relay.Mutation {
     `
   };
   getMutation() {
-    return Relay.QL`mutation { deleteAuthor }`;
+    return Relay.QL`mutation { addAuthor }`;
   }
   getFatQuery() {
     return Relay.QL`
-      fragment on DeleteAuthorPayload {
-        vertex,
-        deletedAuthorId
+      fragment on AddAuthorPayload {
+        vertex {
+          authors
+        },
+        newAuthorEdge
       }
     `;
   }
   getConfigs() {
     return [{
-      type: 'RANGE_DELETE',
+      type: 'RANGE_ADD',
       parentName: 'vertex',
       parentID: this.props.vertex.id,
       connectionName: 'authors',
-      deletedIDFieldName: 'deletedAuthorId',
-      pathToConnection: ['vertex', 'authors']
+      edgeName: 'newAuthorEdge',
+      rangeBehaviors: {
+        '': 'append',
+      }
     }];
   }
   getVariables() {
     return {
       manga_id: this.props.vertex.id,
-      creator_id: this.props.author.id
+      creator_id: this.props.author.node.id
     };
   }
   getOptimisticResponse() {
     return {
       vertex: this.props.vertex,
-      deletedAuthorId: this.props.author.id
+      newAuthorEdge: this.props.author
     }
   }
 }
 
-module.exports = DeleteAuthorMutation;
+module.exports = AddAuthorMutation;

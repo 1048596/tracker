@@ -1,9 +1,11 @@
 import React from 'react';
 import Relay from 'react-relay';
 import { fromGlobalId } from 'graphql-relay';
+import { FIRST_MAXIMUM } from '../../config/config.js';
 
 import TagContainer from './TagContainer.js';
 
+import AddAuthorMutation from '../mutations/AddAuthorMutation.js';
 import DeleteAuthorMutation from '../mutations/DeleteAuthorMutation.js';
 
 var onSuccess = (response) => {
@@ -28,14 +30,23 @@ class MangaEdit extends React.Component {
       type: '',
     };
   }
+  getEdgeIndex(connectionName, nodeId) {
+    let edges = this.props.vertex[connectionName].edges;
+
+    for (let i = 0; i < edges.length; i++) {
+      if (nodeId === edges[i].node.id) {
+        return i;
+      }
+    }
+  }
   callState() {
     console.log(this.state);
     console.log(this.props.vertex);
+    var transactions = this.props.relay.getPendingTransactions(this.props.vertex);
+    console.log(transactions[0]);
   }
   rollBack(event) {
     var transactions = this.props.relay.getPendingTransactions(this.props.vertex);
-    console.log(transactions);
-
     for (let i = 0; i < transactions.length; i++) {
       transactions[i].rollback();
     }
@@ -54,27 +65,45 @@ class MangaEdit extends React.Component {
 
     this.setState(obj);
   }
-  keyDown(arrayName, obj, keyCode) {
+  keyDown(connectionName, edge, keyCode) {
     if (keyCode == 13) {
-      // If "Enter" (13)
-      let state = this.state[arrayName];
-      state.push(obj);
-
-      let setStateObject = {};
-      setStateObject[arrayName] = state;
-
-      this.setState(setStateObject);
+      // Handle "Enter"
+      if (connectionName === 'authors') {
+        var transactions = this.props.relay.getPendingTransactions(this.props.vertex.authors);
+        if (transactions) {
+          var queue = transactions[0]._mutationQueue._queue;
+          for (let i = 0; i < queue.length; i++) {
+            if (queue[i].mutation.props.author.id == edge.node.id) {
+              console.log('rollback:', edge.node.id, edge.node.creator_name);
+              transactions[i].rollback();
+            }
+          }
+        } else {
+          // AddAuthorMutation
+          Relay.Store.applyUpdate(
+            new AddAuthorMutation({
+              vertex: this.props.vertex,
+              author: edge
+            }),
+            { onSuccess, onFailure }
+          );
+        }
+      }
     }
   }
-  deleteTag(arrayName, index) {
-    var transaction = Relay.Store.applyUpdate(
-      new DeleteAuthorMutation({
-        vertex: this.props.vertex,
-        author: this.props.vertex.authors.edges[index].node
-      }),
-      { onSuccess, onFailure }
-    );
-    console.log(transaction);
+  deleteTag(connectionName, nodeId) {
+    var index = this.getEdgeIndex(connectionName, nodeId);
+    console.log(index);
+
+    if (connectionName === 'authors') {
+      Relay.Store.applyUpdate(
+        new DeleteAuthorMutation({
+          vertex: this.props.vertex,
+          author: this.props.vertex.authors.edges[index].node
+        }),
+        { onSuccess, onFailure }
+      );
+    }
   }
   searchQuery(relayVariableName, word) {
     let setVariablesObject = {};
@@ -126,14 +155,14 @@ class MangaEdit extends React.Component {
           </dt>
           <dd>
             <TagContainer
-              arrayName="authors"
-              array={this.props.vertex.authors.edges}
-              propName="node.creator_name"
+              connectionName="authors"
+              edges={this.props.vertex.authors.edges}
+              fieldName="node.creator_name"
               keyDown={this.keyDown.bind(this)}
               deleteTag={this.deleteTag.bind(this)}
-              search={this.searchQuery.bind(this, )}
+              search={this.searchQuery.bind(this)}
               relayVariableName="searchCreatorWord"
-              results={this.props.searchCreators.creators}
+              results={this.props.searchCreators.creators.edges}
             />
           </dd>
         </dl>
@@ -143,14 +172,14 @@ class MangaEdit extends React.Component {
           </dt>
           <dd>
             <TagContainer
-              arrayName="artists"
-              array={this.props.vertex.artists.edges}
-              propName="node.creator_name"
+              connectionName="artists"
+              edges={this.props.vertex.artists.edges}
+              fieldName="node.creator_name"
               keyDown={this.keyDown.bind(this)}
               deleteTag={this.deleteTag.bind(this)}
               search={this.searchQuery.bind(this)}
               relayVariableName="searchCreatorWord"
-              results={this.props.searchCreators.creators}
+              results={this.props.searchCreators.creators.edges}
             />
           </dd>
         </dl>
@@ -160,14 +189,14 @@ class MangaEdit extends React.Component {
           </dt>
           <dd>
             <TagContainer
-              arrayName="genres"
-              array={this.props.vertex.genres}
-              propName="genre"
+              connectionName="genres"
+              edges={this.props.vertex.genres.edges}
+              fieldName="node.genre"
               keyDown={this.keyDown.bind(this)}
               deleteTag={this.deleteTag.bind(this)}
               search={this.searchQuery.bind(this)}
               relayVariableName="searchGenreWord"
-              results={this.props.searchGenres.genres}
+              results={this.props.searchGenres.genres.edges}
             />
           </dd>
         </dl>
@@ -214,6 +243,7 @@ class MangaEdit extends React.Component {
 var Container = Relay.createContainer(MangaEdit, {
   initialVariables: {
     id: null,
+    maximum: FIRST_MAXIMUM,
     searchCreatorWord: null,
     searchGenreWord: null,
   },
@@ -227,7 +257,8 @@ var Container = Relay.createContainer(MangaEdit, {
           status,
           type,
           ${DeleteAuthorMutation.getFragment('vertex')},
-          authors (first: 5) {
+          ${AddAuthorMutation.getFragment('vertex')},
+          authors (first: $maximum) {
             edges {
               node {
                 id,
@@ -235,7 +266,7 @@ var Container = Relay.createContainer(MangaEdit, {
               }
             }
           }
-          artists (first: 5) {
+          artists (first: $maximum) {
             edges {
               node {
                 id,
@@ -243,29 +274,37 @@ var Container = Relay.createContainer(MangaEdit, {
               }
             }
           },
-          genres {
-            id,
-            genre
+          genres (first: $maximum) {
+            edges {
+              node {
+                id,
+                genre
+              }
+            }
           }
         }
       }
     `,
     searchCreators: () => Relay.QL`
       fragment on Search {
-        creators(name: $searchCreatorWord) {
-          ... on Creator {
-            id,
-            creator_name
+        creators(first: $maximum, name: $searchCreatorWord) {
+          edges {
+            node {
+              id,
+              creator_name
+            }
           }
         }
       }
     `,
     searchGenres: () => Relay.QL`
       fragment on Search {
-        genres(genre: $searchGenreWord) {
-          ... on Genre {
-            id,
-            genre
+        genres(first: $maximum,genre: $searchGenreWord) {
+          edges {
+            node {
+              id,
+              genre
+            }
           }
         }
       }

@@ -17,7 +17,6 @@ import {
 } from 'graphql-relay';
 
 import { registerType } from '../registry';
-
 import { nodeInterface } from '../node.js';
 
 export const creatorType = registerType(new GraphQLObjectType({

@@ -363,7 +363,19 @@ exports.getArtistsByMangaId = function(manga_id) {
   });
 };
 
-//Authors
+// Authors
+
+exports.getAuthorById = function(id) {
+  return new Promise((resolve, reject) => {
+    var sql = 'select * from creators where id = ?;';
+
+    connection.query(sql, id, function(err, results) {
+      if (err) console.log(err);
+
+      resolve(results);
+    });
+  });
+};
 
 exports.getAuthorsByMangaId = function(manga_id) {
   return new Promise((resolve, reject) => {
@@ -379,6 +391,33 @@ exports.getAuthorsByMangaId = function(manga_id) {
     });
   });
 };
+
+exports.addAuthor = function(manga_id, creator_id) {
+  return new Promise((resolve, reject) => {
+    var sql = 'INSERT IGNORE INTO authors (manga_id, creator_id) values (?, ?);';
+
+    sql = mysql.format(sql, [manga_id, creator_id]);
+
+    connection.query(sql, (err, results) => {
+      if (err) console.log(err);
+      resolve(results);
+    });
+  });
+};
+
+exports.deleteAuthor = function(manga_id, creator_id) {
+  return new Promise((resolve, reject) => {
+    var sql = 'DELETE IGNORE from authors where manga_id = ? AND creator_id = ?;';
+
+    sql = mysql.format(sql, [manga_id, creator_id]);
+
+    connection.query(sql, (err, results) => {
+      if (err) console.log(err);
+      resolve(results);
+    });
+  });
+};
+
 
 //Types
 exports.getTypeByTypeId = function(id) {
@@ -511,32 +550,6 @@ exports.updateManga = function(id, manga_title, descript, status, type) {
         if (err) console.log(err);
         resolve(results);
       });
-    });
-  });
-};
-
-exports.addAuthor = function(manga_id, creator_id) {
-  return new Promise((resolve, reject) => {
-    var sql = 'INSERT IGNORE INTO authors set manga_id = ? AND creator_id = ?;';
-
-    sql = mysql.format(sql, [manga_id, creator_id]);
-
-    connection.query(sql, (err, results) => {
-      if (err) console.log(err);
-      resolve(results);
-    });
-  });
-};
-
-exports.deleteAuthor = function(manga_id, creator_id) {
-  return new Promise((resolve, reject) => {
-    var sql = 'DELETE IGNORE from authors where manga_id = ? AND creator_id = ?;';
-
-    sql = mysql.format(sql, [manga_id, creator_id]);
-
-    connection.query(sql, (err, results) => {
-      if (err) console.log(err);
-      resolve(results);
     });
   });
 };

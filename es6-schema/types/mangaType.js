@@ -30,10 +30,8 @@ import { registerType } from '../registry';
 import { nodeInterface } from '../node.js';
 import { chapterConnection } from './chapterType';
 import { groupConnection } from './groupType';
-import { genreType } from './genreType';
-
-import { creatorType } from './creatorType';
-import { creatorConnection } from './creatorType';
+import { genreType, genreConnection } from './genreType';
+import { creatorType, creatorConnection } from './creatorType';
 
 export const mangaType = registerType(new GraphQLObjectType({
   name: 'Manga',
@@ -52,10 +50,11 @@ export const mangaType = registerType(new GraphQLObjectType({
       type: GraphQLString
     },
     genres: {
-      type: new GraphQLList(genreType),
-      resolve: (root) => {
+      type: genreConnection,
+      args: connectionArgs,
+      resolve: (root, args) => {
         return mysql.getGenresByMangaId(root.id).then((value) => {
-          return value;
+          return connectionFromArray(value, args);
         });
       }
     },

@@ -1,19 +1,47 @@
 var GraphQL = require('graphql/utilities');
-var schema = require('./schema/mangaType.js');
 var Relay = require('graphql-relay');
 var dotProp = require('dot-prop');
+var mysql = require('/Users/1048596/Desktop/tracker/config/mysql.js');
+var GraphQLRelay = require('graphql-relay');
 
 var arr = [
   { id: 1 },
   { id: 2 }
 ];
+/*
+(function() {
+  new Promise((resolve, reject) => {
+    mysql.getAuthorsByMangaId(2).then((authors) => {
+      resolve(authors);
+    });
+  }).then((authors) => {
+    mysql.getAuthorById(1).then((author) => {
+      console.log(authors);
+      console.log(author);
+    });
+  });
+})();
 
-
-console.log(dotProp.get(arr[1], 'id'));
-
-
-
-
+*/
+(function() {
+  new Promise((resolve, reject) => {
+    mysql.getAuthorsByMangaId(2).then((authors) => {
+      console.log(authors);
+      resolve(authors);
+    });
+  }).then((authors) => {
+    mysql.getAuthorById(2).then((author) => {
+      var obj = arr[1];
+      var obj2 = { id: 2 };
+      console.log(obj);
+      console.log(obj2);
+      console.log(GraphQLRelay.cursorForObjectInConnection(arr, obj));
+      console.log(GraphQLRelay.cursorForObjectInConnection(arr, obj2));
+      console.log(GraphQLRelay.offsetToCursor(1));
+      console.log(author[0]);
+    });
+  });
+})();
 
 /*
 var mysql = require('mysql');

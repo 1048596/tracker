@@ -35,10 +35,11 @@ import { chapterConnection, chapterType, chapterEdge } from './types/chapterType
 import { groupConnection, groupType } from './types/groupType.js';
 import { authorType } from './types/authorType.js';
 import { artistType } from './types/artistType.js';
-import { genreType } from './types/genreType.js';
+import { genreType, genreConnection } from './types/genreType.js';
 import { creatorType, creatorConnection } from './types/creatorType.js';
 
 // Mutations
+import { addAuthorMutation } from './mutations/addAuthorMutation.js';
 import { deleteAuthorMutation } from './mutations/deleteAuthorMutation.js';
 
 // All types, lists
@@ -140,28 +141,30 @@ var searchType = new GraphQLObjectType({
   name: 'Search',
   fields: () => ({
     creators: {
-      type: new GraphQLList(creatorType),
+      type: creatorConnection,
       args: {
+        ...connectionArgs,
         name: {
           type: GraphQLString
         }
       },
       resolve: (rootValue, args) => {
         return mysql.searchCreatorsByName(args.name).then((value) => {
-          return value;
+          return connectionFromArray(value, args);
         });
       }
     },
     genres: {
-      type: new GraphQLList(genreType),
+      type: genreConnection,
       args: {
+        ...connectionArgs,
         genre: {
           type: GraphQLString
         }
       },
       resolve: (rootValue, args) => {
         return mysql.searchGenresByGenre(args.genre).then((value) => {
-          return value
+          return connectionFromArray(value, args);
         });
       }
     }
@@ -224,6 +227,7 @@ var queryType = new GraphQLObjectType({
 var mutationType = new GraphQLObjectType({
   name: 'Mutation',
   fields: () => ({
+    addAuthor: addAuthorMutation,
     deleteAuthor: deleteAuthorMutation,
   })
 });
