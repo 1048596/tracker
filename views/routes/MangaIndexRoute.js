@@ -4,10 +4,10 @@ import { toGlobalId } from 'graphql-relay';
 import Relay from 'react-relay';
 
 export const MangaIndexQueries = {
-  node: (Component, { id, page, limit }) => Relay.QL`
+  vertex: (Component, { id, page, limit }) => Relay.QL`
     query {
       node(id: $id) {
-        ${Component.getFragment('node', { id, page, limit }) }
+        ${Component.getFragment('vertex', { id, page, limit }) }
       }
     }
   `,

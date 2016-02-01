@@ -8,6 +8,8 @@ import { fromGlobalId } from 'graphql-relay';
 import ChapterItem from '../components/ChapterItem.js';
 import PaginationButton from '../components/PaginationButton.js';
 
+import { FIRST_MAXIMUM } from '../../config/config.js';
+
 
 class MangaIndex extends React.Component {
   nextPage(event) {
@@ -46,8 +48,8 @@ class MangaIndex extends React.Component {
         />;
     }
 
-    if (this.props.node.chapters) {
-      if (this.props.node.chapters.pageInfo.hasNextPage) {
+    if (this.props.vertex.chapters) {
+      if (this.props.vertex.chapters.pageInfo.hasNextPage) {
         paginationButtonNext = <PaginationButton
             nextPage={true}
             onClick={this.nextPage.bind(this)}
@@ -57,7 +59,7 @@ class MangaIndex extends React.Component {
           />;
       }
 
-      mapChapters = this.props.node.chapters.edges.map((edge, i) => {
+      mapChapters = this.props.vertex.chapters.edges.map((edge, i) => {
           return (
             <ChapterItem key={i} {...edge.node} />
           );
@@ -67,8 +69,8 @@ class MangaIndex extends React.Component {
       mapChapters = <div>This manga has no chapters :(.</div>;
     }
 
-    if (this.props.node.groups.edges.length > 0) {
-      groups = this.props.node.groups.edges.map((edge, i) => {
+    if (this.props.vertex.groups.edges.length > 0) {
+      groups = this.props.vertex.groups.edges.map((edge, i) => {
           return <span className="info-row-item">{edge.node.group_name}</span>;
           });
     } else {
@@ -83,12 +85,12 @@ class MangaIndex extends React.Component {
             <tbody>
               <tr>
                 <td>Title: </td>
-                <td className="info-row">{this.props.node.manga_title}</td>
+                <td className="info-row">{this.props.vertex.manga_title}</td>
               </tr>
               <tr>
                 <td>Author(s): </td>
                 <td className="info-row">
-                  {this.props.node.authors.edges.map((edge, i) => {
+                  {this.props.vertex.authors.edges.map((edge, i) => {
                     return (<span key={i} className="info-row-item">
                         <Link to={'/creator/' + edge.node.creator_id}>
                           {edge.node.creator_name}
@@ -100,7 +102,7 @@ class MangaIndex extends React.Component {
               <tr>
                 <td>Artist(s): </td>
                 <td className="info-row">
-                  {this.props.node.artists.edges.map((edge, i) => {
+                  {this.props.vertex.artists.edges.map((edge, i) => {
                     return (<span key={i} className="info-row-item">
                         <Link to={'/creator/' + edge.node.creator_id}>
                           {edge.node.creator_name}
@@ -111,11 +113,11 @@ class MangaIndex extends React.Component {
               </tr>
               <tr>
                 <td>Status: </td>
-                <td className="info-row">{this.props.node.status}</td>
+                <td className="info-row">{this.props.vertex.status}</td>
               </tr>
               <tr>
                 <td>Type: </td>
-                <td className="info-row">{this.props.node.type}</td>
+                <td className="info-row">{this.props.vertex.type}</td>
               </tr>
             </tbody>
           </table>
@@ -124,8 +126,8 @@ class MangaIndex extends React.Component {
               <tr>
                 <td>Genres: </td>
                 <td className="info-row">
-                  {this.props.node.genres.map((genre, i) => {
-                    return <span className="info-row-item">{genre.genre}</span>;
+                  {this.props.vertex.genres.edges.map((edge, i) => {
+                    return <span className="info-row-item">{edge.node.genre}</span>;
                     })}
                 </td>
               </tr>
@@ -137,17 +139,17 @@ class MangaIndex extends React.Component {
               </tr>
               <tr>
                 <td>Total chapters: </td>
-                <td className="info-row">{this.props.node.chapter_count}</td>
+                <td className="info-row">{this.props.vertex.chapter_count}</td>
               </tr>
             </tbody>
           </table>
         </div>
         <div className="info-column-bottom clearfix">
           <div className="cover">
-            <img src={'/img/manga_cover_' + fromGlobalId(this.props.node.id).id + '.png'} />
+            <img src={'/img/manga_cover_' + fromGlobalId(this.props.vertex.id).id + '.png'} />
           </div>
           <div className="description">
-            <span>{this.props.node.descript}</span>
+            <span>{this.props.vertex.descript}</span>
           </div>
         </div>
         <table className="chapter-list">
@@ -168,17 +170,18 @@ var Container = Relay.createContainer(MangaIndex, {
   initialVariables: {
     id: null,
     page: null,
-    limit: null
+    limit: null,
+    maximum: FIRST_MAXIMUM
   },
   fragments: {
-    node: () => Relay.QL`
+    vertex: () => Relay.QL`
       fragment on Node {
         id,
         ... on Manga {
           manga_title,
           descript,
           created,
-          genres (first: 1337) {
+          genres (first: $maximum) {
             edges {
               node {
                 id,
@@ -189,7 +192,7 @@ var Container = Relay.createContainer(MangaIndex, {
           type,
           status,
           chapter_count,
-          authors (first: 5) {
+          authors (first: $maximum) {
             edges {
               node {
                 id,
@@ -197,7 +200,7 @@ var Container = Relay.createContainer(MangaIndex, {
               }
             }
           },
-          artists (first: 5) {
+          artists (first: $maximum) {
             edges {
               node {
                 id,
@@ -215,7 +218,7 @@ var Container = Relay.createContainer(MangaIndex, {
                 chapter_title,
                 chapter_number,
                 created,
-                groups (first: 10) {
+                groups (first: $maximum) {
                   edges {
                     node {
                       id,
@@ -230,7 +233,7 @@ var Container = Relay.createContainer(MangaIndex, {
               }
             }
           },
-          groups (first: 10) {
+          groups (first: $maximum) {
             edges {
               node {
                 id,
