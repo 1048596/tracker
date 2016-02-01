@@ -107,7 +107,7 @@ class MangaEdit extends React.Component {
       );
     }
   }
-  handleOnChange(event) {
+  handleChange(event) {
     let obj = {};
     obj[event.target.name] = event.target.value;
 
@@ -117,7 +117,6 @@ class MangaEdit extends React.Component {
     let edges = this.props.vertex[connectionName].edges;
 
     for (let i = 0; i < edges.length; i++) {
-
       if (nodeId === edges[i].node.id) {
         return i;
       }
@@ -165,7 +164,7 @@ class MangaEdit extends React.Component {
             <input
               name="manga_title"
               defaultValue={this.props.vertex.manga_title}
-              onChange={this.handleOnChange.bind(this)}
+              onChange={this.handleChange.bind(this)}
             />
           </dd>
         </dl>
@@ -180,7 +179,7 @@ class MangaEdit extends React.Component {
               rows="7"
               cols="40"
               defaultValue={this.props.vertex.descript}
-              onChange={this.handleOnChange.bind(this)}>
+              onChange={this.handleChange.bind(this)}>
             </textarea>
           </dd>
         </dl>
@@ -242,7 +241,7 @@ class MangaEdit extends React.Component {
           <dd>
             <select
               name="status"
-              onChange={this.handleOnChange.bind(this)}
+              onChange={this.handleChange.bind(this)}
               defaultValue={this.props.vertex.status}
             >
               <option value="null">null</option>
@@ -258,7 +257,7 @@ class MangaEdit extends React.Component {
           <dd>
             <select
               name="type"
-              onChange={this.handleOnChange.bind(this)}
+              onChange={this.handleChange.bind(this)}
               defaultValue={this.props.vertex.type}
             >
               <option value="null">null</option>
