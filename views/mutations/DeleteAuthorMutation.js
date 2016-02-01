@@ -47,13 +47,13 @@ class DeleteAuthorMutation extends Relay.Mutation {
   getVariables() {
     return {
       manga_id: this.props.vertex.id,
-      creator_id: this.props.author.id
+      creator_id: this.props.creator_id
     };
   }
   getOptimisticResponse() {
     return {
       vertex: this.props.vertex,
-      deletedAuthorId: this.props.author.id
+      deletedAuthorId: this.props.creator_id
     }
   }
 }

@@ -31,24 +31,65 @@ class TagContainer extends React.Component {
     let fieldName = this.props.fieldName;
     console.log(event.keyCode);
 
+    // Handle "Enter"
     if (event.keyCode === 13) {
-      // Handle "Enter"
-      this.handleEnter(results, fieldName, event);
+      let edge;
+      let matchingIndex = false;
+
+      for (let i = 0; i < results.length; i++) {
+        if (this.state.input.toLowerCase() === dotProp.get(results[i], fieldName).toLowerCase()) {
+          matchingIndex = i;
+          console.log('We got a matchingIndex:', results[matchingIndex]);
+          break;
+        }
+      }
+
+      if (this.state.focusedIndex >= 0) {
+        edge = results[this.state.focusedIndex];
+        console.log(edge);
+        this.handleEnter(edge);
+      } else if (matchingIndex >= 0) {
+        edge = results[matchingIndex];
+        console.log(edge);
+        this.handleEnter(edge);
+      }
+
+      this.resetFocusedIndex();
+      event.target.value = '';
+      this._handleSearch(event);
     }
 
+    // If down arrow
     if (event.keyCode === 40) {
       this.focusNextOption();
     }
 
+    // If up arrow
     if (event.keyCode === 38) {
       this.focusPreviousOption();
     }
   }
-  handleEnter(results, fieldName, event) {
-    let matchingIndex;
-    let focusedIndex = this.state.focusedIndex;
+  handleEnter(edge) {
     let edges = this.props.edges;
+    let hasEdge = false;
 
+    for (let i = 0; i < edges.length; i++) {
+      if  (edge.node.id === edges[i].node.id) {
+        hasEdge = true;
+        break;
+      }
+    }
+
+    if (!hasEdge) {
+      console.log('Add edge');
+      this.props.handleKeyDown(
+        this.props.connectionName,
+        edge,
+        13
+      );
+    }
+
+    /*
     // Match input with results, with no focused result
     for (let i = 0; i < results.length; i++) {
       console.log(dotProp.get(results[i], fieldName).toLowerCase());
@@ -62,11 +103,17 @@ class TagContainer extends React.Component {
       let hasEdge = false;
 
       for (let i = 0; i < edges.length; i++) {
-        if (results[focusedIndex] == edges[i] || results[matchingIndex] == edges[i]) {
-          hasEdge = true;
-          console.log('Already exists in edges/connection.');
-          resolve(hasEdge);
-          break;
+        console.log(results[focusedIndex].node.id === edges[i].node.id);
+        console.log(results[matchingIndex], edges[i]);
+        try {
+          if (results[focusedIndex].node.id == edges[i].node.id || results[matchingIndex].node.id == edges[i].node.id) {
+            hasEdge = true;
+            console.log('Already exists in edges/connection.');
+            resolve(hasEdge);
+            break;
+          }
+        } catch (e) {
+          console.log(e);
         }
       }
       resolve(hasEdge);
@@ -74,12 +121,13 @@ class TagContainer extends React.Component {
       this.resetFocusedIndex();
       event.target.value = '';
       this._handleSearch(event);
-      
+
+      console.log(hasEdge);
+
       if (!hasEdge) {
         // If matching input and result or focus on a result then:
         if (results[focusedIndex] || results[matchingIndex]) {
           // Reset the dropbox results by changing relay search variable to nothing.
-
           this.props.handleKeyDown(
             this.props.connectionName,
             results[focusedIndex] || results[matchingIndex],
@@ -87,7 +135,36 @@ class TagContainer extends React.Component {
           );
         }
       }
+    });*/
+
+
+
+
+
+
+  }
+  _handleDeleteTag(connectionName, nodeId, event) {
+    this.props.handleClickDeleteTag(
+      this.props.connectionName,
+      nodeId
+    );
+  }
+  _handleSearch(event) {
+    this.setState({
+      input: event.target.value
     });
+    this.props.search(this.props.relayVariableName, event.target.value);
+  }
+  handleFocus(event) {
+    this.setState({
+      focused: true
+    });
+  }
+  handleBlur() {
+    this.setState({
+      focused: false,
+    });
+    this.resetFocusedIndex();
   }
   focusNextOption() {
     if (this.state.focusedIndex === null) {
@@ -118,29 +195,6 @@ class TagContainer extends React.Component {
         };
       })
     }
-  }
-  _handleDeleteTag(connectionName, nodeId, event) {
-    this.props.handleClickDeleteTag(
-      this.props.connectionName,
-      nodeId
-    );
-  }
-  _handleSearch(event) {
-    this.setState({
-      input: event.target.value
-    });
-    this.props.search(this.props.relayVariableName, event.target.value);
-  }
-  handleFocus(event) {
-    this.setState({
-      focused: true
-    });
-  }
-  handleBlur() {
-    this.setState({
-      focused: false,
-    });
-    this.resetFocusedIndex();
   }
   resetFocusedIndex() {
     this.setState({

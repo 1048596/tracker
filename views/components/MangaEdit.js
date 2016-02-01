@@ -43,16 +43,17 @@ class MangaEdit extends React.Component {
       // 3: Else add mutaion
       if (connectionName === 'authors') {
         let transactions = this.props.relay.getPendingTransactions(this.props.vertex.authors);
+        let queue;
+
         if (transactions) {
-          let queue = transactions[0]._mutationQueue._queue;
+          queue = transactions[0]._mutationQueue._queue;
           for (let i = 0; i < queue.length; i++) {
-            if (queue[i].mutation.props.author.id == edge.node.id) {
-              console.log('rollback:', edge.node.id, edge.node.creator_name);
+            if (queue[i].mutation.props.creator_id == edge.node.id) {
               transactions[i].rollback();
+              break;
             }
           }
         } else {
-          // AddAuthorMutation
           Relay.Store.applyUpdate(
             new AddAuthorMutation({
               vertex: this.props.vertex,
@@ -74,7 +75,6 @@ class MangaEdit extends React.Component {
             }
           }
         } else {
-          // AddAuthorMutation
           Relay.Store.applyUpdate(
             new AddArtistMutation({
               vertex: this.props.vertex,
@@ -87,27 +87,27 @@ class MangaEdit extends React.Component {
     }
   }
   handleClickDeleteTag(connectionName, nodeId) {
-    var index = this.getEdgeIndex(connectionName, nodeId);
-    console.log(index);
-
     if (connectionName === 'authors') {
-      Relay.Store.applyUpdate(
-        new DeleteAuthorMutation({
-          vertex: this.props.vertex,
-          author: this.props.vertex.authors.edges[index].node
-        }),
-        { onSuccess, onFailure }
-      );
-    }
+      let transactions = this.props.relay.getPendingTransactions(this.props.vertex.authors);
+      let queue;
 
-    if (connectionName === 'artists') {
-      Relay.Store.applyUpdate(
-        new DeleteArtistMutation({
-          vertex: this.props.vertex,
-          artist: this.props.vertex.artists.edges[index].node
-        }),
-        { onSuccess, onFailure }
-      );
+      if (transactions) {
+        queue = transactions[0]._mutationQueue._queue;
+        for (let i = 0; i < queue.length; i++) {
+          if (queue[i].mutation.props.author.node.id == nodeId) {
+            transactions[i].rollback();
+            break;
+          }
+        }
+      } else {
+        Relay.Store.applyUpdate(
+          new DeleteAuthorMutation({
+            vertex: this.props.vertex,
+            creator_id: nodeId
+          }),
+          { onSuccess, onFailure }
+        );
+      }
     }
   }
   handleChange(event) {
@@ -129,7 +129,7 @@ class MangaEdit extends React.Component {
     console.log(this.state);
     console.log(this.props.vertex);
     var transactions = this.props.relay.getPendingTransactions(this.props.vertex);
-    console.log(transactions[0]);
+    console.log(transactions);
   }
   rollBack(event) {
     var transactions = this.props.relay.getPendingTransactions(this.props.vertex);
