@@ -363,6 +363,34 @@ exports.getArtistsByMangaId = function(manga_id) {
   });
 };
 
+exports.addArtist = function(manga_id, creator_id) {
+  return new Promise((resolve, reject) => {
+    var sql = 'INSERT IGNORE INTO artists (manga_id, creator_id) values (?, ?);';
+
+    sql = mysql.format(sql, [manga_id, creator_id]);
+
+    connection.query(sql, (err, results) => {
+      if (err) console.log(err);
+      resolve(results);
+    });
+  });
+};
+
+exports.deleteArtist = function(manga_id, creator_id) {
+  return new Promise((resolve, reject) => {
+    var sql = 'DELETE IGNORE from artists where manga_id = ? AND creator_id = ?;';
+
+    sql = mysql.format(sql, [manga_id, creator_id]);
+
+    connection.query(sql, (err, results) => {
+      if (err) console.log(err);
+      resolve(results);
+    });
+  });
+};
+
+
+
 // Authors
 
 exports.getAuthorById = function(id) {

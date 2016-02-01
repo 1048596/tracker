@@ -178,8 +178,13 @@ var Container = Relay.createContainer(MangaIndex, {
           manga_title,
           descript,
           created,
-          genres {
-            genre
+          genres (first: 1337) {
+            edges {
+              node {
+                id,
+                genre
+              }
+            }
           },
           type,
           status,

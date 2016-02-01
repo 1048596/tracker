@@ -6,7 +6,9 @@ import { FIRST_MAXIMUM } from '../../config/config.js';
 import TagContainer from './TagContainer.js';
 
 import AddAuthorMutation from '../mutations/AddAuthorMutation.js';
+import AddArtistMutation from '../mutations/AddArtistMutation.js';
 import DeleteAuthorMutation from '../mutations/DeleteAuthorMutation.js';
+import DeleteArtistMutation from '../mutations/DeleteArtistMutation.js';
 
 var onSuccess = (response) => {
   console.log('Success!');
@@ -30,42 +32,10 @@ class MangaEdit extends React.Component {
       type: '',
     };
   }
-  getEdgeIndex(connectionName, nodeId) {
-    let edges = this.props.vertex[connectionName].edges;
-
-    for (let i = 0; i < edges.length; i++) {
-      if (nodeId === edges[i].node.id) {
-        return i;
-      }
-    }
+  componentWillMount() {
+    let arr = [''];
   }
-  callState() {
-    console.log(this.state);
-    console.log(this.props.vertex);
-    var transactions = this.props.relay.getPendingTransactions(this.props.vertex);
-    console.log(transactions[0]);
-  }
-  rollBack(event) {
-    var transactions = this.props.relay.getPendingTransactions(this.props.vertex);
-    for (let i = 0; i < transactions.length; i++) {
-      transactions[i].rollback();
-    }
-  }
-  commit() {
-    var transactions = this.props.relay.getPendingTransactions(this.props.vertex);
-    console.log(transactions);
-
-    for (let i = 0; i < transactions.length; i++) {
-      transactions[i].commit();
-    }
-  }
-  _handleOnChange(event) {
-    let obj = {};
-    obj[event.target.name] = event.target.value;
-
-    this.setState(obj);
-  }
-  keyDown(connectionName, edge, keyCode) {
+  handleKeyDownTagContainer(connectionName, edge, keyCode) {
     if (keyCode == 13) {
       // Handle "Enter"
       if (connectionName === 'authors') {
@@ -89,9 +59,31 @@ class MangaEdit extends React.Component {
           );
         }
       }
+
+      if (connectionName === 'artists') {
+        var transactions = this.props.relay.getPendingTransactions(this.props.vertex.artists);
+        if (transactions) {
+          var queue = transactions[0]._mutationQueue._queue;
+          for (let i = 0; i < queue.length; i++) {
+            if (queue[i].mutation.props.artist.id == edge.node.id) {
+              console.log('rollback:', edge.node.id, edge.node.creator_name);
+              transactions[i].rollback();
+            }
+          }
+        } else {
+          // AddAuthorMutation
+          Relay.Store.applyUpdate(
+            new AddArtistMutation({
+              vertex: this.props.vertex,
+              artist: edge
+            }),
+            { onSuccess, onFailure }
+          );
+        }
+      }
     }
   }
-  deleteTag(connectionName, nodeId) {
+  handleClickDeleteTag(connectionName, nodeId) {
     var index = this.getEdgeIndex(connectionName, nodeId);
     console.log(index);
 
@@ -104,8 +96,54 @@ class MangaEdit extends React.Component {
         { onSuccess, onFailure }
       );
     }
+
+    if (connectionName === 'artists') {
+      Relay.Store.applyUpdate(
+        new DeleteArtistMutation({
+          vertex: this.props.vertex,
+          artist: this.props.vertex.artists.edges[index].node
+        }),
+        { onSuccess, onFailure }
+      );
+    }
   }
-  searchQuery(relayVariableName, word) {
+  handleOnChange(event) {
+    let obj = {};
+    obj[event.target.name] = event.target.value;
+
+    this.setState(obj);
+  }
+  getEdgeIndex(connectionName, nodeId) {
+    let edges = this.props.vertex[connectionName].edges;
+
+    for (let i = 0; i < edges.length; i++) {
+
+      if (nodeId === edges[i].node.id) {
+        return i;
+      }
+    }
+  }
+  getState() {
+    console.log(this.state);
+    console.log(this.props.vertex);
+    var transactions = this.props.relay.getPendingTransactions(this.props.vertex);
+    console.log(transactions[0]);
+  }
+  rollBack(event) {
+    var transactions = this.props.relay.getPendingTransactions(this.props.vertex);
+    for (let i = 0; i < transactions.length; i++) {
+      transactions[i].rollback();
+    }
+  }
+  commit() {
+    var transactions = this.props.relay.getPendingTransactions(this.props.vertex);
+    console.log(transactions);
+
+    for (let i = 0; i < transactions.length; i++) {
+      transactions[i].commit();
+    }
+  }
+  setSearchWord(relayVariableName, word) {
     let setVariablesObject = {};
 
     if (word == "") {
@@ -115,9 +153,6 @@ class MangaEdit extends React.Component {
       setVariablesObject[relayVariableName] = word;
       this.props.relay.setVariables(setVariablesObject);
     }
-  }
-  componentWillMount() {
-    let arr = [''];
   }
   render() {
     return (
@@ -130,7 +165,7 @@ class MangaEdit extends React.Component {
             <input
               name="manga_title"
               defaultValue={this.props.vertex.manga_title}
-              onChange={this._handleOnChange.bind(this)}
+              onChange={this.handleOnChange.bind(this)}
             />
           </dd>
         </dl>
@@ -145,7 +180,7 @@ class MangaEdit extends React.Component {
               rows="7"
               cols="40"
               defaultValue={this.props.vertex.descript}
-              onChange={this._handleOnChange.bind(this)}>
+              onChange={this.handleOnChange.bind(this)}>
             </textarea>
           </dd>
         </dl>
@@ -158,9 +193,9 @@ class MangaEdit extends React.Component {
               connectionName="authors"
               edges={this.props.vertex.authors.edges}
               fieldName="node.creator_name"
-              keyDown={this.keyDown.bind(this)}
-              deleteTag={this.deleteTag.bind(this)}
-              search={this.searchQuery.bind(this)}
+              handleKeyDown={this.handleKeyDownTagContainer.bind(this)}
+              handleClickDeleteTag={this.handleClickDeleteTag.bind(this)}
+              search={this.setSearchWord.bind(this)}
               relayVariableName="searchCreatorWord"
               results={this.props.searchCreators.creators.edges}
             />
@@ -175,9 +210,9 @@ class MangaEdit extends React.Component {
               connectionName="artists"
               edges={this.props.vertex.artists.edges}
               fieldName="node.creator_name"
-              keyDown={this.keyDown.bind(this)}
-              deleteTag={this.deleteTag.bind(this)}
-              search={this.searchQuery.bind(this)}
+              handleKeyDown={this.handleKeyDownTagContainer.bind(this)}
+              handleClickDeleteTag={this.handleClickDeleteTag.bind(this)}
+              search={this.setSearchWord.bind(this)}
               relayVariableName="searchCreatorWord"
               results={this.props.searchCreators.creators.edges}
             />
@@ -192,9 +227,9 @@ class MangaEdit extends React.Component {
               connectionName="genres"
               edges={this.props.vertex.genres.edges}
               fieldName="node.genre"
-              keyDown={this.keyDown.bind(this)}
-              deleteTag={this.deleteTag.bind(this)}
-              search={this.searchQuery.bind(this)}
+              handleKeyDown={this.handleKeyDownTagContainer.bind(this)}
+              handleClickDeleteTag={this.handleClickDeleteTag.bind(this)}
+              search={this.setSearchWord.bind(this)}
               relayVariableName="searchGenreWord"
               results={this.props.searchGenres.genres.edges}
             />
@@ -207,7 +242,7 @@ class MangaEdit extends React.Component {
           <dd>
             <select
               name="status"
-              onChange={this._handleOnChange.bind(this)}
+              onChange={this.handleOnChange.bind(this)}
               defaultValue={this.props.vertex.status}
             >
               <option value="null">null</option>
@@ -223,7 +258,7 @@ class MangaEdit extends React.Component {
           <dd>
             <select
               name="type"
-              onChange={this._handleOnChange.bind(this)}
+              onChange={this.handleOnChange.bind(this)}
               defaultValue={this.props.vertex.type}
             >
               <option value="null">null</option>
@@ -232,7 +267,7 @@ class MangaEdit extends React.Component {
             </select>
           </dd>
         </dl>
-        <button onClick={this.callState.bind(this)}>Check state!</button>
+        <button onClick={this.getState.bind(this)}>Check state!</button>
         <button onClick={this.rollBack.bind(this)}>Time rooollllback!</button>
         <button onClick={this.commit.bind(this)}>Commit!</button>
       </div>
@@ -256,8 +291,10 @@ var Container = Relay.createContainer(MangaEdit, {
           descript,
           status,
           type,
-          ${DeleteAuthorMutation.getFragment('vertex')},
           ${AddAuthorMutation.getFragment('vertex')},
+          ${AddArtistMutation.getFragment('vertex')},
+          ${DeleteAuthorMutation.getFragment('vertex')},
+          ${DeleteArtistMutation.getFragment('vertex')},
           authors (first: $maximum) {
             edges {
               node {

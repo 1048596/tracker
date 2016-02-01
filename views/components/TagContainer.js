@@ -9,8 +9,8 @@ class TagContainer extends React.Component {
     connectionName: React.PropTypes.string.isRequired,
     edges: React.PropTypes.array.isRequired,
     fieldName: React.PropTypes.string.isRequired,
-    keyDown: React.PropTypes.func.isRequired,
-    deleteTag: React.PropTypes.func.isRequired,
+    handleKeyDown: React.PropTypes.func.isRequired,
+    handleClickDeleteTag: React.PropTypes.func.isRequired,
     search: React.PropTypes.func,
     relayVariableName: React.PropTypes.string,
     results: React.PropTypes.array,
@@ -64,7 +64,7 @@ class TagContainer extends React.Component {
       event.target.value = '';
       this._handleSearch(event);
 
-      this.props.keyDown(
+      this.props.handleKeyDown(
         this.props.connectionName,
         results[focusedIndex] || results[matchingIndex],
         13
@@ -102,7 +102,7 @@ class TagContainer extends React.Component {
     }
   }
   _handleDeleteTag(connectionName, nodeId, event) {
-    this.props.deleteTag(
+    this.props.handleClickDeleteTag(
       this.props.connectionName,
       nodeId
     );
