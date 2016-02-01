@@ -38,10 +38,13 @@ class MangaEdit extends React.Component {
   handleKeyDownTagContainer(connectionName, edge, keyCode) {
     if (keyCode == 13) {
       // Handle "Enter"
+      // 1: If edge exists in props, do nothing
+      // 2: If edge exists in transactions, rollback
+      // 3: Else add mutaion
       if (connectionName === 'authors') {
-        var transactions = this.props.relay.getPendingTransactions(this.props.vertex.authors);
+        let transactions = this.props.relay.getPendingTransactions(this.props.vertex.authors);
         if (transactions) {
-          var queue = transactions[0]._mutationQueue._queue;
+          let queue = transactions[0]._mutationQueue._queue;
           for (let i = 0; i < queue.length; i++) {
             if (queue[i].mutation.props.author.id == edge.node.id) {
               console.log('rollback:', edge.node.id, edge.node.creator_name);
@@ -61,9 +64,9 @@ class MangaEdit extends React.Component {
       }
 
       if (connectionName === 'artists') {
-        var transactions = this.props.relay.getPendingTransactions(this.props.vertex.artists);
+        let transactions = this.props.relay.getPendingTransactions(this.props.vertex.artists);
         if (transactions) {
-          var queue = transactions[0]._mutationQueue._queue;
+          let queue = transactions[0]._mutationQueue._queue;
           for (let i = 0; i < queue.length; i++) {
             if (queue[i].mutation.props.artist.id == edge.node.id) {
               console.log('rollback:', edge.node.id, edge.node.creator_name);
@@ -145,7 +148,7 @@ class MangaEdit extends React.Component {
   setSearchWord(relayVariableName, word) {
     let setVariablesObject = {};
 
-    if (word == "") {
+    if (word === "") {
       setVariablesObject[relayVariableName] = null;
       this.props.relay.setVariables(setVariablesObject);
     } else {

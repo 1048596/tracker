@@ -47,6 +47,7 @@ class TagContainer extends React.Component {
   handleEnter(results, fieldName, event) {
     let matchingIndex;
     let focusedIndex = this.state.focusedIndex;
+    let edges = this.props.edges;
 
     // Match input with results, with no focused result
     for (let i = 0; i < results.length; i++) {
@@ -57,19 +58,36 @@ class TagContainer extends React.Component {
       }
     }
 
-    // If matching input and result or focus on a result then:
-    if (results[focusedIndex] || results[matchingIndex]) {
-      // Reset the dropbox results by changing relay search variable to nothing.
+    new Promise((resolve, reject) => {
+      let hasEdge = false;
+
+      for (let i = 0; i < edges.length; i++) {
+        if (results[focusedIndex] == edges[i] || results[matchingIndex] == edges[i]) {
+          hasEdge = true;
+          console.log('Already exists in edges/connection.');
+          resolve(hasEdge);
+          break;
+        }
+      }
+      resolve(hasEdge);
+    }).then((hasEdge) => {
       this.resetFocusedIndex();
       event.target.value = '';
       this._handleSearch(event);
+      
+      if (!hasEdge) {
+        // If matching input and result or focus on a result then:
+        if (results[focusedIndex] || results[matchingIndex]) {
+          // Reset the dropbox results by changing relay search variable to nothing.
 
-      this.props.handleKeyDown(
-        this.props.connectionName,
-        results[focusedIndex] || results[matchingIndex],
-        13
-      );
-    }
+          this.props.handleKeyDown(
+            this.props.connectionName,
+            results[focusedIndex] || results[matchingIndex],
+            13
+          );
+        }
+      }
+    });
   }
   focusNextOption() {
     if (this.state.focusedIndex === null) {
