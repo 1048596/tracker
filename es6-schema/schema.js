@@ -41,8 +41,10 @@ import { creatorType, creatorConnection } from './types/creatorType.js';
 // Mutations
 import { addAuthorMutation } from './mutations/addAuthorMutation.js';
 import { addArtistMutation } from './mutations/addArtistMutation.js';
+import { addGenreMutation } from './mutations/addGenreMutation.js';
 import { deleteAuthorMutation } from './mutations/deleteAuthorMutation.js';
 import { deleteArtistMutation } from './mutations/deleteArtistMutation.js';
+import { deleteGenreMutation } from './mutations/deleteGenreMutation.js';
 
 // All types, lists
 var allChaptersType = new GraphQLObjectType({
@@ -233,6 +235,8 @@ var mutationType = new GraphQLObjectType({
     addArtist: addArtistMutation,
     deleteAuthor: deleteAuthorMutation,
     deleteArtist: deleteArtistMutation,
+    addGenre: addGenreMutation,
+    deleteGenre: deleteGenreMutation,
   })
 });
 

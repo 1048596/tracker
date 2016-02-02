@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.6.26, for osx10.10 (x86_64)
+-- MySQL dump 10.13  Distrib 5.6.28, for Win64 (x86_64)
 --
 -- Host: localhost    Database: tracker
 -- ------------------------------------------------------
--- Server version	5.6.26
+-- Server version	5.6.28
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -19,7 +19,7 @@
 -- Current Database: `tracker`
 --
 
-CREATE DATABASE /*!32312 IF NOT EXISTS*/ `tracker` /*!40100 DEFAULT CHARACTER SET utf8 */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `tracker` /*!40100 DEFAULT CHARACTER SET latin1 */;
 
 USE `tracker`;
 
@@ -174,7 +174,7 @@ CREATE TABLE `creators` (
   `birthdate` date DEFAULT NULL,
   `descript` mediumtext,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -183,7 +183,7 @@ CREATE TABLE `creators` (
 
 LOCK TABLES `creators` WRITE;
 /*!40000 ALTER TABLE `creators` DISABLE KEYS */;
-INSERT INTO `creators` VALUES (1,'Akiko Higashimura','f','1975-10-15','Author and artist for Kakukaku Shikajika and Jellyfish Princess');
+INSERT INTO `creators` VALUES (1,'Akiko Higashimura','f','1975-10-15','Author and artist for Kakukaku Shikajika and Jellyfish Princess'),(2,'creator1',NULL,NULL,NULL),(3,'creator2',NULL,NULL,NULL);
 /*!40000 ALTER TABLE `creators` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -242,34 +242,6 @@ INSERT INTO `groups` VALUES (1,'Twisted Hel Scans','Translates Tokyo Ghoul and w
 UNLOCK TABLES;
 
 --
--- Table structure for table `manga_genres`
---
-
-DROP TABLE IF EXISTS `manga_genres`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `manga_genres` (
-  `manga_id` int(10) unsigned NOT NULL,
-  `genre_id` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`manga_id`,`genre_id`),
-  KEY `manga_id` (`manga_id`),
-  KEY `genre_id` (`genre_id`),
-  CONSTRAINT `manga_genres_ibfk_1` FOREIGN KEY (`manga_id`) REFERENCES `mangas` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `manga_genres_ibfk_2` FOREIGN KEY (`genre_id`) REFERENCES `genres` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `manga_genres`
---
-
-LOCK TABLES `manga_genres` WRITE;
-/*!40000 ALTER TABLE `manga_genres` DISABLE KEYS */;
-INSERT INTO `manga_genres` VALUES (1,3),(1,5),(1,7),(2,1),(2,2),(2,4),(3,1),(3,4),(3,6);
-/*!40000 ALTER TABLE `manga_genres` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `mangas`
 --
 
@@ -298,8 +270,36 @@ CREATE TABLE `mangas` (
 
 LOCK TABLES `mangas` WRITE;
 /*!40000 ALTER TABLE `mangas` DISABLE KEYS */;
-INSERT INTO `mangas` VALUES (1,'Tokyo Ghoul','About a human called Kaneki, which later on becomes a ghoul.','2015-10-29 11:28:12',NULL,0,0),(2,'Kakukaku Shikajika','Self-biography of Akiko Higashimura.','2015-10-29 11:28:12',NULL,1,2),(3,'Skill of Lure','About a guy learning about how to pick up girls.','2015-10-29 11:28:12',NULL,0,0);
+INSERT INTO `mangas` VALUES (1,'Tokyo Ghoul','About a human called Kaneki, which later on becomes a ghoul.','2015-10-29 11:28:12',NULL,0,0),(2,'Kakukaku Shikajika','Self-biography of Akiko Higashimura.','2015-10-29 11:28:12','2016-01-29 13:34:45',1,2),(3,'Skill of Lure','About a guy learning about how to pick up girls.','2015-10-29 11:28:12',NULL,0,0);
 /*!40000 ALTER TABLE `mangas` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `mangas_genres`
+--
+
+DROP TABLE IF EXISTS `mangas_genres`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `mangas_genres` (
+  `manga_id` int(10) unsigned NOT NULL,
+  `genre_id` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`manga_id`,`genre_id`),
+  KEY `manga_id` (`manga_id`),
+  KEY `genre_id` (`genre_id`),
+  CONSTRAINT `mangas_genres_ibfk_1` FOREIGN KEY (`manga_id`) REFERENCES `mangas` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `mangas_genres_ibfk_2` FOREIGN KEY (`genre_id`) REFERENCES `genres` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `mangas_genres`
+--
+
+LOCK TABLES `mangas_genres` WRITE;
+/*!40000 ALTER TABLE `mangas_genres` DISABLE KEYS */;
+INSERT INTO `mangas_genres` VALUES (1,3),(1,5),(1,7),(2,1),(2,2),(2,4),(3,1),(3,4),(3,6);
+/*!40000 ALTER TABLE `mangas_genres` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -466,4 +466,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-01-28 14:58:41
+-- Dump completed on 2016-02-02  5:51:15

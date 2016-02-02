@@ -7,8 +7,10 @@ import TagContainer from './TagContainer.js';
 
 import AddAuthorMutation from '../mutations/AddAuthorMutation.js';
 import AddArtistMutation from '../mutations/AddArtistMutation.js';
+import AddGenreMutation from '../mutations/AddGenreMutation.js';
 import DeleteAuthorMutation from '../mutations/DeleteAuthorMutation.js';
 import DeleteArtistMutation from '../mutations/DeleteArtistMutation.js';
+import DeleteGenreMutation from '../mutations/DeleteGenreMutation.js';
 
 var onSuccess = (response) => {
   console.log('Success!');
@@ -37,77 +39,211 @@ class MangaEdit extends React.Component {
   }
   handleKeyDownTagContainer(connectionName, edge, keyCode) {
     if (keyCode == 13) {
-      // Handle "Enter"
-      // 1: If edge exists in props, do nothing
-      // 2: If edge exists in transactions, rollback
-      // 3: Else add mutaion
-      if (connectionName === 'authors') {
-        let transactions = this.props.relay.getPendingTransactions(this.props.vertex.authors);
-        let queue;
+      // 1: If edge exists in props, do nothing (logic in TagContainer)
+      // 2: Check for a Delete/Add mutation and if exists, roll it back,
+      // 3: Else do new mutation
 
-        if (transactions) {
-          queue = transactions[0]._mutationQueue._queue;
-          for (let i = 0; i < queue.length; i++) {
-            if (queue[i].mutation.props.creator_id == edge.node.id) {
-              transactions[i].rollback();
-              break;
+      // Add author
+      if (connectionName === 'authors') {
+        new Promise((resolve, reject) => {
+          let transactions = this.props.relay.getPendingTransactions(this.props.vertex.authors);
+          let mutate = true;
+
+          if (transactions) {
+            let queue = transactions[0]._mutationQueue._queue;
+
+            for (let i = 0; i < queue.length; i++) {
+              if (queue[i].mutation instanceof DeleteAuthorMutation) {
+                if (queue[i].mutation.props.creator_id == edge.node.id) {
+                  transactions[i].rollback();
+                  mutate = false;
+                  break;
+                }
+              }
             }
           }
-        } else {
-          Relay.Store.applyUpdate(
-            new AddAuthorMutation({
-              vertex: this.props.vertex,
-              author: edge
-            }),
-            { onSuccess, onFailure }
-          );
-        }
+          resolve(mutate);
+        }).then((mutate) => {
+          if (mutate) {
+            console.log('Mutate!');
+            Relay.Store.applyUpdate(
+              new AddAuthorMutation({
+                vertex: this.props.vertex,
+                author: edge
+              }),
+              { onSuccess, onFailure }
+            );
+          }
+        });
       }
 
+      // Add artist
       if (connectionName === 'artists') {
-        let transactions = this.props.relay.getPendingTransactions(this.props.vertex.artists);
-        if (transactions) {
-          let queue = transactions[0]._mutationQueue._queue;
-          for (let i = 0; i < queue.length; i++) {
-            if (queue[i].mutation.props.artist.id == edge.node.id) {
-              console.log('rollback:', edge.node.id, edge.node.creator_name);
-              transactions[i].rollback();
+        new Promise((resolve, reject) => {
+          let transactions = this.props.relay.getPendingTransactions(this.props.vertex.artists);
+          let mutate = true;
+
+          if (transactions) {
+            let queue = transactions[0]._mutationQueue._queue;
+
+            for (let i = 0; i < queue.length; i++) {
+              if (queue[i].mutation instanceof DeleteArtistMutation) {
+                if (queue[i].mutation.props.creator_id == edge.node.id) {
+                  transactions[i].rollback();
+                  mutate = false;
+                  break;
+                }
+              }
             }
           }
-        } else {
-          Relay.Store.applyUpdate(
-            new AddArtistMutation({
-              vertex: this.props.vertex,
-              artist: edge
-            }),
-            { onSuccess, onFailure }
-          );
-        }
+          resolve(mutate);
+        }).then((mutate) => {
+          if (mutate) {
+            console.log('Mutate!');
+            Relay.Store.applyUpdate(
+              new AddArtistMutation({
+                vertex: this.props.vertex,
+                artist: edge
+              }),
+              { onSuccess, onFailure }
+            );
+          }
+        });
+      }
+
+      // Add genre
+      if (connectionName === 'genres') {
+        new Promise((resolve, reject) => {
+          let transactions = this.props.relay.getPendingTransactions(this.props.vertex.genres);
+          let mutate = true;
+
+          if (transactions) {
+            let queue = transactions[0]._mutationQueue._queue;
+
+            for (let i = 0; i < queue.length; i++) {
+              if (queue[i].mutation instanceof DeleteGenreMutation) {
+                if (queue[i].mutation.props.genre_id == edge.node.id) {
+                  transactions[i].rollback();
+                  mutate = false;
+                  break;
+                }
+              }
+            }
+          }
+          resolve(mutate);
+        }).then((mutate) => {
+          if (mutate) {
+            console.log('Mutate!');
+            Relay.Store.applyUpdate(
+              new AddGenreMutation({
+                vertex: this.props.vertex,
+                genre: edge
+              }),
+              { onSuccess, onFailure }
+            );
+          }
+        });
       }
     }
   }
   handleClickDeleteTag(connectionName, nodeId) {
+    // Delete author
     if (connectionName === 'authors') {
-      let transactions = this.props.relay.getPendingTransactions(this.props.vertex.authors);
-      let queue;
+      new Promise((resolve, reject) => {
+        let transactions = this.props.relay.getPendingTransactions(this.props.vertex.authors);
+        let mutate = true;
 
-      if (transactions) {
-        queue = transactions[0]._mutationQueue._queue;
-        for (let i = 0; i < queue.length; i++) {
-          if (queue[i].mutation.props.author.node.id == nodeId) {
-            transactions[i].rollback();
-            break;
+        if (transactions) {
+          let queue = transactions[0]._mutationQueue._queue;
+
+          for (let i = 0; i < queue.length; i++) {
+            if (queue[i].mutation instanceof AddAuthorMutation) {
+              if (queue[i].mutation.props.author.node.id == nodeId) {
+                transactions[i].rollback();
+                mutate = false;
+                break;
+              }
+            }
           }
         }
-      } else {
-        Relay.Store.applyUpdate(
-          new DeleteAuthorMutation({
-            vertex: this.props.vertex,
-            creator_id: nodeId
-          }),
-          { onSuccess, onFailure }
-        );
-      }
+        resolve(mutate);
+      }).then((mutate) => {
+        if (mutate) {
+          Relay.Store.applyUpdate(
+            new DeleteAuthorMutation({
+              vertex: this.props.vertex,
+              creator_id: nodeId
+            }),
+            { onSuccess, onFailure }
+          );
+        }
+      });
+    }
+
+    // Delete artist
+    if (connectionName === 'artists') {
+      new Promise((resolve, reject) => {
+        let transactions = this.props.relay.getPendingTransactions(this.props.vertex.artists);
+        let mutate = true;
+
+        if (transactions) {
+          let queue = transactions[0]._mutationQueue._queue;
+
+          for (let i = 0; i < queue.length; i++) {
+            if (queue[i].mutation instanceof AddArtistMutation) {
+              if (queue[i].mutation.props.artist.node.id == nodeId) {
+                transactions[i].rollback();
+                mutate = false;
+                break;
+              }
+            }
+          }
+        }
+        resolve(mutate);
+      }).then((mutate) => {
+        if (mutate) {
+          Relay.Store.applyUpdate(
+            new DeleteArtistMutation({
+              vertex: this.props.vertex,
+              creator_id: nodeId
+            }),
+            { onSuccess, onFailure }
+          );
+        }
+      });
+    }
+
+    // Delete genre
+    if (connectionName === 'genres') {
+      new Promise((resolve, reject) => {
+        let transactions = this.props.relay.getPendingTransactions(this.props.vertex.genres);
+        let mutate = true;
+
+        if (transactions) {
+          let queue = transactions[0]._mutationQueue._queue;
+
+          for (let i = 0; i < queue.length; i++) {
+            if (queue[i].mutation instanceof AddGenreMutation) {
+              if (queue[i].mutation.props.genre.node.id == nodeId) {
+                transactions[i].rollback();
+                mutate = false;
+                break;
+              }
+            }
+          }
+        }
+        resolve(mutate);
+      }).then((mutate) => {
+        if (mutate) {
+          Relay.Store.applyUpdate(
+            new DeleteGenreMutation({
+              vertex: this.props.vertex,
+              genre_id: nodeId
+            }),
+            { onSuccess, onFailure }
+          );
+        }
+      });
     }
   }
   handleChange(event) {
@@ -295,8 +431,10 @@ var Container = Relay.createContainer(MangaEdit, {
           type,
           ${AddAuthorMutation.getFragment('vertex')},
           ${AddArtistMutation.getFragment('vertex')},
+          ${AddGenreMutation.getFragment('vertex')},
           ${DeleteAuthorMutation.getFragment('vertex')},
           ${DeleteArtistMutation.getFragment('vertex')},
+          ${DeleteGenreMutation.getFragment('vertex')},
           authors (first: $maximum) {
             edges {
               node {

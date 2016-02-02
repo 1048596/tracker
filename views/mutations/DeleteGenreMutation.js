@@ -2,7 +2,7 @@ import Relay from 'react-relay';
 import { fromGlobalId } from 'graphql-relay';
 import { FIRST_MAXIMUM } from '../../config/config.js';
 
-class DeleteArtistMutation extends Relay.Mutation {
+class DeleteGenreMutation extends Relay.Mutation {
   //static initialVariables = {
   //  maximum: FIRST_MAXIMUM
   //};
@@ -11,11 +11,11 @@ class DeleteArtistMutation extends Relay.Mutation {
       fragment on Node {
         id,
         ... on Manga {
-          artists (first: 1337) {
+          genres (first: 1337) {
             edges {
               node {
                 id,
-                creator_name
+                genre
               }
             }
           }
@@ -24,13 +24,13 @@ class DeleteArtistMutation extends Relay.Mutation {
     `
   };
   getMutation() {
-    return Relay.QL`mutation { deleteArtist }`;
+    return Relay.QL`mutation { deleteGenre }`;
   }
   getFatQuery() {
     return Relay.QL`
-      fragment on DeleteArtistPayload {
+      fragment on DeleteGenrePayload {
         vertex,
-        deletedArtistId
+        deletedGenreId
       }
     `;
   }
@@ -39,23 +39,23 @@ class DeleteArtistMutation extends Relay.Mutation {
       type: 'RANGE_DELETE',
       parentName: 'vertex',
       parentID: this.props.vertex.id,
-      connectionName: 'artists',
-      deletedIDFieldName: 'deletedArtistId',
-      pathToConnection: ['vertex', 'artists']
+      connectionName: 'genres',
+      deletedIDFieldName: 'deletedGenreId',
+      pathToConnection: ['vertex', 'genres']
     }];
   }
   getVariables() {
     return {
       manga_id: this.props.vertex.id,
-      creator_id: this.props.creator_id
+      genre_id: this.props.genre_id
     };
   }
   getOptimisticResponse() {
     return {
       vertex: this.props.vertex,
-      deletedArtistId: this.props.creator_id
+      deletedGenreId: this.props.genre_id
     }
   }
 }
 
-module.exports = DeleteArtistMutation;
+module.exports = DeleteGenreMutation;

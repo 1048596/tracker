@@ -479,11 +479,37 @@ exports.getStatusByStatusId = function(id) {
 
 exports.getGenresByMangaId = function(id) {
   return new Promise((resolve, reject) => {
-    var sql = 'select id, genre from manga_genres mg join genres g on mg.genre_id = g.id where mg.manga_id = ?;';
+    var sql = 'select id, genre from mangas_genres mg join genres g on mg.genre_id = g.id where mg.manga_id = ?;';
 
     connection.query(sql, id, function(err, results) {
       if (err) console.log(err);
 
+      resolve(results);
+    });
+  });
+};
+
+exports.addGenre = function(manga_id, genre_id) {
+  return new Promise((resolve, reject) => {
+    var sql = 'INSERT IGNORE INTO mangas_genres (manga_id, genre_id) values (?, ?);';
+
+    sql = mysql.format(sql, [manga_id, genre_id]);
+
+    connection.query(sql, (err, results) => {
+      if (err) console.log(err);
+      resolve(results);
+    });
+  });
+};
+
+exports.deleteGenre = function(manga_id, genre_id) {
+  return new Promise((resolve, reject) => {
+    var sql = 'DELETE IGNORE from mangas_genres where manga_id = ? AND genre_id = ?;';
+
+    sql = mysql.format(sql, [manga_id, genre_id]);
+
+    connection.query(sql, (err, results) => {
+      if (err) console.log(err);
       resolve(results);
     });
   });
