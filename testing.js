@@ -3,11 +3,26 @@ var Relay = require('graphql-relay');
 var dotProp = require('dot-prop');
 var mysql = require('/Users/1048596/Desktop/tracker/config/mysql.js');
 var GraphQLRelay = require('graphql-relay');
+var moment = require('moment');
+
+var x = moment('Thu Oct 29 2015 12:28:12 GMT+0100 (W. Europe Standard Time)').fromNow();
+console.log(x);
+/*
 
 var arr = [
   { id: 1 },
   { id: 2 }
 ];
+
+mysql.getMangaCountByGroupId(3).then((value) => {
+  console.log(value);
+});
+*/
+
+
+
+
+
 /*
 (function() {
   new Promise((resolve, reject) => {
@@ -22,7 +37,7 @@ var arr = [
   });
 })();
 
-*/
+
 (function() {
   new Promise((resolve, reject) => {
     mysql.getAuthorsByMangaId(2).then((authors) => {
@@ -42,6 +57,7 @@ var arr = [
     });
   });
 })();
+*/
 
 /*
 var mysql = require('mysql');
@@ -55,8 +71,10 @@ var connection = mysql.createConnection({
   multipleStatements: true,
 });
 
-//console.log(Relay.fromGlobalId('Q2hhcHRlcjpRMmhoY0hSbGNqbzJPQT09').id);
 
+
+
+//console.log(Relay.fromGlobalId('Q2hhcHRlcjpRMmhoY0hSbGNqbzJPQT09').id);
 connection.query('select id from mangas where id = 2;', function(err, value) {
   console.log(value);
 });

@@ -37,6 +37,7 @@ import { authorType } from './types/authorType.js';
 import { artistType } from './types/artistType.js';
 import { genreType, genreConnection } from './types/genreType.js';
 import { creatorType, creatorConnection } from './types/creatorType.js';
+import { userType } from './types/userType.js';
 
 // Mutations
 import { addAuthorMutation } from './mutations/addAuthorMutation.js';
@@ -45,6 +46,7 @@ import { addGenreMutation } from './mutations/addGenreMutation.js';
 import { deleteAuthorMutation } from './mutations/deleteAuthorMutation.js';
 import { deleteArtistMutation } from './mutations/deleteArtistMutation.js';
 import { deleteGenreMutation } from './mutations/deleteGenreMutation.js';
+import { updateMangaMutation } from './mutations/updateMangaMutation.js';
 
 // All types, lists
 var allChaptersType = new GraphQLObjectType({
@@ -131,7 +133,7 @@ var subscriptionChaptersType = new GraphQLObjectType({
     }
   })
 });
-
+/*
 var userType = new GraphQLObjectType({
   name: 'User',
   fields: () => ({
@@ -139,7 +141,7 @@ var userType = new GraphQLObjectType({
       type: GraphQLString,
     },
   })
-});
+});*/
 
 var searchType = new GraphQLObjectType({
   name: 'Search',
@@ -233,10 +235,11 @@ var mutationType = new GraphQLObjectType({
   fields: () => ({
     addAuthor: addAuthorMutation,
     addArtist: addArtistMutation,
+    addGenre: addGenreMutation,
     deleteAuthor: deleteAuthorMutation,
     deleteArtist: deleteArtistMutation,
-    addGenre: addGenreMutation,
     deleteGenre: deleteGenreMutation,
+    updateManga: updateMangaMutation
   })
 });
 

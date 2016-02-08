@@ -127,7 +127,7 @@ CREATE TABLE `chapter_scanlated_by` (
 
 LOCK TABLES `chapter_scanlated_by` WRITE;
 /*!40000 ALTER TABLE `chapter_scanlated_by` DISABLE KEYS */;
-INSERT INTO `chapter_scanlated_by` VALUES (1,1),(2,1),(3,1),(7,2),(8,2),(9,2),(9,3);
+INSERT INTO `chapter_scanlated_by` VALUES (1,1),(2,1),(3,1),(7,2),(8,2),(9,2),(9,3),(65,3),(66,3),(67,3);
 /*!40000 ALTER TABLE `chapter_scanlated_by` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -224,11 +224,8 @@ CREATE TABLE `groups` (
   `descript` mediumtext,
   `created` datetime NOT NULL,
   `edited` datetime DEFAULT NULL,
-  `owner` varchar(20) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `owner` (`owner`),
-  CONSTRAINT `groups_ibfk_1` FOREIGN KEY (`owner`) REFERENCES `users` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -237,7 +234,7 @@ CREATE TABLE `groups` (
 
 LOCK TABLES `groups` WRITE;
 /*!40000 ALTER TABLE `groups` DISABLE KEYS */;
-INSERT INTO `groups` VALUES (1,'Twisted Hel Scans','Translates Tokyo Ghoul and was in a bit of a drama around translations.','2015-10-29 11:28:12',NULL,'asdf'),(2,'Game of Scanlation','Scanlation group created by Allafta.','2015-10-29 11:28:12',NULL,'tonton'),(3,'Testing Group','This is just a test for groups.','2015-12-21 12:25:44',NULL,'asdf');
+INSERT INTO `groups` VALUES (1,'Twisted Hel Scans','Translates Tokyo Ghoul and was in a bit of a drama around translations.','2015-10-29 11:28:12',NULL),(2,'Game of Scanlation','Scanlation group created by Allafta.','2015-10-29 11:28:12',NULL),(3,'Testing Group','This is just a test for groups.','2015-12-21 12:25:44',NULL),(4,'Testing 2',NULL,'2016-02-07 13:01:15',NULL);
 /*!40000 ALTER TABLE `groups` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -270,7 +267,7 @@ CREATE TABLE `mangas` (
 
 LOCK TABLES `mangas` WRITE;
 /*!40000 ALTER TABLE `mangas` DISABLE KEYS */;
-INSERT INTO `mangas` VALUES (1,'Tokyo Ghoul','About a human called Kaneki, which later on becomes a ghoul.','2015-10-29 11:28:12',NULL,0,0),(2,'Kakukaku Shikajika','Self-biography of Akiko Higashimura.','2015-10-29 11:28:12','2016-01-29 13:34:45',1,2),(3,'Skill of Lure','About a guy learning about how to pick up girls.','2015-10-29 11:28:12',NULL,0,0);
+INSERT INTO `mangas` VALUES (1,'Tokyo Ghoul','About a human called Kaneki, which later on becomes a ghoul.','2015-10-29 11:28:12',NULL,0,0),(2,'Kakukaku Shikajika','Self-biography of Akiko Higashimura.','2015-10-29 11:28:12','2016-02-05 18:22:17',1,2),(3,'Skill of Lure','About a guy learning about how to pick up girls.','2015-10-29 11:28:12',NULL,0,0);
 /*!40000 ALTER TABLE `mangas` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -312,7 +309,7 @@ DROP TABLE IF EXISTS `members`;
 CREATE TABLE `members` (
   `username` varchar(20) NOT NULL,
   `group_id` int(10) unsigned NOT NULL,
-  `permission` varchar(1) NOT NULL DEFAULT 'f',
+  `permission` varchar(1) NOT NULL DEFAULT 'n',
   PRIMARY KEY (`username`,`group_id`),
   KEY `username` (`username`),
   KEY `group_id` (`group_id`),
@@ -329,7 +326,7 @@ CREATE TABLE `members` (
 
 LOCK TABLES `members` WRITE;
 /*!40000 ALTER TABLE `members` DISABLE KEYS */;
-INSERT INTO `members` VALUES ('asdf',1,'a');
+INSERT INTO `members` VALUES ('asdf',1,'o'),('asdf',2,'o'),('asdf',3,'o'),('testing',3,'o'),('tonton',3,'o');
 /*!40000 ALTER TABLE `members` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -353,7 +350,7 @@ CREATE TABLE `permissions` (
 
 LOCK TABLES `permissions` WRITE;
 /*!40000 ALTER TABLE `permissions` DISABLE KEYS */;
-INSERT INTO `permissions` VALUES ('a','Admin'),('b','Member'),('d','Donator'),('f','Follower'),('m','Mod');
+INSERT INTO `permissions` VALUES ('a','Admin'),('b','Member'),('d','Donator'),('f','Follower'),('m','Mod'),('n','None'),('o','Owner');
 /*!40000 ALTER TABLE `permissions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -466,4 +463,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-02-02  5:51:15
+-- Dump completed on 2016-02-07 22:03:09

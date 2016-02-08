@@ -1,7 +1,7 @@
 create table members (
   username varchar(20) not null,
   group_id int unsigned not null,
-  permission varchar(1) not null default "f",
+  permission varchar(1) not null default "n",
   primary key (username, group_id),
   index (username),
   index (group_id),

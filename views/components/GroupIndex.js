@@ -2,6 +2,7 @@ import React from 'react';
 import Relay from 'react-relay';
 import queryString from 'query-string';
 import path from 'path';
+import moment from 'moment';
 
 import { fromGlobalId } from 'graphql-relay';
 
@@ -9,51 +10,97 @@ import { Link, IndexLink } from 'react-router';
 
 import ChapterItem from './ChapterItem.js';
 
-class GroupInfo extends React.Component {
+class GroupIndex extends React.Component {
   render() {
-    let editLink;
-
-    if (this.props.node.permission) {
-      editLink = <Link to={this.props.location.pathname + '/edit'}>Edit</Link>
-    }
-
-    console.log(this.props.relay.variables);
     return (
       <div>
-        {editLink}
+        <div className="info clearfix">
+          <table className="info-column-left">
+            <tbody>
+              <tr>
+                <td>Name: </td>
+                <td className="info-row">{this.props.vertex.group_name}</td>
+              </tr>
+              <tr>
+                <td>Description: </td>
+                <td className="info-row">{this.props.vertex.descript}</td>
+              </tr>
+              <tr>
+                <td>Created: </td>
+                <td className="info-row">{moment(moment.utc(this.props.vertex.created).toDate()).format('YYYY-MM-DD HH:mm:ss')}</td>
+              </tr>
+            </tbody>
+          </table>
+          <table className="info-column-right">
+            <tbody>
+              <tr>
+                <td>Total manga: </td>
+                <td className="info-row">
+                  {this.props.vertex.manga_count}
+                </td>
+              </tr>
+              <tr>
+                <td>Total chapters: </td>
+                <td className="info-row">
+                  {this.props.vertex.chapter_count}
+                </td>
+              </tr>
+              <tr>
+                <td>Total members: </td>
+                <td className="info-row">
+                  {this.props.vertex.member_count}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
         <table className="chapter-list">
           <tbody>
-            {this.props.node.chapters.edges.map((edge, i) => {
+            {this.props.vertex.chapters.edges.map((edge, i) => {
               return (
                 <ChapterItem key={i} {...edge.node} />
               );
             })}
           </tbody>
         </table>
-        {this.props.node.id}: {this.props.node.group_name}
+        {this.props.vertex.id}: {this.props.vertex.group_name}
 
-        <br></br>{this.props.node.descript}
-        <br></br>Created on: {this.props.node.created}
+        <br></br>{this.props.vertex.descript}
+        <br></br>Created on: {this.props.vertex.created}
       </div>
     );
   }
 }
 
-var Container = Relay.createContainer(GroupInfo, {
+var Container = Relay.createContainer(GroupIndex, {
   initialVariables: {
     id: null,
-    page: null
+    page: null,
+    limit: null
   },
   fragments: {
-    node: () => Relay.QL`
+    vertex: () => Relay.QL`
       fragment on Node {
         id,
         ... on Group {
           group_name,
           descript,
           created,
-          owner,
-          permission,
+          edited,
+          chapter_count,
+          manga_count,
+          member_count,
+          members (first: 100) {
+            edges {
+              node {
+                id
+              }
+            }
+          }
+          currentPermission {
+            permission_initial,
+            permission_value
+          },
           mangas (first: 100) {
             edges {
               node {
@@ -68,6 +115,7 @@ var Container = Relay.createContainer(GroupInfo, {
                 id,
                 chapter_title,
                 chapter_number,
+                created,
                 manga {
                   id,
                   manga_title

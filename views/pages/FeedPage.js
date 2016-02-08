@@ -32,12 +32,13 @@ class FeedPage extends React.Component {
     }
   }
   render() {
-
     let paginationButtonPreivous;
     let paginationButtonNext;
     let separator;
 
-    if (this.props.location.query.page > 0) {
+    console.log(this.props);
+
+    /*if (this.props.location.query.page > 0) {
       paginationButtonPreivous = <PaginationButton
           nextPage={false}
           onClick={this.previousPage.bind(this)}
@@ -46,9 +47,16 @@ class FeedPage extends React.Component {
           query={this.props.location.query}
           className="left"
         />;
+    }*/
+
+    if (this.props.location.query.page > 0) {
+      paginationButtonPreivous = <Link
+          to={{pathname: "feed", query: { page: parseInt(this.props.location.query.page, 10) - 1 } }}
+          onClick={this.previousPage.bind(this)}
+        >Previous page</Link>;
     }
 
-    if (this.props.allChapters.chapters.pageInfo.hasNextPage) {
+    /*if (this.props.allChapters.chapters.pageInfo.hasNextPage) {
       paginationButtonNext = <PaginationButton
           nextPage={true}
           onClick={this.nextPage.bind(this)}
@@ -57,6 +65,19 @@ class FeedPage extends React.Component {
           query={this.props.location.query}
           className="left"
         />;
+    }*/
+
+
+    if (this.props.allChapters.chapters.pageInfo.hasNextPage && this.props.location.query.page) {
+      paginationButtonNext = <Link
+          to={{pathname: "feed", query: { page: parseInt(this.props.location.query.page, 10) + 1 } }}
+          onClick={this.nextPage.bind(this)}
+        >Next page</Link>;
+    } else if (this.props.location.query.page === undefined){
+      paginationButtonNext = <Link
+          to={{pathname: "feed", query: { page: 1 } }}
+          onClick={this.nextPage.bind(this)}
+        >Next page</Link>;
     }
 
     if (paginationButtonNext && paginationButtonPreivous) {

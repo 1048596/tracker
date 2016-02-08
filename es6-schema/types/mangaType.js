@@ -32,6 +32,8 @@ import { chapterConnection } from './chapterType';
 import { groupConnection } from './groupType';
 import { genreType, genreConnection } from './genreType';
 import { creatorType, creatorConnection } from './creatorType';
+import { typeType } from './typeType';
+import { statusType } from './statusType';
 
 export const mangaType = registerType(new GraphQLObjectType({
   name: 'Manga',
@@ -59,18 +61,18 @@ export const mangaType = registerType(new GraphQLObjectType({
       }
     },
     type: {
-      type: GraphQLString,
+      type: typeType,
       resolve: (root) => {
-        return mysql.getTypeByTypeId(root.type).then((value) => {
-          return value[0].type;
+        return mysql.getTypeByMangaId(root.id).then((value) => {
+          return value[0];
         });
       }
     },
     status: {
-      type: GraphQLString,
+      type: statusType,
       resolve: (root) => {
-        return mysql.getStatusByStatusId(root.status).then((value) => {
-          return value[0].status;
+        return mysql.getStatusByMangaId(root.id).then((value) => {
+          return value[0];
         });
       }
     },

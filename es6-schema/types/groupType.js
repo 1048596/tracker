@@ -30,6 +30,8 @@ import { registerType } from '../registry';
 import { nodeInterface } from '../node.js';
 import { mangaConnection } from './mangaType';
 import { chapterConnection } from './chapterType';
+import { permissionType } from './permissionType';
+import { userConnection } from './userType';
 
 export const groupType = registerType(new GraphQLObjectType({
   name: 'Group',
@@ -47,17 +49,52 @@ export const groupType = registerType(new GraphQLObjectType({
     edited: {
       type: GraphQLString
     },
-    owner: {
-      type: GraphQLString
+    chapter_count: {
+      type: GraphQLInt,
+      resolve: (root) => {
+        return mysql.getChapterCountByGroupId(root.id).then((value) => {
+          return value[0].chapter_count;
+        });
+      }
     },
-    permission: {
-      type: GraphQLString,
+    manga_count: {
+      type: GraphQLInt,
+      resolve: (root) => {
+        return mysql.getMangaCountByGroupId(root.id).then((value) => {
+          return value[0].manga_count;
+        });
+      }
+    },
+    member_count: {
+      type: GraphQLInt,
+      resolve: (root) => {
+        return mysql.getMemberCountByGroupId(root.id).then((value) => {
+          return value[0].member_count;
+        });
+      }
+    },
+    currentPermission: {
+      type: permissionType,
       resolve: (root) => {
         if (root.rootValue.user) {
           return mysql.getPermissionByGroupIdAndUsername(root.id, root.rootValue.user.username).then((value) => {
-            return value[0].permission;
+            return value[0];
           });
+        } else {
+          return {
+            permission_initial: 'n',
+            permission_value: 'None'
+          };
         }
+      }
+    },
+    members: {
+      type: userConnection,
+      args: connectionArgs,
+      resolve: (root, args) => {
+        return mysql.getUsersByGroupId(root.id).then((value) => {
+          return connectionFromArray(value, args);
+        });
       }
     },
     mangas: {
@@ -79,7 +116,7 @@ export const groupType = registerType(new GraphQLObjectType({
         },
       },
       resolve: (root, args) => {
-        return mysql.getChaptersByGroupIdAndPage(root.id, args.page).then((value) => {
+        return mysql.getChaptersByGroupIdAndPage(root.id, args.page, args.first).then((value) => {
           return connectionFromArray(value, args);
         });
       }

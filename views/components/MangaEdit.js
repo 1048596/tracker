@@ -11,6 +11,7 @@ import AddGenreMutation from '../mutations/AddGenreMutation.js';
 import DeleteAuthorMutation from '../mutations/DeleteAuthorMutation.js';
 import DeleteArtistMutation from '../mutations/DeleteArtistMutation.js';
 import DeleteGenreMutation from '../mutations/DeleteGenreMutation.js';
+import UpdateMangaMutation from '../mutations/UpdateMangaMutation.js';
 
 var onSuccess = (response) => {
   console.log('Success!');
@@ -35,7 +36,21 @@ class MangaEdit extends React.Component {
     };
   }
   componentWillMount() {
-    let arr = [''];
+    this.setState({
+      manga_title: this.props.vertex.manga_title,
+      descript: this.props.vertex.descript,
+      status: this.props.vertex.status.id,
+      type: this.props.vertex.type.id
+    });
+  }
+  handleUpdateManga() {
+    Relay.Store.commitUpdate(
+      new UpdateMangaMutation({
+        state: this.state,
+        vertex: this.props.vertex
+      }),
+      { onSuccess, onFailure }
+    );
   }
   handleKeyDownTagContainer(connectionName, edge, keyCode) {
     if (keyCode == 13) {
@@ -277,6 +292,8 @@ class MangaEdit extends React.Component {
     var transactions = this.props.relay.getPendingTransactions(this.props.vertex);
     console.log(transactions);
 
+    this.handleUpdateManga();
+
     for (let i = 0; i < transactions.length; i++) {
       transactions[i].commit();
     }
@@ -381,11 +398,11 @@ class MangaEdit extends React.Component {
             <select
               name="status"
               onChange={this.handleChange.bind(this)}
-              defaultValue={this.props.vertex.status}
+              defaultValue={this.props.vertex.status.id}
             >
-              <option value="null">null</option>
-              <option value="On going">On going</option>
-              <option value="Completed">Completed</option>
+              <option value="0">null</option>
+              <option value="1">On going</option>
+              <option value="2">Completed</option>
             </select>
           </dd>
         </dl>
@@ -397,16 +414,14 @@ class MangaEdit extends React.Component {
             <select
               name="type"
               onChange={this.handleChange.bind(this)}
-              defaultValue={this.props.vertex.type}
+              defaultValue={this.props.vertex.type.id}
             >
-              <option value="null">null</option>
-              <option value="Manga">Manga</option>
-              <option value="Manhwa">Manhwa</option>
+              <option value="0">null</option>
+              <option value="1">Manga</option>
+              <option value="2">Manhwa</option>
             </select>
           </dd>
         </dl>
-        <button onClick={this.getState.bind(this)}>Check state!</button>
-        <button onClick={this.rollBack.bind(this)}>Time rooollllback!</button>
         <button onClick={this.commit.bind(this)}>Commit!</button>
       </div>
     );
@@ -427,14 +442,21 @@ var Container = Relay.createContainer(MangaEdit, {
         ... on Manga {
           manga_title,
           descript,
-          status,
-          type,
+          status {
+            id,
+            status
+          },
+          type {
+            id,
+            type
+          },
           ${AddAuthorMutation.getFragment('vertex')},
           ${AddArtistMutation.getFragment('vertex')},
           ${AddGenreMutation.getFragment('vertex')},
           ${DeleteAuthorMutation.getFragment('vertex')},
           ${DeleteArtistMutation.getFragment('vertex')},
           ${DeleteGenreMutation.getFragment('vertex')},
+          ${UpdateMangaMutation.getFragment('vertex')},
           authors (first: $maximum) {
             edges {
               node {

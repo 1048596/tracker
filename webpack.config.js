@@ -8,7 +8,6 @@ module.exports = {
       'graphql',
       'graphql-relay',
       'history',
-      'moment',
       'object-assign',
       'pluralize',
       'query-string',
@@ -18,6 +17,8 @@ module.exports = {
       'react-router',
       'react-router-relay',
       'cookie',
+      'moment',
+      'moment-timezone'
     ],
   },
   output: {
@@ -35,6 +36,10 @@ module.exports = {
         test: /\.js$/,
         exclude: /node_modules/,
       },
+      {
+        loader: 'json-loader',
+        test: /\.json$/
+      }
     ]
   },
   resolve: {

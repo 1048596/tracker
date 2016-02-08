@@ -6,6 +6,7 @@ var connection = mysql.createConnection({
   password: 'superhacker1',
   database: 'tracker',
   timezone: 'utc',
+  dateStrings: 'TIMESTAMP',
   multipleStatements: true,
 });
 
@@ -58,7 +59,7 @@ exports.register = function(obj) {
   });
 };
 
-//Mangas
+// Mangas
 exports.getMangaById = function(id) {
   return new Promise((resolve, reject) => {
     var sql = 'select * from mangas where id = ?;';
@@ -73,7 +74,11 @@ exports.getMangaById = function(id) {
 
 exports.getMangasByGroupId = function(id) {
   return new Promise((resolve, reject) => {
-    var sql = 'select m.* from mangas m left join chapters c on m.id = c.manga_id left join chapter_scanlated_by csb on c.id = csb.chapter_id left join groups g on csb.group_id = g.id where g.id = ? group by m.id;';
+    var sql = `select m.* from mangas m
+    left join chapters c on m.id = c.manga_id
+    left join chapter_scanlated_by csb on c.id = csb.chapter_id
+    left join groups g on csb.group_id = g.id
+    where g.id = ? group by m.id;`;
 
     connection.query(sql, id, function(err, results) {
       if (err) console.log(err);
@@ -139,7 +144,7 @@ exports.getChaptersByMangaIdPageAndLimit = function(manga_id, page, limit) {
 
     var sql = 'select * from chapters where manga_id = ? order by chapter_number desc limit ? offset ?';
 
-    var inserts = [manga_id, limit+1, pagination];
+    var inserts = [manga_id, limit + 1, pagination];
     sql = mysql.format(sql, inserts);
 
     connection.query(sql, function(err, results) {
@@ -151,15 +156,17 @@ exports.getChaptersByMangaIdPageAndLimit = function(manga_id, page, limit) {
   });
 };
 
-exports.getChaptersByGroupIdAndPage = function(id, page) {
+exports.getChaptersByGroupIdAndPage = function(id, page, limit) {
   return new Promise((resolve, reject) => {
-    var sql = 'select c.* from chapters c left join chapter_scanlated_by csb on c.id = csb.chapter_id left join groups g on csb.group_id = g.id where g.id = ? group by c.id desc limit 3 offset ?;';
+    var sql = 'select c.* from chapters c left join chapter_scanlated_by csb on c.id = csb.chapter_id left join groups g on csb.group_id = g.id where g.id = ? group by c.id desc limit ? offset ?;';
+
     if (page === 0) {
       pagination = 0;
     } else {
-      pagination = page*2;
+      pagination = page*limit;
     }
-    var inserts = [id, pagination];
+
+    var inserts = [id, limit + 1, pagination];
     sql = mysql.format(sql, inserts);
 
     connection.query(sql, function(err, results) {
@@ -218,7 +225,7 @@ exports.getSubChaptersByUsernameAndPage = function(username, page) {
 
 exports.addChapter = function(chapter_title, chapter_number, manga_title) {
   return new Promise((resolve, reject) => {
-    var sql = 'insert into chapters (chapter_title, chapter_number, manga_id, created) select ?, ?, m.id, now() from mangas m where m.manga_title = ?;';
+    var sql = 'insert into chapters (chapter_title, chapter_number, manga_id, created) select ?, ?, m.id, UTC_TIMESTAMP() from mangas m where m.manga_title = ?;';
     var inserts = [chapter_title, chapter_number, manga_title];
 
     sql = mysql.format(sql, inserts);
@@ -448,6 +455,19 @@ exports.deleteAuthor = function(manga_id, creator_id) {
 
 
 //Types
+
+exports.getTypeByMangaId = function(id) {
+  return new Promise((resolve, reject) => {
+    var sql = 'select t.id, t.type from mangas m join types t on m.type = t.id where m.id = ?;';
+
+    connection.query(sql, id, function(err, results) {
+      if (err) console.log(err);
+
+      resolve(results);
+    });
+  });
+};
+
 exports.getTypeByTypeId = function(id) {
   return new Promise((resolve, reject) => {
     var sql = 'select type from types where id = ?';
@@ -462,6 +482,18 @@ exports.getTypeByTypeId = function(id) {
 
 
 // Status
+
+exports.getStatusByMangaId = function(id) {
+  return new Promise((resolve, reject) => {
+    var sql = 'select s.id, s.status from mangas m join status s on m.status = s.id where m.id = ?;';
+
+    connection.query(sql, id, function(err, results) {
+      if (err) console.log(err);
+
+      resolve(results);
+    });
+  });
+};
 
 exports.getStatusByStatusId = function(id) {
   return new Promise((resolve, reject) => {
@@ -538,6 +570,42 @@ exports.searchGenresByGenre = function(genre) {
   });
 };
 
+
+// Users
+// or
+// Members
+exports.getUsersByGroupId = function(id) {
+  return new Promise((resolve, reject) => {
+    var sql = 'select username as id from members where group_id = ?;';
+
+    connection.query(sql, id, function(err, results) {
+      if (err) console.log(err);
+
+      resolve(results);
+    });
+  });
+};
+
+
+
+// Manga count
+exports.getMangaCountByGroupId = function(id) {
+  return new Promise((resolve, reject) => {
+    var sql = `select count(*) as manga_count from (select m.* from mangas m
+    left join chapters c on m.id = c.manga_id
+    left join chapter_scanlated_by csb on c.id = csb.chapter_id
+    left join groups g on csb.group_id = g.id
+    where g.id = ? group by m.id) as mangas;`;
+
+    connection.query(sql, id, function(err, results) {
+      if (err) console.log(err);
+
+      resolve(results);
+    });
+  });
+};
+
+
 // Chapter count
 
 exports.getChapterCountByMangaId = function(id) {
@@ -552,16 +620,43 @@ exports.getChapterCountByMangaId = function(id) {
   });
 };
 
+exports.getChapterCountByGroupId = function(id) {
+  return new Promise((resolve, reject) => {
+    var sql = `select count(*) as chapter_count from chapters c
+    left join chapter_scanlated_by csb on c.id = csb.chapter_id
+    left join groups g on csb.group_id = g.id where g.id = ?;`;
+
+    connection.query(sql, id, function(err, results) {
+      if (err) console.log(err);
+
+      resolve(results);
+    });
+  });
+};
+
+
+// Member count
+exports.getMemberCountByGroupId = function(id) {
+  return new Promise((resolve, reject) => {
+    var sql = 'select count(*) as member_count from members where group_id = ?;';
+
+    connection.query(sql, id, function(err, results) {
+      if (err) console.log(err);
+
+      resolve(results);
+    });
+  });
+};
 
 // Permission
 
 exports.getPermissionByGroupIdAndUsername = function(group_id, username) {
   return new Promise((resolve, reject) => {
-    var sql = 'select permission from members where group_id = ? && username = ?;';
+    var sql = `select p.permission_initial, p.permission_value from members m
+      join permissions p on p.permission_initial = m.permission
+      where group_id = ? && username = ? limit 1;`;
 
-    var inserts = [group_id, username];
-
-    sql = mysql.format(sql, inserts);
+    sql = mysql.format(sql, [group_id, username]);
 
     connection.query(sql, function(err, results) {
       if (err) console.log(err);
@@ -574,36 +669,14 @@ exports.getPermissionByGroupIdAndUsername = function(group_id, username) {
 // Manga mutations
 exports.updateManga = function(id, manga_title, descript, status, type) {
   return new Promise((resolve, reject) => {
-    var sql = 'select * from status where status = ?;';
+    var sql = (`UPDATE mangas SET manga_title = ?, descript = ?,
+      status = ?, type = ?, edited = UTC_TIMESTAMP() where id = ?;`);
 
-    sql = mysql.format(sql, [status]);
+    sql = mysql.format(sql, [manga_title, descript, status, type, id]);
 
     connection.query(sql, function(err, results) {
       if (err) console.log(err);
       resolve(results);
-    });
-  }).then((value) => {
-    return new Promise((resolve, reject) => {
-      var sql = 'select * from types where type = ?;';
-
-      sql = mysql.format(sql, [type]);
-
-      connection.query(sql, function(err, results) {
-        if (err) console.log(err);
-        resolve([ value[0], results[0] ]);
-      });
-    });
-  }).then((value) => {
-    return new Promise((resolve, reject) => {
-      var sql = (`UPDATE mangas SET manga_title = ?, descript = ?,
-        status = ?, type = ?, edited = now() where id = ?;`);
-
-      sql = mysql.format(sql, [manga_title, descript, value[0].id, value[1].id, id]);
-
-      connection.query(sql, function(err, results) {
-        if (err) console.log(err);
-        resolve(results);
-      });
     });
   });
 };

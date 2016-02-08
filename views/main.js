@@ -20,6 +20,7 @@ import MangaEdit from './components/MangaEdit.js';
 
 // Group page
 import GroupPage from './pages/GroupPage.js';
+import GroupIndex from './components/GroupIndex.js';
 
 // Chapter page
 import ChapterPage from './pages/ChapterPage.js';
@@ -34,12 +35,13 @@ import Authenticate from './pages/Authenticate.js';
 import Test from './components/Test.js';
 
 // Routes
-import { MangaIndexQueries, prepareMangaIndexParams } from './routes/MangaIndexRoute.js';
 import { FeedQueries, prepareFeedParams } from './routes/FeedRoute.js';
 import { SubscriptionQueries, prepareSubscriptionParams } from './routes/SubscriptionRoute.js';
-import { MangaEditQueries, prepareMangaEditParams } from './routes/MangaEditRoute.js';
 import { UploadQueries } from './routes/UploadRoute.js';
 import { AuthenticateQueries } from './routes/AuthenticateRoute.js';
+import { MangaIndexQueries, prepareMangaIndexParams } from './routes/MangaIndexRoute.js';
+import { MangaEditQueries, prepareMangaEditParams } from './routes/MangaEditRoute.js';
+import { GroupIndexQueries, prepareGroupIndexParams } from './routes/GroupIndexRoute.js';
 
 Relay.injectNetworkLayer(
   new Relay.DefaultNetworkLayer('http://localhost:1337/graphql', {
@@ -89,6 +91,17 @@ ReactDOM.render(
           component={MangaEdit}
           queries={MangaEditQueries}
           prepareParams={prepareMangaEditParams}
+        />
+      </Route>
+      <Route
+        path="group/:id"
+        component={GroupPage}
+      >
+        <IndexRoute
+          component={GroupIndex}
+          queries={GroupIndexQueries}
+          queryParams={['page', 'limit']}
+          prepareParams={prepareGroupIndexParams}
         />
       </Route>
       <Route

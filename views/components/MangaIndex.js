@@ -113,11 +113,11 @@ class MangaIndex extends React.Component {
               </tr>
               <tr>
                 <td>Status: </td>
-                <td className="info-row">{this.props.vertex.status}</td>
+                <td className="info-row">{this.props.vertex.status.status}</td>
               </tr>
               <tr>
                 <td>Type: </td>
-                <td className="info-row">{this.props.vertex.type}</td>
+                <td className="info-row">{this.props.vertex.type.type}</td>
               </tr>
             </tbody>
           </table>
@@ -181,6 +181,7 @@ var Container = Relay.createContainer(MangaIndex, {
           manga_title,
           descript,
           created,
+          chapter_count,
           genres (first: $maximum) {
             edges {
               node {
@@ -189,9 +190,14 @@ var Container = Relay.createContainer(MangaIndex, {
               }
             }
           },
-          type,
-          status,
-          chapter_count,
+          status {
+            id,
+            status
+          },
+          type {
+            id,
+            type
+          },
           authors (first: $maximum) {
             edges {
               node {
