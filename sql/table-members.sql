@@ -1,23 +1,23 @@
 create table members (
-  username varchar(20) not null,
+  user_id int unsigned not null,
   group_id int unsigned not null,
-  permission varchar(1) not null default "n",
-  primary key (username, group_id),
-  index (username),
+  permission_id int(2) unsigned not null,
+  primary key (user_id, group_id, permission_id),
+  index (user_id),
   index (group_id),
-  index (permission),
-  foreign key (username)
-  references users(username)
+  index (permission_id),
+  foreign key (user_id)
+  references users(id)
     on update cascade
     on delete cascade,
   foreign key (group_id)
   references groups(id)
     on update cascade
     on delete cascade,
-  foreign key (permission)
-  references permissions(permission_initial)
+  foreign key (permission_id)
+  references permissions(id)
     on update cascade
     on delete cascade
 ) engine=innodb;
 
-insert into members (username, group_id, permission) values ('asdf', 1, 'a');
+#insert into members (user_id, group_id, permission) values (2, 1, 'o');

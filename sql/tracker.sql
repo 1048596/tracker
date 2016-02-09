@@ -307,17 +307,17 @@ DROP TABLE IF EXISTS `members`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `members` (
-  `username` varchar(20) NOT NULL,
+  `user_id` int(10) unsigned NOT NULL,
   `group_id` int(10) unsigned NOT NULL,
-  `permission` varchar(1) NOT NULL DEFAULT 'n',
-  PRIMARY KEY (`username`,`group_id`),
-  KEY `username` (`username`),
+  `permission_id` int(2) unsigned NOT NULL,
+  PRIMARY KEY (`user_id`,`group_id`,`permission_id`),
+  KEY `user_id` (`user_id`),
   KEY `group_id` (`group_id`),
-  KEY `permission` (`permission`),
-  CONSTRAINT `members_ibfk_1` FOREIGN KEY (`username`) REFERENCES `users` (`username`) ON DELETE CASCADE ON UPDATE CASCADE,
+  KEY `permission_id` (`permission_id`),
+  CONSTRAINT `members_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `members_ibfk_2` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `members_ibfk_3` FOREIGN KEY (`permission`) REFERENCES `permissions` (`permission_initial`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  CONSTRAINT `members_ibfk_3` FOREIGN KEY (`permission_id`) REFERENCES `permissions` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -326,7 +326,6 @@ CREATE TABLE `members` (
 
 LOCK TABLES `members` WRITE;
 /*!40000 ALTER TABLE `members` DISABLE KEYS */;
-INSERT INTO `members` VALUES ('asdf',1,'o'),('asdf',2,'o'),('asdf',3,'o'),('testing',3,'o'),('tonton',3,'o');
 /*!40000 ALTER TABLE `members` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -338,10 +337,10 @@ DROP TABLE IF EXISTS `permissions`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `permissions` (
-  `permission_initial` varchar(1) NOT NULL,
-  `permission_value` varchar(70) NOT NULL,
-  PRIMARY KEY (`permission_initial`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `id` int(2) unsigned NOT NULL,
+  `permission` varchar(70) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -350,8 +349,37 @@ CREATE TABLE `permissions` (
 
 LOCK TABLES `permissions` WRITE;
 /*!40000 ALTER TABLE `permissions` DISABLE KEYS */;
-INSERT INTO `permissions` VALUES ('a','Admin'),('b','Member'),('d','Donator'),('f','Follower'),('m','Mod'),('n','None'),('o','Owner');
+INSERT INTO `permissions` VALUES (1,'Owner'),(2,'Admin'),(3,'Mod'),(4,'Member'),(5,'Donator'),(6,'Follower'),(7,'None');
 /*!40000 ALTER TABLE `permissions` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `profiles`
+--
+
+DROP TABLE IF EXISTS `profiles`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `profiles` (
+  `user_id` int(10) unsigned NOT NULL,
+  `biography` varchar(160) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `gender` varchar(1) DEFAULT NULL,
+  `birthday` date DEFAULT NULL,
+  `location` varchar(30) DEFAULT NULL,
+  PRIMARY KEY (`user_id`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `profiles_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `profiles`
+--
+
+LOCK TABLES `profiles` WRITE;
+/*!40000 ALTER TABLE `profiles` DISABLE KEYS */;
+/*!40000 ALTER TABLE `profiles` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -376,34 +404,6 @@ LOCK TABLES `status` WRITE;
 /*!40000 ALTER TABLE `status` DISABLE KEYS */;
 INSERT INTO `status` VALUES (0,'null'),(1,'On going'),(2,'Completed');
 /*!40000 ALTER TABLE `status` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `subs`
---
-
-DROP TABLE IF EXISTS `subs`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `subs` (
-  `username` varchar(20) NOT NULL,
-  `manga_id` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`username`,`manga_id`),
-  KEY `username` (`username`),
-  KEY `manga_id` (`manga_id`),
-  CONSTRAINT `subs_ibfk_1` FOREIGN KEY (`username`) REFERENCES `users` (`username`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `subs_ibfk_2` FOREIGN KEY (`manga_id`) REFERENCES `mangas` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `subs`
---
-
-LOCK TABLES `subs` WRITE;
-/*!40000 ALTER TABLE `subs` DISABLE KEYS */;
-INSERT INTO `subs` VALUES ('asdf',1),('asdf',2);
-/*!40000 ALTER TABLE `subs` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -438,10 +438,12 @@ DROP TABLE IF EXISTS `users`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `users` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `username` varchar(20) NOT NULL,
   `password` char(60) NOT NULL,
-  PRIMARY KEY (`username`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `username` (`username`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -450,7 +452,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES ('adsf1','$2a$10$w/lXFEbX8CAegTw3JkTe4uehky26ZWqtyYQbUWnWUAqQQwqxkaBS2'),('asdf','$2a$10$uP.OUnvBYVImzDAMOojqKuO2lxObGFyMsz5eBe55hn5CVrFanaIwq'),('test','$2a$10$8rUpBQ4qHYyfZViVCggU.OugTt9LlFcJeYzmD9jYvhFr4LBp5Cspe'),('testing','$2a$10$40OHLPapIK9nit/Cl/EF2OOEut9tnentRZd0gWn5GHTf6MJIv.Rou'),('tonton','$2a$10$.v3YOlvzX1eZzEZLg5N0r.WuKemwBSYa3x1OqE3XIVsCNY5r6ZfgK');
+INSERT INTO `users` VALUES (1,'adsf1','$2a$10$w/lXFEbX8CAegTw3JkTe4uehky26ZWqtyYQbUWnWUAqQQwqxkaBS2'),(2,'asdf','$2a$10$uP.OUnvBYVImzDAMOojqKuO2lxObGFyMsz5eBe55hn5CVrFanaIwq'),(3,'test','$2a$10$8rUpBQ4qHYyfZViVCggU.OugTt9LlFcJeYzmD9jYvhFr4LBp5Cspe'),(4,'testing','$2a$10$40OHLPapIK9nit/Cl/EF2OOEut9tnentRZd0gWn5GHTf6MJIv.Rou'),(5,'tonton','$2a$10$.v3YOlvzX1eZzEZLg5N0r.WuKemwBSYa3x1OqE3XIVsCNY5r6ZfgK');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -463,4 +465,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-02-07 22:03:09
+-- Dump completed on 2016-02-09  9:00:08
