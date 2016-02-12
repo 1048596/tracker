@@ -104,34 +104,6 @@ INSERT INTO `books` VALUES (1,'Thus Spoke Zarathustra'),(2,'The Great Gatsby'),(
 UNLOCK TABLES;
 
 --
--- Table structure for table `chapter_scanlated_by`
---
-
-DROP TABLE IF EXISTS `chapter_scanlated_by`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `chapter_scanlated_by` (
-  `chapter_id` int(10) unsigned NOT NULL,
-  `group_id` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`chapter_id`,`group_id`),
-  KEY `group_id` (`group_id`),
-  KEY `chapter_id` (`chapter_id`),
-  CONSTRAINT `chapter_scanlated_by_ibfk_1` FOREIGN KEY (`chapter_id`) REFERENCES `chapters` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `chapter_scanlated_by_ibfk_2` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `chapter_scanlated_by`
---
-
-LOCK TABLES `chapter_scanlated_by` WRITE;
-/*!40000 ALTER TABLE `chapter_scanlated_by` DISABLE KEYS */;
-INSERT INTO `chapter_scanlated_by` VALUES (1,1),(2,1),(3,1),(7,2),(8,2),(9,2),(9,3),(65,3),(66,3),(67,3);
-/*!40000 ALTER TABLE `chapter_scanlated_by` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `chapters`
 --
 
@@ -158,6 +130,34 @@ LOCK TABLES `chapters` WRITE;
 /*!40000 ALTER TABLE `chapters` DISABLE KEYS */;
 INSERT INTO `chapters` VALUES (1,'One Shot - Joker',0.00,1,'2015-10-29 11:28:12'),(2,'Tradegy',1.00,1,'2015-10-29 11:28:12'),(3,'Strange Phenomenon',2.00,1,'2015-10-29 11:28:12'),(4,'Canvas 01',1.00,2,'2015-10-29 11:28:12'),(5,'Canvas 02',2.00,2,'2015-10-29 11:28:12'),(6,'Canvas 03',3.00,2,'2015-10-29 11:28:12'),(7,NULL,0.00,3,'2015-10-29 11:28:12'),(8,NULL,1.00,3,'2015-10-29 11:28:12'),(9,NULL,2.00,3,'2015-10-29 11:28:12'),(20,'Canvas 04',4.00,2,'2015-12-11 23:13:36'),(22,'Canvas 05',5.00,2,'2015-12-11 23:38:29'),(23,'Canvas 06',6.00,2,'2015-12-11 23:40:56'),(24,'Canvas 07',7.00,2,'2015-12-14 15:33:54'),(25,'Canvas 08',7.00,2,'2015-12-14 15:35:04'),(26,'Canvas 09',9.00,2,'2015-12-14 15:40:05'),(27,'Canvas 10',10.00,2,'2015-12-14 15:42:17'),(28,'Canvas 11',11.00,2,'2015-12-14 15:46:29'),(29,'Canvas 12',12.00,2,'2015-12-14 16:47:35'),(30,'Canvas 13',13.00,2,'2015-12-14 16:53:29'),(31,'Canvas 14',14.00,2,'2015-12-14 16:59:26'),(32,'Canvas 15',15.00,2,'2015-12-14 17:14:28'),(33,'Canvas 16',16.00,2,'2015-12-14 17:26:43'),(34,'Canvas 17',17.00,2,'2015-12-14 20:19:28'),(35,'Canvas 18',18.00,2,'2015-12-14 20:26:35'),(36,'Canvas 19',19.00,2,'2015-12-14 20:30:10'),(37,'Canvas 20',20.00,2,'2015-12-14 20:31:43'),(38,'Canvas 21',21.00,2,'2015-12-14 20:48:12'),(39,'Canvas 22',22.00,2,'2015-12-14 20:51:09'),(40,'Canvas 23',23.00,2,'2015-12-14 20:52:53'),(41,'Canvas 24',24.00,2,'2015-12-15 11:17:18'),(42,'Canvas 25',25.00,2,'2015-12-15 11:37:00'),(43,'Canvas 26',26.00,2,'2015-12-15 11:49:45'),(44,'Canvas 27',27.00,2,'2015-12-15 11:53:01'),(45,'Canvas 28',28.00,2,'2015-12-15 12:08:32'),(46,'Canvas 29',29.00,2,'2015-12-15 12:15:49'),(47,'Canvas 30',30.00,2,'2015-12-15 12:26:44'),(48,'Canvas 31',31.00,2,'2015-12-15 12:29:10'),(49,'Canvas 32',32.00,2,'2015-12-15 13:50:17'),(50,'Canvas 33',33.00,2,'2015-12-15 13:53:19'),(51,'Canvas 34',34.00,2,'2015-12-15 13:54:03'),(52,'Canvas 35',35.00,2,'2015-12-15 13:55:53'),(53,'Canvas 36',36.00,2,'2015-12-15 14:02:34'),(54,'Canvas 37',37.00,2,'2015-12-15 14:03:13'),(55,'Canvas 38',38.00,2,'2015-12-15 14:09:15'),(56,'Canvas 39',39.00,2,'2015-12-15 14:12:03'),(57,'Canvas 40',40.00,2,'2015-12-15 14:14:06'),(58,'Canvas 41',41.00,2,'2015-12-15 14:14:48'),(59,'Canvas 42',42.00,2,'2015-12-15 15:27:16'),(60,'Canvas 43',43.00,2,'2015-12-15 15:32:12'),(61,'Canvas 44',44.00,2,'2015-12-15 15:33:57'),(62,'Canvas 45',45.00,2,'2015-12-15 15:34:51'),(63,'Canvas 46',46.00,2,'2015-12-16 09:58:22'),(64,'Canvas 47',47.00,2,'2015-12-16 13:21:04'),(65,'Canvas 48',48.00,2,'2015-12-16 13:23:11'),(66,'Canvas 49',49.00,2,'2015-12-20 19:01:34'),(67,'Canvas 50',50.00,2,'2015-12-25 22:44:51');
 /*!40000 ALTER TABLE `chapters` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `chapters_groups`
+--
+
+DROP TABLE IF EXISTS `chapters_groups`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `chapters_groups` (
+  `chapter_id` int(10) unsigned NOT NULL,
+  `group_id` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`chapter_id`,`group_id`),
+  KEY `group_id` (`group_id`),
+  KEY `chapter_id` (`chapter_id`),
+  CONSTRAINT `chapters_groups_ibfk_1` FOREIGN KEY (`chapter_id`) REFERENCES `chapters` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `chapters_groups_ibfk_2` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `chapters_groups`
+--
+
+LOCK TABLES `chapters_groups` WRITE;
+/*!40000 ALTER TABLE `chapters_groups` DISABLE KEYS */;
+INSERT INTO `chapters_groups` VALUES (1,1),(2,1),(3,1),(7,2),(8,2),(9,2),(9,3),(65,3),(66,3),(67,3);
+/*!40000 ALTER TABLE `chapters_groups` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -465,4 +465,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-02-09  9:00:08
+-- Dump completed on 2016-02-12 12:22:10
