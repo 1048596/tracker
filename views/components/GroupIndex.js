@@ -93,7 +93,8 @@ var Container = Relay.createContainer(GroupIndex, {
           members (first: 100) {
             edges {
               node {
-                id
+                id,
+                username
               }
             }
           }

@@ -33,7 +33,10 @@ import { permissionType } from './permissionType';
 export const userType = registerType(new GraphQLObjectType({
   name: 'User',
   fields: () => ({
-    id: globalIdField('User')
+    id: globalIdField('User'),
+    username: {
+      type: GraphQLString
+    }
   }),
   interfaces: [nodeInterface]
 }));

@@ -24,59 +24,59 @@ CREATE DATABASE /*!32312 IF NOT EXISTS*/ `tracker` /*!40100 DEFAULT CHARACTER SE
 USE `tracker`;
 
 --
--- Table structure for table `artist`
+-- Table structure for table `artists`
 --
 
-DROP TABLE IF EXISTS `artist`;
+DROP TABLE IF EXISTS `artists`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `artist` (
+CREATE TABLE `artists` (
   `manga_id` int(10) unsigned NOT NULL,
   `creator_id` int(10) unsigned NOT NULL,
   PRIMARY KEY (`manga_id`,`creator_id`),
   KEY `manga_id` (`manga_id`),
   KEY `creator_id` (`creator_id`),
-  CONSTRAINT `artist_ibfk_1` FOREIGN KEY (`manga_id`) REFERENCES `manga` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `artist_ibfk_2` FOREIGN KEY (`creator_id`) REFERENCES `creator` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `artists_ibfk_1` FOREIGN KEY (`manga_id`) REFERENCES `mangas` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `artists_ibfk_2` FOREIGN KEY (`creator_id`) REFERENCES `creators` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `artist`
+-- Dumping data for table `artists`
 --
 
-LOCK TABLES `artist` WRITE;
-/*!40000 ALTER TABLE `artist` DISABLE KEYS */;
-INSERT INTO `artist` VALUES (2,1);
-/*!40000 ALTER TABLE `artist` ENABLE KEYS */;
+LOCK TABLES `artists` WRITE;
+/*!40000 ALTER TABLE `artists` DISABLE KEYS */;
+INSERT INTO `artists` VALUES (2,1);
+/*!40000 ALTER TABLE `artists` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `author`
+-- Table structure for table `authors`
 --
 
-DROP TABLE IF EXISTS `author`;
+DROP TABLE IF EXISTS `authors`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `author` (
+CREATE TABLE `authors` (
   `manga_id` int(10) unsigned NOT NULL,
   `creator_id` int(10) unsigned NOT NULL,
   PRIMARY KEY (`manga_id`,`creator_id`),
   KEY `manga_id` (`manga_id`),
   KEY `creator_id` (`creator_id`),
-  CONSTRAINT `author_ibfk_1` FOREIGN KEY (`manga_id`) REFERENCES `manga` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `author_ibfk_2` FOREIGN KEY (`creator_id`) REFERENCES `creator` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `authors_ibfk_1` FOREIGN KEY (`manga_id`) REFERENCES `mangas` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `authors_ibfk_2` FOREIGN KEY (`creator_id`) REFERENCES `creators` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `author`
+-- Dumping data for table `authors`
 --
 
-LOCK TABLES `author` WRITE;
-/*!40000 ALTER TABLE `author` DISABLE KEYS */;
-INSERT INTO `author` VALUES (2,1);
-/*!40000 ALTER TABLE `author` ENABLE KEYS */;
+LOCK TABLES `authors` WRITE;
+/*!40000 ALTER TABLE `authors` DISABLE KEYS */;
+INSERT INTO `authors` VALUES (2,1);
+/*!40000 ALTER TABLE `authors` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -104,15 +104,6 @@ INSERT INTO `books` VALUES (1,'Thus Spoke Zarathustra'),(2,'The Great Gatsby'),(
 UNLOCK TABLES;
 
 --
-<<<<<<< HEAD
--- Table structure for table `chapter`
---
-
-DROP TABLE IF EXISTS `chapter`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `chapter` (
-=======
 -- Table structure for table `chapters`
 --
 
@@ -120,7 +111,6 @@ DROP TABLE IF EXISTS `chapters`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `chapters` (
->>>>>>> test
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `chapter_title` varchar(140) DEFAULT NULL,
   `chapter_number` double(8,2) NOT NULL,
@@ -128,24 +118,21 @@ CREATE TABLE `chapters` (
   `created` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `manga_id` (`manga_id`),
-  CONSTRAINT `chapter_ibfk_1` FOREIGN KEY (`manga_id`) REFERENCES `manga` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `chapters_ibfk_1` FOREIGN KEY (`manga_id`) REFERENCES `mangas` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=68 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `chapter`
+-- Dumping data for table `chapters`
 --
 
-LOCK TABLES `chapter` WRITE;
-/*!40000 ALTER TABLE `chapter` DISABLE KEYS */;
-INSERT INTO `chapter` VALUES (1,'One Shot - Joker',0.00,1,'2015-10-29 11:28:12'),(2,'Tradegy',1.00,1,'2015-10-29 11:28:12'),(3,'Strange Phenomenon',2.00,1,'2015-10-29 11:28:12'),(4,'Canvas 01',1.00,2,'2015-10-29 11:28:12'),(5,'Canvas 02',2.00,2,'2015-10-29 11:28:12'),(6,'Canvas 03',3.00,2,'2015-10-29 11:28:12'),(7,NULL,0.00,3,'2015-10-29 11:28:12'),(8,NULL,1.00,3,'2015-10-29 11:28:12'),(9,NULL,2.00,3,'2015-10-29 11:28:12'),(20,'Canvas 04',4.00,2,'2015-12-11 23:13:36'),(22,'Canvas 05',5.00,2,'2015-12-11 23:38:29'),(23,'Canvas 06',6.00,2,'2015-12-11 23:40:56'),(24,'Canvas 07',7.00,2,'2015-12-14 15:33:54'),(25,'Canvas 08',7.00,2,'2015-12-14 15:35:04'),(26,'Canvas 09',9.00,2,'2015-12-14 15:40:05'),(27,'Canvas 10',10.00,2,'2015-12-14 15:42:17'),(28,'Canvas 11',11.00,2,'2015-12-14 15:46:29'),(29,'Canvas 12',12.00,2,'2015-12-14 16:47:35'),(30,'Canvas 13',13.00,2,'2015-12-14 16:53:29'),(31,'Canvas 14',14.00,2,'2015-12-14 16:59:26'),(32,'Canvas 15',15.00,2,'2015-12-14 17:14:28'),(33,'Canvas 16',16.00,2,'2015-12-14 17:26:43'),(34,'Canvas 17',17.00,2,'2015-12-14 20:19:28'),(35,'Canvas 18',18.00,2,'2015-12-14 20:26:35'),(36,'Canvas 19',19.00,2,'2015-12-14 20:30:10'),(37,'Canvas 20',20.00,2,'2015-12-14 20:31:43'),(38,'Canvas 21',21.00,2,'2015-12-14 20:48:12'),(39,'Canvas 22',22.00,2,'2015-12-14 20:51:09'),(40,'Canvas 23',23.00,2,'2015-12-14 20:52:53'),(41,'Canvas 24',24.00,2,'2015-12-15 11:17:18'),(42,'Canvas 25',25.00,2,'2015-12-15 11:37:00'),(43,'Canvas 26',26.00,2,'2015-12-15 11:49:45'),(44,'Canvas 27',27.00,2,'2015-12-15 11:53:01'),(45,'Canvas 28',28.00,2,'2015-12-15 12:08:32'),(46,'Canvas 29',29.00,2,'2015-12-15 12:15:49'),(47,'Canvas 30',30.00,2,'2015-12-15 12:26:44'),(48,'Canvas 31',31.00,2,'2015-12-15 12:29:10'),(49,'Canvas 32',32.00,2,'2015-12-15 13:50:17'),(50,'Canvas 33',33.00,2,'2015-12-15 13:53:19'),(51,'Canvas 34',34.00,2,'2015-12-15 13:54:03'),(52,'Canvas 35',35.00,2,'2015-12-15 13:55:53'),(53,'Canvas 36',36.00,2,'2015-12-15 14:02:34'),(54,'Canvas 37',37.00,2,'2015-12-15 14:03:13'),(55,'Canvas 38',38.00,2,'2015-12-15 14:09:15'),(56,'Canvas 39',39.00,2,'2015-12-15 14:12:03'),(57,'Canvas 40',40.00,2,'2015-12-15 14:14:06'),(58,'Canvas 41',41.00,2,'2015-12-15 14:14:48'),(59,'Canvas 42',42.00,2,'2015-12-15 15:27:16'),(60,'Canvas 43',43.00,2,'2015-12-15 15:32:12'),(61,'Canvas 44',44.00,2,'2015-12-15 15:33:57'),(62,'Canvas 45',45.00,2,'2015-12-15 15:34:51'),(63,'Canvas 46',46.00,2,'2015-12-16 09:58:22'),(64,'Canvas 47',47.00,2,'2015-12-16 13:21:04'),(65,'Canvas 48',48.00,2,'2015-12-16 13:23:11'),(66,'Canvas 49',49.00,2,'2015-12-20 19:01:34'),(67,'Canvas 50',50.00,2,'2015-12-25 22:44:51');
-/*!40000 ALTER TABLE `chapter` ENABLE KEYS */;
+LOCK TABLES `chapters` WRITE;
+/*!40000 ALTER TABLE `chapters` DISABLE KEYS */;
+INSERT INTO `chapters` VALUES (1,'One Shot - Joker',0.00,1,'2015-10-29 11:28:12'),(2,'Tradegy',1.00,1,'2015-10-29 11:28:12'),(3,'Strange Phenomenon',2.00,1,'2015-10-29 11:28:12'),(4,'Canvas 01',1.00,2,'2015-10-29 11:28:12'),(5,'Canvas 02',2.00,2,'2015-10-29 11:28:12'),(6,'Canvas 03',3.00,2,'2015-10-29 11:28:12'),(7,NULL,0.00,3,'2015-10-29 11:28:12'),(8,NULL,1.00,3,'2015-10-29 11:28:12'),(9,NULL,2.00,3,'2015-10-29 11:28:12'),(20,'Canvas 04',4.00,2,'2015-12-11 23:13:36'),(22,'Canvas 05',5.00,2,'2015-12-11 23:38:29'),(23,'Canvas 06',6.00,2,'2015-12-11 23:40:56'),(24,'Canvas 07',7.00,2,'2015-12-14 15:33:54'),(25,'Canvas 08',7.00,2,'2015-12-14 15:35:04'),(26,'Canvas 09',9.00,2,'2015-12-14 15:40:05'),(27,'Canvas 10',10.00,2,'2015-12-14 15:42:17'),(28,'Canvas 11',11.00,2,'2015-12-14 15:46:29'),(29,'Canvas 12',12.00,2,'2015-12-14 16:47:35'),(30,'Canvas 13',13.00,2,'2015-12-14 16:53:29'),(31,'Canvas 14',14.00,2,'2015-12-14 16:59:26'),(32,'Canvas 15',15.00,2,'2015-12-14 17:14:28'),(33,'Canvas 16',16.00,2,'2015-12-14 17:26:43'),(34,'Canvas 17',17.00,2,'2015-12-14 20:19:28'),(35,'Canvas 18',18.00,2,'2015-12-14 20:26:35'),(36,'Canvas 19',19.00,2,'2015-12-14 20:30:10'),(37,'Canvas 20',20.00,2,'2015-12-14 20:31:43'),(38,'Canvas 21',21.00,2,'2015-12-14 20:48:12'),(39,'Canvas 22',22.00,2,'2015-12-14 20:51:09'),(40,'Canvas 23',23.00,2,'2015-12-14 20:52:53'),(41,'Canvas 24',24.00,2,'2015-12-15 11:17:18'),(42,'Canvas 25',25.00,2,'2015-12-15 11:37:00'),(43,'Canvas 26',26.00,2,'2015-12-15 11:49:45'),(44,'Canvas 27',27.00,2,'2015-12-15 11:53:01'),(45,'Canvas 28',28.00,2,'2015-12-15 12:08:32'),(46,'Canvas 29',29.00,2,'2015-12-15 12:15:49'),(47,'Canvas 30',30.00,2,'2015-12-15 12:26:44'),(48,'Canvas 31',31.00,2,'2015-12-15 12:29:10'),(49,'Canvas 32',32.00,2,'2015-12-15 13:50:17'),(50,'Canvas 33',33.00,2,'2015-12-15 13:53:19'),(51,'Canvas 34',34.00,2,'2015-12-15 13:54:03'),(52,'Canvas 35',35.00,2,'2015-12-15 13:55:53'),(53,'Canvas 36',36.00,2,'2015-12-15 14:02:34'),(54,'Canvas 37',37.00,2,'2015-12-15 14:03:13'),(55,'Canvas 38',38.00,2,'2015-12-15 14:09:15'),(56,'Canvas 39',39.00,2,'2015-12-15 14:12:03'),(57,'Canvas 40',40.00,2,'2015-12-15 14:14:06'),(58,'Canvas 41',41.00,2,'2015-12-15 14:14:48'),(59,'Canvas 42',42.00,2,'2015-12-15 15:27:16'),(60,'Canvas 43',43.00,2,'2015-12-15 15:32:12'),(61,'Canvas 44',44.00,2,'2015-12-15 15:33:57'),(62,'Canvas 45',45.00,2,'2015-12-15 15:34:51'),(63,'Canvas 46',46.00,2,'2015-12-16 09:58:22'),(64,'Canvas 47',47.00,2,'2015-12-16 13:21:04'),(65,'Canvas 48',48.00,2,'2015-12-16 13:23:11'),(66,'Canvas 49',49.00,2,'2015-12-20 19:01:34'),(67,'Canvas 50',50.00,2,'2015-12-25 22:44:51');
+/*!40000 ALTER TABLE `chapters` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
-<<<<<<< HEAD
--- Table structure for table `creator`
-=======
 -- Table structure for table `chapters_groups`
 --
 
@@ -175,13 +162,12 @@ UNLOCK TABLES;
 
 --
 -- Table structure for table `creators`
->>>>>>> test
 --
 
-DROP TABLE IF EXISTS `creator`;
+DROP TABLE IF EXISTS `creators`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `creator` (
+CREATE TABLE `creators` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `creator_name` varchar(70) NOT NULL,
   `gender` varchar(1) DEFAULT NULL,
@@ -192,23 +178,23 @@ CREATE TABLE `creator` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `creator`
+-- Dumping data for table `creators`
 --
 
-LOCK TABLES `creator` WRITE;
-/*!40000 ALTER TABLE `creator` DISABLE KEYS */;
-INSERT INTO `creator` VALUES (1,'Akiko Higashimura','f','1975-10-15','Author and artist for Kakukaku Shikajika and Jellyfish Princess'),(2,'creator1',NULL,NULL,NULL),(3,'creator2',NULL,NULL,NULL);
-/*!40000 ALTER TABLE `creator` ENABLE KEYS */;
+LOCK TABLES `creators` WRITE;
+/*!40000 ALTER TABLE `creators` DISABLE KEYS */;
+INSERT INTO `creators` VALUES (1,'Akiko Higashimura','f','1975-10-15','Author and artist for Kakukaku Shikajika and Jellyfish Princess'),(2,'creator1',NULL,NULL,NULL),(3,'creator2',NULL,NULL,NULL);
+/*!40000 ALTER TABLE `creators` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `genre`
+-- Table structure for table `genres`
 --
 
-DROP TABLE IF EXISTS `genre`;
+DROP TABLE IF EXISTS `genres`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `genre` (
+CREATE TABLE `genres` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `genre` varchar(70) NOT NULL,
   PRIMARY KEY (`id`,`genre`)
@@ -216,23 +202,50 @@ CREATE TABLE `genre` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `genre`
+-- Dumping data for table `genres`
 --
 
-LOCK TABLES `genre` WRITE;
-/*!40000 ALTER TABLE `genre` DISABLE KEYS */;
-INSERT INTO `genre` VALUES (1,'School Life'),(2,'Slice of Life'),(3,'Action'),(4,'Comedy'),(5,'Tradegy'),(6,'Romance'),(7,'Shounen'),(8,'Shoujo');
-/*!40000 ALTER TABLE `genre` ENABLE KEYS */;
+LOCK TABLES `genres` WRITE;
+/*!40000 ALTER TABLE `genres` DISABLE KEYS */;
+INSERT INTO `genres` VALUES (1,'School Life'),(2,'Slice of Life'),(3,'Action'),(4,'Comedy'),(5,'Tradegy'),(6,'Romance'),(7,'Shounen'),(8,'Shoujo');
+/*!40000 ALTER TABLE `genres` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `manga`
+-- Table structure for table `groups`
 --
 
-DROP TABLE IF EXISTS `manga`;
+DROP TABLE IF EXISTS `groups`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `manga` (
+CREATE TABLE `groups` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `group_name` varchar(70) NOT NULL,
+  `descript` mediumtext,
+  `created` datetime NOT NULL,
+  `edited` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `groups`
+--
+
+LOCK TABLES `groups` WRITE;
+/*!40000 ALTER TABLE `groups` DISABLE KEYS */;
+INSERT INTO `groups` VALUES (1,'Twisted Hel Scans','Translates Tokyo Ghoul and was in a bit of a drama around translations.','2015-10-29 11:28:12',NULL),(2,'Game of Scanlation','Scanlation group created by Allafta.','2015-10-29 11:28:12',NULL),(3,'Testing Group','This is just a test for groups.','2015-12-21 12:25:44',NULL),(4,'Testing 2',NULL,'2016-02-07 13:01:15',NULL);
+/*!40000 ALTER TABLE `groups` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `mangas`
+--
+
+DROP TABLE IF EXISTS `mangas`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `mangas` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `manga_title` varchar(70) NOT NULL,
   `descript` mediumtext,
@@ -243,87 +256,88 @@ CREATE TABLE `manga` (
   PRIMARY KEY (`id`),
   KEY `type` (`type`),
   KEY `status` (`status`),
-  CONSTRAINT `manga_ibfk_1` FOREIGN KEY (`type`) REFERENCES `type` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `manga_ibfk_2` FOREIGN KEY (`status`) REFERENCES `status` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `mangas_ibfk_1` FOREIGN KEY (`type`) REFERENCES `types` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `mangas_ibfk_2` FOREIGN KEY (`status`) REFERENCES `status` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `manga`
+-- Dumping data for table `mangas`
 --
 
-LOCK TABLES `manga` WRITE;
-/*!40000 ALTER TABLE `manga` DISABLE KEYS */;
-INSERT INTO `manga` VALUES (1,'Tokyo Ghoul','About a human called Kaneki, which later on becomes a ghoul.','2015-10-29 11:28:12',NULL,0,0),(2,'Kakukaku Shikajika','Self-biography of Akiko Higashimura.','2015-10-29 11:28:12','2016-02-05 18:22:17',1,2),(3,'Skill of Lure','About a guy learning about how to pick up girls.','2015-10-29 11:28:12',NULL,0,0);
-/*!40000 ALTER TABLE `manga` ENABLE KEYS */;
+LOCK TABLES `mangas` WRITE;
+/*!40000 ALTER TABLE `mangas` DISABLE KEYS */;
+INSERT INTO `mangas` VALUES (1,'Tokyo Ghoul','About a human called Kaneki, which later on becomes a ghoul.','2015-10-29 11:28:12',NULL,0,0),(2,'Kakukaku Shikajika','Self-biography of Akiko Higashimura.','2015-10-29 11:28:12','2016-02-05 18:22:17',1,2),(3,'Skill of Lure','About a guy learning about how to pick up girls.','2015-10-29 11:28:12',NULL,0,0);
+/*!40000 ALTER TABLE `mangas` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `manga_genre`
+-- Table structure for table `mangas_genres`
 --
 
-DROP TABLE IF EXISTS `manga_genre`;
+DROP TABLE IF EXISTS `mangas_genres`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `manga_genre` (
+CREATE TABLE `mangas_genres` (
   `manga_id` int(10) unsigned NOT NULL,
   `genre_id` int(10) unsigned NOT NULL,
   PRIMARY KEY (`manga_id`,`genre_id`),
   KEY `manga_id` (`manga_id`),
   KEY `genre_id` (`genre_id`),
-  CONSTRAINT `manga_genre_ibfk_1` FOREIGN KEY (`manga_id`) REFERENCES `manga` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `manga_genre_ibfk_2` FOREIGN KEY (`genre_id`) REFERENCES `genre` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `mangas_genres_ibfk_1` FOREIGN KEY (`manga_id`) REFERENCES `mangas` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `mangas_genres_ibfk_2` FOREIGN KEY (`genre_id`) REFERENCES `genres` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `manga_genre`
+-- Dumping data for table `mangas_genres`
 --
 
-LOCK TABLES `manga_genre` WRITE;
-/*!40000 ALTER TABLE `manga_genre` DISABLE KEYS */;
-INSERT INTO `manga_genre` VALUES (1,3),(1,5),(1,7),(2,1),(2,2),(2,4),(3,1),(3,4),(3,6);
-/*!40000 ALTER TABLE `manga_genre` ENABLE KEYS */;
+LOCK TABLES `mangas_genres` WRITE;
+/*!40000 ALTER TABLE `mangas_genres` DISABLE KEYS */;
+INSERT INTO `mangas_genres` VALUES (1,3),(1,5),(1,7),(2,1),(2,2),(2,4),(3,1),(3,4),(3,6);
+/*!40000 ALTER TABLE `mangas_genres` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `member`
+-- Table structure for table `members`
 --
 
-DROP TABLE IF EXISTS `member`;
+DROP TABLE IF EXISTS `members`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `member` (
+CREATE TABLE `members` (
   `user_id` int(10) unsigned NOT NULL,
-  `release_group_id` int(10) unsigned NOT NULL,
+  `group_id` int(10) unsigned NOT NULL,
   `permission_id` int(2) unsigned NOT NULL,
-  PRIMARY KEY (`user_id`,`release_group_id`,`permission_id`),
+  PRIMARY KEY (`user_id`,`group_id`,`permission_id`),
   KEY `user_id` (`user_id`),
-  KEY `release_group_id` (`release_group_id`),
+  KEY `group_id` (`group_id`),
   KEY `permission_id` (`permission_id`),
-  CONSTRAINT `member_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `member_ibfk_2` FOREIGN KEY (`release_group_id`) REFERENCES `release_group` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `member_ibfk_3` FOREIGN KEY (`permission_id`) REFERENCES `permission` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `members_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `members_ibfk_2` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `members_ibfk_3` FOREIGN KEY (`permission_id`) REFERENCES `permissions` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `member`
+-- Dumping data for table `members`
 --
 
-LOCK TABLES `member` WRITE;
-/*!40000 ALTER TABLE `member` DISABLE KEYS */;
-/*!40000 ALTER TABLE `member` ENABLE KEYS */;
+LOCK TABLES `members` WRITE;
+/*!40000 ALTER TABLE `members` DISABLE KEYS */;
+INSERT INTO `members` VALUES (2,2,1),(2,3,1),(2,4,1),(4,3,4),(5,3,4);
+/*!40000 ALTER TABLE `members` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `permission`
+-- Table structure for table `permissions`
 --
 
-DROP TABLE IF EXISTS `permission`;
+DROP TABLE IF EXISTS `permissions`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `permission` (
+CREATE TABLE `permissions` (
   `id` int(2) unsigned NOT NULL,
   `permission` varchar(70) NOT NULL,
   PRIMARY KEY (`id`)
@@ -331,23 +345,23 @@ CREATE TABLE `permission` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `permission`
+-- Dumping data for table `permissions`
 --
 
-LOCK TABLES `permission` WRITE;
-/*!40000 ALTER TABLE `permission` DISABLE KEYS */;
-INSERT INTO `permission` VALUES (1,'Owner'),(2,'Admin'),(3,'Mod'),(4,'Member'),(5,'Donator'),(6,'Follower'),(7,'None');
-/*!40000 ALTER TABLE `permission` ENABLE KEYS */;
+LOCK TABLES `permissions` WRITE;
+/*!40000 ALTER TABLE `permissions` DISABLE KEYS */;
+INSERT INTO `permissions` VALUES (1,'Owner'),(2,'Admin'),(3,'Mod'),(4,'Member'),(5,'Donator'),(6,'Follower'),(7,'None');
+/*!40000 ALTER TABLE `permissions` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `profile`
+-- Table structure for table `profiles`
 --
 
-DROP TABLE IF EXISTS `profile`;
+DROP TABLE IF EXISTS `profiles`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `profile` (
+CREATE TABLE `profiles` (
   `user_id` int(10) unsigned NOT NULL,
   `biography` varchar(160) DEFAULT NULL,
   `email` varchar(255) DEFAULT NULL,
@@ -356,72 +370,17 @@ CREATE TABLE `profile` (
   `location` varchar(30) DEFAULT NULL,
   PRIMARY KEY (`user_id`),
   KEY `user_id` (`user_id`),
-  CONSTRAINT `profile_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `profiles_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `profile`
+-- Dumping data for table `profiles`
 --
 
-LOCK TABLES `profile` WRITE;
-/*!40000 ALTER TABLE `profile` DISABLE KEYS */;
-/*!40000 ALTER TABLE `profile` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `release_group`
---
-
-DROP TABLE IF EXISTS `release_group`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `release_group` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `release_group_name` varchar(70) DEFAULT NULL,
-  `descript` mediumtext,
-  `created` datetime NOT NULL,
-  `edited` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `release_group`
---
-
-LOCK TABLES `release_group` WRITE;
-/*!40000 ALTER TABLE `release_group` DISABLE KEYS */;
-INSERT INTO `release_group` VALUES (1,'Twisted Hel Scans','Translates Tokyo Ghoul and was in a bit of a drama around translations.','2015-10-29 11:28:12',NULL),(2,'Game of Scanlation','Scanlation group created by Allafta.','2015-10-29 11:28:12',NULL),(3,'Testing Group','This is just a test for groups.','2015-12-21 12:25:44',NULL),(4,'Testing 2',NULL,'2016-02-07 13:01:15',NULL);
-/*!40000 ALTER TABLE `release_group` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `release_group_chapter`
---
-
-DROP TABLE IF EXISTS `release_group_chapter`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `release_group_chapter` (
-  `chapter_id` int(10) unsigned NOT NULL,
-  `release_group_id` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`chapter_id`,`release_group_id`),
-  KEY `release_group_id` (`release_group_id`),
-  KEY `chapter_id` (`chapter_id`),
-  CONSTRAINT `release_group_chapter_ibfk_1` FOREIGN KEY (`chapter_id`) REFERENCES `chapter` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `release_group_chapter_ibfk_2` FOREIGN KEY (`release_group_id`) REFERENCES `release_group` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `release_group_chapter`
---
-
-LOCK TABLES `release_group_chapter` WRITE;
-/*!40000 ALTER TABLE `release_group_chapter` DISABLE KEYS */;
-INSERT INTO `release_group_chapter` VALUES (1,1),(2,1),(3,1),(7,2),(8,2),(9,2),(9,3),(65,3),(66,3),(67,3);
-/*!40000 ALTER TABLE `release_group_chapter` ENABLE KEYS */;
+LOCK TABLES `profiles` WRITE;
+/*!40000 ALTER TABLE `profiles` DISABLE KEYS */;
+/*!40000 ALTER TABLE `profiles` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -449,13 +408,13 @@ INSERT INTO `status` VALUES (0,'null'),(1,'On going'),(2,'Completed');
 UNLOCK TABLES;
 
 --
--- Table structure for table `type`
+-- Table structure for table `types`
 --
 
-DROP TABLE IF EXISTS `type`;
+DROP TABLE IF EXISTS `types`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `type` (
+CREATE TABLE `types` (
   `id` smallint(5) unsigned NOT NULL DEFAULT '0',
   `type` varchar(70) NOT NULL,
   PRIMARY KEY (`id`)
@@ -463,23 +422,23 @@ CREATE TABLE `type` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `type`
+-- Dumping data for table `types`
 --
 
-LOCK TABLES `type` WRITE;
-/*!40000 ALTER TABLE `type` DISABLE KEYS */;
-INSERT INTO `type` VALUES (0,'null'),(1,'Manga'),(2,'Manhwa');
-/*!40000 ALTER TABLE `type` ENABLE KEYS */;
+LOCK TABLES `types` WRITE;
+/*!40000 ALTER TABLE `types` DISABLE KEYS */;
+INSERT INTO `types` VALUES (0,'null'),(1,'Manga'),(2,'Manhwa');
+/*!40000 ALTER TABLE `types` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `user`
+-- Table structure for table `users`
 --
 
-DROP TABLE IF EXISTS `user`;
+DROP TABLE IF EXISTS `users`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `user` (
+CREATE TABLE `users` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `username` varchar(20) NOT NULL,
   `password` char(60) NOT NULL,
@@ -489,13 +448,13 @@ CREATE TABLE `user` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `user`
+-- Dumping data for table `users`
 --
 
-LOCK TABLES `user` WRITE;
-/*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'adsf1','$2a$10$w/lXFEbX8CAegTw3JkTe4uehky26ZWqtyYQbUWnWUAqQQwqxkaBS2'),(2,'asdf','$2a$10$uP.OUnvBYVImzDAMOojqKuO2lxObGFyMsz5eBe55hn5CVrFanaIwq'),(3,'test','$2a$10$8rUpBQ4qHYyfZViVCggU.OugTt9LlFcJeYzmD9jYvhFr4LBp5Cspe'),(4,'testing','$2a$10$40OHLPapIK9nit/Cl/EF2OOEut9tnentRZd0gWn5GHTf6MJIv.Rou'),(5,'tonton','$2a$10$.v3YOlvzX1eZzEZLg5N0r.WuKemwBSYa3x1OqE3XIVsCNY5r6ZfgK');
-/*!40000 ALTER TABLE `user` ENABLE KEYS */;
+LOCK TABLES `users` WRITE;
+/*!40000 ALTER TABLE `users` DISABLE KEYS */;
+INSERT INTO `users` VALUES (1,'adsf1','$2a$10$w/lXFEbX8CAegTw3JkTe4uehky26ZWqtyYQbUWnWUAqQQwqxkaBS2'),(2,'asdf','$2a$10$uP.OUnvBYVImzDAMOojqKuO2lxObGFyMsz5eBe55hn5CVrFanaIwq'),(3,'test','$2a$10$8rUpBQ4qHYyfZViVCggU.OugTt9LlFcJeYzmD9jYvhFr4LBp5Cspe'),(4,'testing','$2a$10$40OHLPapIK9nit/Cl/EF2OOEut9tnentRZd0gWn5GHTf6MJIv.Rou'),(5,'tonton','$2a$10$.v3YOlvzX1eZzEZLg5N0r.WuKemwBSYa3x1OqE3XIVsCNY5r6ZfgK');
+/*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -507,8 +466,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
-<<<<<<< HEAD
--- Dump completed on 2016-02-11 18:24:51
-=======
--- Dump completed on 2016-02-12 12:22:10
->>>>>>> test
+-- Dump completed on 2016-02-12 13:28:03

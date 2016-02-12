@@ -581,7 +581,9 @@ exports.searchGenresByGenre = function(genre) {
 // Members
 exports.getUsersByGroupId = function(id) {
   return new Promise((resolve, reject) => {
-    var sql = 'select username as id from members where group_id = ?;';
+    var sql = `select u.id, u.username from members m
+    left join users u on m.user_id = u.id
+    where group_id = ?;`;
 
     connection.query(sql, id, function(err, results) {
       if (err) console.log(err);
