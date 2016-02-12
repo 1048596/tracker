@@ -104,6 +104,7 @@ INSERT INTO `books` VALUES (1,'Thus Spoke Zarathustra'),(2,'The Great Gatsby'),(
 UNLOCK TABLES;
 
 --
+<<<<<<< HEAD
 -- Table structure for table `chapter`
 --
 
@@ -111,6 +112,15 @@ DROP TABLE IF EXISTS `chapter`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `chapter` (
+=======
+-- Table structure for table `chapters`
+--
+
+DROP TABLE IF EXISTS `chapters`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `chapters` (
+>>>>>>> test
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `chapter_title` varchar(140) DEFAULT NULL,
   `chapter_number` double(8,2) NOT NULL,
@@ -133,7 +143,39 @@ INSERT INTO `chapter` VALUES (1,'One Shot - Joker',0.00,1,'2015-10-29 11:28:12')
 UNLOCK TABLES;
 
 --
+<<<<<<< HEAD
 -- Table structure for table `creator`
+=======
+-- Table structure for table `chapters_groups`
+--
+
+DROP TABLE IF EXISTS `chapters_groups`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `chapters_groups` (
+  `chapter_id` int(10) unsigned NOT NULL,
+  `group_id` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`chapter_id`,`group_id`),
+  KEY `group_id` (`group_id`),
+  KEY `chapter_id` (`chapter_id`),
+  CONSTRAINT `chapters_groups_ibfk_1` FOREIGN KEY (`chapter_id`) REFERENCES `chapters` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `chapters_groups_ibfk_2` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `chapters_groups`
+--
+
+LOCK TABLES `chapters_groups` WRITE;
+/*!40000 ALTER TABLE `chapters_groups` DISABLE KEYS */;
+INSERT INTO `chapters_groups` VALUES (1,1),(2,1),(3,1),(7,2),(8,2),(9,2),(9,3),(65,3),(66,3),(67,3);
+/*!40000 ALTER TABLE `chapters_groups` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `creators`
+>>>>>>> test
 --
 
 DROP TABLE IF EXISTS `creator`;
@@ -465,4 +507,8 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
+<<<<<<< HEAD
 -- Dump completed on 2016-02-11 18:24:51
+=======
+-- Dump completed on 2016-02-12 12:22:10
+>>>>>>> test
