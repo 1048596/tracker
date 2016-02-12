@@ -1,15 +1,15 @@
 create table subs (
-  username varchar(20) not null,
+  user_id int unsigned not null,
   manga_id int unsigned not null,
-  primary key (username, manga_id),
-  index(username),
+  primary key (user_id, manga_id),
+  index(user_id),
   index(manga_id),
-  foreign key (username)
-  references users(username)
+  foreign key (user_id)
+  references user(id)
     on update cascade
     on delete cascade,
   foreign key (manga_id)
-  references mangas(id)
+  references manga(id)
     on update cascade
     on delete cascade
 ) engine=innodb;

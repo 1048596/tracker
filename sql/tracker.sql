@@ -133,34 +133,6 @@ INSERT INTO `chapter` VALUES (1,'One Shot - Joker',0.00,1,'2015-10-29 11:28:12')
 UNLOCK TABLES;
 
 --
--- Table structure for table `chapter_team`
---
-
-DROP TABLE IF EXISTS `chapter_team`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `chapter_team` (
-  `chapter_id` int(10) unsigned NOT NULL,
-  `group_id` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`chapter_id`,`group_id`),
-  KEY `group_id` (`group_id`),
-  KEY `chapter_id` (`chapter_id`),
-  CONSTRAINT `chapter_team_ibfk_1` FOREIGN KEY (`chapter_id`) REFERENCES `chapter` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `chapter_team_ibfk_2` FOREIGN KEY (`group_id`) REFERENCES `team` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `chapter_team`
---
-
-LOCK TABLES `chapter_team` WRITE;
-/*!40000 ALTER TABLE `chapter_team` DISABLE KEYS */;
-INSERT INTO `chapter_team` VALUES (1,1),(2,1),(3,1),(7,2),(8,2),(9,2),(9,3),(65,3),(66,3),(67,3);
-/*!40000 ALTER TABLE `chapter_team` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `creator`
 --
 
@@ -281,14 +253,14 @@ DROP TABLE IF EXISTS `member`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `member` (
   `user_id` int(10) unsigned NOT NULL,
-  `group_id` int(10) unsigned NOT NULL,
+  `release_group_id` int(10) unsigned NOT NULL,
   `permission_id` int(2) unsigned NOT NULL,
-  PRIMARY KEY (`user_id`,`group_id`,`permission_id`),
+  PRIMARY KEY (`user_id`,`release_group_id`,`permission_id`),
   KEY `user_id` (`user_id`),
-  KEY `group_id` (`group_id`),
+  KEY `release_group_id` (`release_group_id`),
   KEY `permission_id` (`permission_id`),
   CONSTRAINT `member_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `member_ibfk_2` FOREIGN KEY (`group_id`) REFERENCES `team` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `member_ibfk_2` FOREIGN KEY (`release_group_id`) REFERENCES `release_group` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `member_ibfk_3` FOREIGN KEY (`permission_id`) REFERENCES `permission` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -356,6 +328,61 @@ LOCK TABLES `profile` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `release_group`
+--
+
+DROP TABLE IF EXISTS `release_group`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `release_group` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `release_group_name` varchar(70) DEFAULT NULL,
+  `descript` mediumtext,
+  `created` datetime NOT NULL,
+  `edited` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `release_group`
+--
+
+LOCK TABLES `release_group` WRITE;
+/*!40000 ALTER TABLE `release_group` DISABLE KEYS */;
+INSERT INTO `release_group` VALUES (1,'Twisted Hel Scans','Translates Tokyo Ghoul and was in a bit of a drama around translations.','2015-10-29 11:28:12',NULL),(2,'Game of Scanlation','Scanlation group created by Allafta.','2015-10-29 11:28:12',NULL),(3,'Testing Group','This is just a test for groups.','2015-12-21 12:25:44',NULL),(4,'Testing 2',NULL,'2016-02-07 13:01:15',NULL);
+/*!40000 ALTER TABLE `release_group` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `release_group_chapter`
+--
+
+DROP TABLE IF EXISTS `release_group_chapter`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `release_group_chapter` (
+  `chapter_id` int(10) unsigned NOT NULL,
+  `release_group_id` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`chapter_id`,`release_group_id`),
+  KEY `release_group_id` (`release_group_id`),
+  KEY `chapter_id` (`chapter_id`),
+  CONSTRAINT `release_group_chapter_ibfk_1` FOREIGN KEY (`chapter_id`) REFERENCES `chapter` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `release_group_chapter_ibfk_2` FOREIGN KEY (`release_group_id`) REFERENCES `release_group` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `release_group_chapter`
+--
+
+LOCK TABLES `release_group_chapter` WRITE;
+/*!40000 ALTER TABLE `release_group_chapter` DISABLE KEYS */;
+INSERT INTO `release_group_chapter` VALUES (1,1),(2,1),(3,1),(7,2),(8,2),(9,2),(9,3),(65,3),(66,3),(67,3);
+/*!40000 ALTER TABLE `release_group_chapter` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `status`
 --
 
@@ -377,33 +404,6 @@ LOCK TABLES `status` WRITE;
 /*!40000 ALTER TABLE `status` DISABLE KEYS */;
 INSERT INTO `status` VALUES (0,'null'),(1,'On going'),(2,'Completed');
 /*!40000 ALTER TABLE `status` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `team`
---
-
-DROP TABLE IF EXISTS `team`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `team` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `group_name` varchar(70) NOT NULL,
-  `descript` mediumtext,
-  `created` datetime NOT NULL,
-  `edited` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `team`
---
-
-LOCK TABLES `team` WRITE;
-/*!40000 ALTER TABLE `team` DISABLE KEYS */;
-INSERT INTO `team` VALUES (1,'Twisted Hel Scans','Translates Tokyo Ghoul and was in a bit of a drama around translations.','2015-10-29 11:28:12',NULL),(2,'Game of Scanlation','Scanlation group created by Allafta.','2015-10-29 11:28:12',NULL),(3,'Testing Group','This is just a test for groups.','2015-12-21 12:25:44',NULL),(4,'Testing 2',NULL,'2016-02-07 13:01:15',NULL);
-/*!40000 ALTER TABLE `team` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -465,4 +465,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-02-09 10:28:33
+-- Dump completed on 2016-02-11 18:24:51
