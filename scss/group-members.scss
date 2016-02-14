@@ -1,0 +1,48 @@
+@import 'border-radius';
+
+.member-list {
+  @include border-radius(2px);
+  margin: 20px 0px;
+  display: block;
+  border: 1px solid #ddd;
+}
+
+.member-item:first-child {
+  border-top: 0;
+}
+
+.member-item {
+  padding: 6px 10px;
+  border-top: 1px solid #eee;
+}
+
+.member-avatar {
+  max-width: 70px;
+  max-height: 70px;
+  display: inline;
+  vertical-align: middle;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.member-avatar-container {
+  width: 70px;
+  height: 70px;
+  text-align: center;
+  margin-right: 10px;
+}
+
+.member-username {
+  margin: 3px 10px 0 0;
+}
+
+.permission-tag {
+  @include border-radius(2px);
+  border: 1px solid #ddd;
+  margin-right: 5px;
+  padding: 3px 5px;
+  background-color: #eee;
+  line-height: 18px;
+  margin-bottom: 5px;
+}

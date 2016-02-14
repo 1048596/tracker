@@ -79,7 +79,8 @@ class MangaPage extends React.Component {
     let editLink;
 
     return (
-      <div>
+      <div className="content">
+        <h1 className="manga-title"><strong>{this.props.vertex.manga_title}</strong></h1>
         <Link to={{pathname: '/manga/' + this.props.params.id + '/edit'}} activeClassName="active">Edit</Link>
         {this.props.children}
       </div>
@@ -87,4 +88,20 @@ class MangaPage extends React.Component {
   }
 }
 
-module.exports = MangaPage;
+var Container = Relay.createContainer(MangaPage, {
+  initialVariables: {
+    id: null,
+  },
+  fragments: {
+    vertex: () => Relay.QL`
+      fragment on Node {
+        id,
+        ... on Manga {
+          manga_title
+        }
+      }
+    `
+  }
+});
+
+module.exports = Container;

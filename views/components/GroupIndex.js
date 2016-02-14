@@ -98,10 +98,6 @@ var Container = Relay.createContainer(GroupIndex, {
               }
             }
           }
-          currentPermission {
-            permission_initial,
-            permission_value
-          },
           mangas (first: 100) {
             edges {
               node {

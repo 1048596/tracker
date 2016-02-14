@@ -73,21 +73,6 @@ export const groupType = registerType(new GraphQLObjectType({
         });
       }
     },
-    currentPermission: {
-      type: permissionType,
-      resolve: (root) => {
-        if (root.rootValue.user) {
-          return mysql.getPermissionByGroupIdAndUsername(root.id, root.rootValue.user.username).then((value) => {
-            return value[0];
-          });
-        } else {
-          return {
-            permission_initial: 'n',
-            permission_value: 'None'
-          };
-        }
-      }
-    },
     members: {
       type: userConnection,
       args: connectionArgs,

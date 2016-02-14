@@ -656,14 +656,11 @@ exports.getMemberCountByGroupId = function(id) {
 };
 
 // Permission
-
-exports.getPermissionByGroupIdAndUsername = function(group_id, username) {
+exports.getPermissionById = function(id) {
   return new Promise((resolve, reject) => {
-    var sql = `select p.permission_initial, p.permission_value from members m
-      join permissions p on p.permission_initial = m.permission
-      where group_id = ? && username = ? limit 1;`;
+    var sql = `select permission from permissions where id = ?;`;
 
-    sql = mysql.format(sql, [group_id, username]);
+    sql = mysql.format(sql, [id]);
 
     connection.query(sql, function(err, results) {
       if (err) console.log(err);
@@ -672,6 +669,35 @@ exports.getPermissionByGroupIdAndUsername = function(group_id, username) {
     });
   });
 };
+
+exports.getPermissionsByUserId = function(id) {
+  return new Promise((resolve, reject) => {
+    var sql = `select * from members where user_id = ?;`;
+
+    sql = mysql.format(sql, [id]);
+
+    connection.query(sql, function(err, results) {
+      if (err) console.log(err);
+
+      resolve(results);
+    });
+  });
+};
+
+exports.getPermissionByUserIdAndGroupId = function(user_id, group_id) {
+  return new Promise((resolve, reject) => {
+    var sql = `select * from members where user_id = ? and group_id = ?;`;
+
+    sql = mysql.format(sql, [user_id, group_id]);
+
+    connection.query(sql, function(err, results) {
+      if (err) console.log(err);
+
+      resolve(results);
+    });
+  });
+};
+
 
 // Manga mutations
 exports.updateManga = function(id, manga_title, descript, status, type) {

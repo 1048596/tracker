@@ -5,17 +5,19 @@ import { fromGlobalId } from 'graphql-relay';
 
 import { Link, IndexLink } from 'react-router';
 
-class ProfilePage extends React.Component {
+class ProfileIndex extends React.Component {
   render() {
     return (
       <div>
-        {this.props.children}
+        <div className="side-bar">
+        </div>
+        <div></div>
       </div>
     );
   }
 }
 
-var Container = Relay.createContainer(ProfilePage, {
+var Container = Relay.createContainer(ProfileIndex, {
   initialVariables: {
     id: null,
   },

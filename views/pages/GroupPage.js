@@ -10,6 +10,7 @@ class GroupPage extends React.Component {
     return (
       <div>
         <Link to={{pathname: '/group/' + this.props.params.id + '/edit'}} activeClassName="active">Edit</Link>
+        <Link to={{pathname: '/group/' + this.props.params.id + '/members'}} activeClassName="active">Members</Link>
         {this.props.children}
       </div>
     );

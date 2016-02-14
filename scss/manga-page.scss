@@ -1,5 +1,14 @@
 @import 'border-radius';
 
+.manga-title {
+  font-size: 24px;
+  margin-top: 20px;
+}
+
+.content strong {
+  font-weight: bold;
+}
+
 table.info-column-left {
   @include border-radius(2px);
   width: 478px;
@@ -70,7 +79,7 @@ table.info-column-right td.info-row {
 
 .info-column-bottom {
   @include border-radius(2px);
-  width: 978px;
+  width: 958px;
   display: block;
   border: 1px solid #ddd;
   margin-top: 20px;

@@ -73,6 +73,59 @@ table.chapter-list td.created {
 .drop-down-item:hover {
   background-color: #ddd; }
 
+.member-list {
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  -ms-border-radius: 2px;
+  border-radius: 2px;
+  margin: 20px 0px;
+  display: block;
+  border: 1px solid #ddd; }
+
+.member-item:first-child {
+  border-top: 0; }
+
+.member-item {
+  padding: 6px 10px;
+  border-top: 1px solid #eee; }
+
+.member-avatar {
+  max-width: 70px;
+  max-height: 70px;
+  display: inline;
+  vertical-align: middle;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%); }
+
+.member-avatar-container {
+  width: 70px;
+  height: 70px;
+  text-align: center;
+  margin-right: 10px; }
+
+.member-username {
+  margin: 3px 10px 0 0; }
+
+.permission-tag {
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  -ms-border-radius: 2px;
+  border-radius: 2px;
+  border: 1px solid #ddd;
+  margin-right: 5px;
+  padding: 3px 5px;
+  background-color: #eee;
+  line-height: 18px;
+  margin-bottom: 5px; }
+
+.manga-title {
+  font-size: 24px;
+  margin-top: 20px; }
+
+.content strong {
+  font-weight: bold; }
+
 table.info-column-left {
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
@@ -142,7 +195,7 @@ table.info-column-right td.info-row {
   -moz-border-radius: 2px;
   -ms-border-radius: 2px;
   border-radius: 2px;
-  width: 978px;
+  width: 958px;
   display: block;
   border: 1px solid #ddd;
   margin-top: 20px;
@@ -208,8 +261,8 @@ table.info-column-right td.info-row {
   margin: 0 5px 0 5px; }
 
 body {
-  font: helvetica;
-  font-family: helvetica; }
+  font-family: helvetica;
+  font-size: 16px; }
 
 a {
   text-decoration: none;

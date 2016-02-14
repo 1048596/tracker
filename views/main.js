@@ -21,6 +21,7 @@ import MangaEdit from './components/MangaEdit.js';
 // Group page
 import GroupPage from './pages/GroupPage.js';
 import GroupIndex from './components/GroupIndex.js';
+import GroupMembers from './components/GroupMembers.js';
 
 // Chapter page
 import ChapterPage from './pages/ChapterPage.js';
@@ -39,9 +40,11 @@ import { FeedQueries, prepareFeedParams } from './routes/FeedRoute.js';
 import { SubscriptionQueries, prepareSubscriptionParams } from './routes/SubscriptionRoute.js';
 import { UploadQueries } from './routes/UploadRoute.js';
 import { AuthenticateQueries } from './routes/AuthenticateRoute.js';
+import { MangaPageQueries, prepareMangaPageParams } from './routes/MangaPageRoute.js';
 import { MangaIndexQueries, prepareMangaIndexParams } from './routes/MangaIndexRoute.js';
 import { MangaEditQueries, prepareMangaEditParams } from './routes/MangaEditRoute.js';
 import { GroupIndexQueries, prepareGroupIndexParams } from './routes/GroupIndexRoute.js';
+import { GroupMembersQueries, prepareGroupMembersParams } from './routes/GroupMembersRoute.js';
 
 Relay.injectNetworkLayer(
   new Relay.DefaultNetworkLayer('http://localhost:1337/graphql', {
@@ -57,21 +60,21 @@ ReactDOM.render(
         queries={FeedQueries}
         queryParams={['page', 'limit']}
         prepareParams={prepareFeedParams}
-      />
+        />
       <Route
         path="feed"
         component={FeedPage}
         queries={FeedQueries}
         queryParams={['page', 'limit']}
         prepareParams={prepareFeedParams}
-      />
+        />
       <Route
         path="subscriptions"
         component={SubscriptionsPage}
         queries={SubscriptionQueries}
         queryParams={['page', 'limit']}
         prepareParams={prepareSubscriptionParams}
-      />
+        />
     <Route path="upload" component={Upload} queries={UploadQueries}/>
       <Route path="login" component={Login}/>
       <Route path="register" component={Register}/>
@@ -79,7 +82,9 @@ ReactDOM.render(
       <Route
         path="manga/:id"
         component={MangaPage}
-      >
+        queries={MangaPageQueries}
+        prepareParams={prepareMangaPageParams}
+        >
         <IndexRoute
           component={MangaIndex}
           queries={MangaIndexQueries}
@@ -91,23 +96,29 @@ ReactDOM.render(
           component={MangaEdit}
           queries={MangaEditQueries}
           prepareParams={prepareMangaEditParams}
-        />
+          />
       </Route>
       <Route
         path="group/:id"
         component={GroupPage}
-      >
+        >
         <IndexRoute
           component={GroupIndex}
           queries={GroupIndexQueries}
           queryParams={['page', 'limit']}
           prepareParams={prepareGroupIndexParams}
         />
+        <Route
+          path="members"
+          component={GroupMembers}
+          queries={GroupMembersQueries}
+          prepareParams={prepareGroupMembersParams}
+          />
       </Route>
       <Route
         path="test"
         component={Test}
-      />
+        />
     </Route>
   </RelayRouter>,
   document.getElementById('wrap')

@@ -36,6 +36,27 @@ export const userType = registerType(new GraphQLObjectType({
     id: globalIdField('User'),
     username: {
       type: GraphQLString
+    },
+    permissions: {
+      type: new GraphQLList(permissionType),
+      args: {
+        group_id: {
+          type: GraphQLString
+        }
+      },
+      resolve: (root, args) => {
+        if (args.group_id.length > 0) {
+          console.log('Get single permission');
+          return mysql.getPermissionByUserIdAndGroupId(root.id, args.group_id).then((value) => {
+            return value;
+          });
+        } else {
+          console.log('Get all permissions');
+          return mysql.getPermissionsByUserId(root.id).then((value) => {
+            return value;
+          });
+        }
+      }
     }
   }),
   interfaces: [nodeInterface]
